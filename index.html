@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <title>[AppName] :: [AppDescription]</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/main.css">
+
+    <script src="js/libs/jquery-1.10.2.min.js"></script>
+    <script src="js/libs/handlebars-v1.3.0.js"></script>
+    <script src="js/libs/ember-1.8.1.js"></script>
+    <script src="js/libs/ember-data-1.0-beta-11.js"></script>
+
+    <script src="js/libs/moment.js"></script>
+    <script src="js/app.js"></script>
+
+    <script type="text/x-handlebars" data-template-name="application">
+        <div id="headerArea">
+            <img src="images/company-logo.png" height="80"/><h1> [AppName] :: [AppDescription]</h1>
+        </div>
+        <div id="mainArea">
+            {{outlet}}
+        </div>
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="products">
+        <div class="row">
+            <div class="col-md-4">
+                <h1>Products :: {{length}}</h1>
+                <div class="list-group">
+                    {{#each}}
+                        {{#link-to 'product' this class="list-group-item"}}
+                            <span {{bind-attr title=category}} {{bind-attr class=":glyphicon glyphicon"}}></span> {{name}} <span class="badge">{{price}}</span>
+                        {{/link-to}}
+                    {{else}}
+                        <li class="list-group-item">No products</li>
+                    {{/each}}
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                {{outlet}}
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="product">
+        <div class="row">
+            <div class="col">
+            <h1>Product :: {{name}}</h1>
+                <div class="list-group">
+                    <li class="list-group-item">
+                        {{price}}
+                    </li>
+                </div>
+            </div>
+        </div>
+    </script>
+
+</head>
+<body>
+
+</body>
+</html>
