@@ -3,9 +3,9 @@
 <head>
 
     <meta charset="utf-8">
-    <title>[AppName] :: [AppDescription]</title>
+    <title>Demo application - v0.1</title>
     <link rel="stylesheet" href="css/bootstrap.css">
-    <link rel="stylesheet" href="css/main.css">
+    <!--<link rel="stylesheet" href="css/main.css">-->
 
     <script src="js/libs/jquery-1.10.2.min.js"></script>
     <script src="js/libs/handlebars-v1.3.0.js"></script>
@@ -16,18 +16,83 @@
     <script src="js/app.js"></script>
 
     <script type="text/x-handlebars" data-template-name="application">
-        <div id="headerArea">
-            <img src="images/company-logo.png" height="80"/><h1> [AppName] :: [AppDescription]</h1>
+        <div class="bs-docs-header" id="content">
+            <div class="container">
+                <h1>Demo application - v0.1</h1>
+                <p>This is an amazing demo to impress your family and friends.</p>
+            </div>
         </div>
-        <div id="mainArea">
-            {{outlet}}
+        <header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
+            <div class="container">
+                <div class="navbar-header">
+                    <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    {{#link-to "index" class="navbar-brand"}}Home{{/link-to}}
+                </div>
+                <nav class="collapse navbar-collapse bs-navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li>{{#link-to "products"}}Products{{/link-to}}</li>
+                        <li>{{#link-to "categories"}}Categories{{/link-to}}</li>
+                        <li>{{#link-to "users"}}Users{{/link-to}}</li>
+                        <li>{{#link-to "about"}}About{{/link-to}}</li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>{{#link-to "admin"}}Admin{{/link-to}}</li>
+                        <li>{{#link-to "login"}}Login{{/link-to}}</li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        <div class="container bs-docs-container">
+            <div class="row">
+                <div class="col-md-10">
+                    <div class="bs-docs-section">
+                        {{outlet}}
+                    </div>
+                </div>
+            </div>
         </div>
     </script>
 
+    <script type="text/x-handlebars" data-template-name="index">
+        <h1 class="page-header">Home</h1>
+        <p>To get started just click on one of the navigation links above.</p>
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="about">
+        <h1 class="page-header">About</h1>
+        <p>This is the about page</p>
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="login">
+        <h1 class="page-header">Login</h1>
+        <p>This is the login page</p>
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="categories">
+        <h1 class="page-header">Categories</h1>
+        <p>This is the category page</p>
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="users">
+        <h1 class="page-header">Users</h1>
+        <p>This is the users page</p>
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="admin">
+        <h1 class="page-header">Admin</h1>
+        <p>This is the admin page</p>
+    </script>
+
     <script type="text/x-handlebars" data-template-name="products">
+        <h1 class="page-header">Products</h1>
         <div class="row">
-            <div class="col-md-4">
-                <h1>Products :: {{length}}</h1>
+            <div class="col-md-5">
+                <h2>{{length}} {{pluralize length single='products'}}</h2>
                 <div class="list-group">
                     {{#each}}
                         {{#link-to 'product' this class="list-group-item"}}
@@ -37,23 +102,18 @@
                         <li class="list-group-item">No products</li>
                     {{/each}}
                 </div>
-            </div>
-
-            <div class="col-md-4">
-                {{outlet}}
-            </div>
+             </div>
+            {{outlet}}
         </div>
     </script>
 
     <script type="text/x-handlebars" data-template-name="product">
-        <div class="row">
-            <div class="col">
-            <h1>Product :: {{name}}</h1>
-                <div class="list-group">
-                    <li class="list-group-item">
-                        {{price}}
-                    </li>
-                </div>
+        <div class="col-md-5">
+            <h2>{{name}}</h2>
+            <div class="list-group">
+                <li class="list-group-item">
+                    {{price}} {{pluralize price single='token'}}
+                </li>
             </div>
         </div>
     </script>

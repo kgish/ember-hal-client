@@ -57,15 +57,20 @@ App.Router.map(function() {
     this.resource('products', function() {
         this.resource('product', { path: ':product_id' }, function() {})
     });
+    this.route('categories');
+    this.route('users');
+    this.route('admin');
+    this.route('about');
+    this.route('login');
 });
 
 /** ROUTES **/
-App.IndexRoute = Ember.Route.extend({
-    redirect: function() {
-        console.log('IndexRoute: redirect');
-        this.transitionTo('products');
-    }
-});
+//App.IndexRoute = Ember.Route.extend({
+//    redirect: function() {
+//        console.log('IndexRoute: redirect');
+//        this.transitionTo('products');
+//    }
+//});
 
 App.ProductsRoute = Ember.Route.extend({
     model: function() {
@@ -148,8 +153,19 @@ App.Product = DS.Model.extend({
     price: DS.attr('number')
 });
 
+/** FIXTURES **/
+App.Product.reopenClass({
+  FIXTURES: [
+    { id: 1, name: 'Pizza',     price: 300  },
+    { id: 2, name: 'Beer',      price: 40   },
+    { id: 3, name: 'Hamburger', price: 125  },
+    { id: 4, name: 'Shoes',     price: 60   },
+    { id: 5, name: 'Laptop',    price: 2000 }
+  ]
+});
+
 /** HANDLEBAR HELPERS **/
-Ember.Handlebars.helper('formatvalue', function(value, options) {
+Ember.Handlebars.helper('truncate', function(value, options) {
     if (value) {
         var maxlen = options.hash.maxlen || 50;
         if (/\s/g.test(value)) {
@@ -164,15 +180,9 @@ Ember.Handlebars.helper('formatvalue', function(value, options) {
     }
 });
 
-/** FIXTURES **/
-App.Product.reopenClass({
-  FIXTURES: [
-    { id: 1, name: 'Pizza',     price: 300  },
-    { id: 2, name: 'Beer',      price: 40   },
-    { id: 3, name: 'Hamburger', price: 125  },
-    { id: 4, name: 'Shoes',     price: 60   },
-    { id: 5, name: 'Laptop',    price: 2000 }
-  ]
+Ember.Handlebars.helper('pluralize', function(number, options) {
+    var single = options.hash.single;
+    return single.pluralize();
 });
 
 Ember.Handlebars.helper('formatdate', function(value, options) {
