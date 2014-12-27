@@ -112,7 +112,22 @@
             <h2>{{name}}</h2>
             <div class="list-group">
                 <li class="list-group-item">
-                    {{price}} {{pluralize price single='token'}}
+                    <div class="row">
+                        <div class="col-md-5">Id</div>
+                        <div class="col-md-5">{{id}}</div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-5">Price</div>
+                        <div class="col-md-5">{{price}} {{pluralize price single='token'}}</div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-5">Category</div>
+                        <div class="col-md-5">{{category}}</div>
+                    </div>
                 </li>
             </div>
         </div>

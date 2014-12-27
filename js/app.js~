@@ -11,7 +11,8 @@ App = Ember.Application.create({
 /** ADAPTERS **/
 //App.ApplicationAdapter = DS.FixtureAdapter.extend({});
 
-App.ApplicationAdapter = DS.RESTAdapter.extend({});
+App.ApplicationAdapter = DS.RESTAdapter.extend({
+});
 
 DS.RESTAdapter.reopen({
     host: 'http://0.0.0.0:8080'
@@ -40,18 +41,107 @@ App.ProductSerializer = DS.RESTSerializer.extend({
         console.log('ProductSerializer: typeForRoot(root='+root+') => '+res);
         return res;
     },
-    normalizePayload: function(payload) {
-        if (payload.products) {
-            var normalizedPayload = { products: [] };
-            payload.products.forEach(function(item){
-                normalizedPayload.products.pushObject(item.product);
-            });
-            payload = normalizedPayload;
-            console.log('ProductSerializer: normalizePayload() => '+JSON.stringify(payload));
-        } else {
-            console.log('ProductSerializer: normalizePayload() => do nothing');
+
+    normalize: function(type, hash, property) {
+        for (var prop in hash) {
+            if (prop == '_links' || prop == '_embedded' || prop.indexOf('http') === 0) {
+                    continue;
+            }
+            var camelizedProp = prop.camelize();
+            if (prop != camelizedProp) {
+                hash[camelizedProp] = hash[prop];
+                delete hash[prop];
+            }
         }
+
+        var res = this._super(type, hash, property);
+        console.log('ProductSerializer: normalize(type='+type+',hash='+JSON.stringify(hash)+',prop='+JSON.stringify(property)+') => '+JSON.stringify(res));
+        return res;
+    },
+
+    normalizePayload: function(type, payload) {
+        var normalizedPayload;
+
+        if (type) {
+            normalizedPayload = this._normalizeRootResource(type.typeKey, payload);
+        } else {
+            normalizedPayload = payload;
+        }
+
+        var embeddedResources     = this._extractEmbeddedResources(payload);
+        var flatEmbeddedResources = this._flattenRelations(embeddedResources);
+        var merged = _.extend(normalizedPayload, flatEmbeddedResources);
+        var normalizedEmbeddedResources = this._normalizeEmbeddedIds(merged);
+
+        console.log('ProductSerializer: normalizePayload() => ' + normalizedEmbeddedResources);
+        return normalizedEmbeddedResources;
+    },
+
+    normalizeId: function(hash) {
+        console.log('ProductSerializer: normalizedID');
+        hash.id = hash._links.self.href;
+        return hash;
+    },
+
+    /** private **/
+
+    _normalizeRootResource: function(typeKey, payload) {
+        console.log('ProductSerializer: _normalizedRootResource');
+        var resource = {};
+        resource[typeKey] = payload;
+        return resource;
+    },
+
+    _normalizeEmbeddedIds: function(payload) {
+        console.log('ProductSerializer: _normalizeEmbeddedIds');
+        var serializerScope = this;
+
+        _.each(payload, function(resources, relation) {
+            console.log('ProductSerializer: _.each');
+            var ids = _.map(resources, function(resource) {
+                if (!resource.hasOwnProperty("_embedded")) return resource;
+                serializerScope;
+
+                var ids = _.map(resource._embedded, function(embedded, relation) {
+                    if (!_.isArray(embedded)) embedded = [embedded];
+                    var mapped = {};
+
+                    var mappedIds = _.map(embedded, serializerScope._extractResourceId);
+                    mapped[relation] = mappedIds;
+
+                    return mapped;
+                });
+                var reduced = _.reduce(ids, function(a,b) { return _.merge(a,b) }, {});
+
+                _.extend(resource, reduced);
+            });
+        });
+
         return payload;
+    },
+
+    _flattenRelations: function(relations) {
+        console.log('ProductSerializer: _flattenedRelations');
+        var flattened = {};
+
+        _.each(relations, function(embeds) {
+            _.each(embeds, function(relation_embeds, relation) {
+                flattened[relation] = (flattened[relation] || []).concat(relation_embeds);
+            });
+        });
+
+        return flattened;
+    },
+
+    _extractEmbeddedResources: function(payload) {
+        console.log('ProductSerializer: _extractEmbeddedResources');
+        return _.walk.pluckRec(payload, "_embedded");
+    },
+
+    _extractResourceId: function(payload) {
+        console.log('ProductSerializer: _extractResourceId');
+        var self_link = payload._links.self.href;
+        return self_link;
     }
 });
 
@@ -153,18 +243,17 @@ App.ProductController = Ember.ObjectController.extend({
 /** MODELS **/
 App.Product = DS.Model.extend({
     name: DS.attr('string'),
-    category: DS.attr('string'),
     price: DS.attr('number')
 });
 
 /** FIXTURES **/
 App.Product.reopenClass({
   FIXTURES: [
-    { id: 1, name: 'Pizza',     category: 'Food',     price: 300  },
-    { id: 2, name: 'Beer',      category: 'Drink',    price: 40   },
-    { id: 3, name: 'Hamburger', category: 'Food',     price: 125  },
-    { id: 4, name: 'Shoes',     category: 'Clothing', price: 60   },
-    { id: 5, name: 'Laptop',    category: 'Computer', price: 2000 }
+    { id: 1, name: 'Pizza',     price: 300  },
+    { id: 2, name: 'Beer',      price: 40   },
+    { id: 3, name: 'Hamburger', price: 125  },
+    { id: 4, name: 'Shoes',     price: 60   },
+    { id: 5, name: 'Laptop',    price: 2000 }
   ]
 });
 
