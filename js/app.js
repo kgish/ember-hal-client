@@ -9,48 +9,52 @@ App = Ember.Application.create({
 //Ember.LOG_BINDINGS = true;
 
 /** ADAPTERS **/
-App.ApplicationAdapter = DS.FixtureAdapter.extend({});
+//App.ApplicationAdapter = DS.FixtureAdapter.extend({});
 
-/*
-App.ApplicationAdapter = DS.RESTAdapter.extend({});
+App.ApplicationAdapter = DS.RESTAdapter.extend({
+});
 
 DS.RESTAdapter.reopen({
-    host: 'http://0.0.0.0:5000'
-//    host: 'http://192.168.2.9:5000'
+    host: 'http://0.0.0.0:8080'
 });
 
 App.ProductsAdapter = DS.RESTAdapter.extend({
     buildURL: function(type, id, record) {
-        var url = this._super(type, id, url);
-//        console.log('ProductsAdapter: buildURL(type='+type+',id='+id+') => '+url);
+        var url = this._super(type, id, record);
+        console.log('ProductsAdapter: buildURL(type='+type+',id='+id+') => '+url);
         return url;
     }
 });
 
 App.ProductAdapter = DS.RESTAdapter.extend({
     buildURL: function(type, id, record) {
-        var url = this._super(type, id, url);
-//        console.log('ProductAdapter: buildURL(type='+type+',id='+id+') => '+url);
+        var url = this._super(type, id, record);
+        console.log('ProductAdapter: buildURL(type='+type+',id='+id+') => '+url);
         return url;
     }
 });
-*/
 
 /** SERIALIZERS **/
-/*
 App.ProductSerializer = DS.RESTSerializer.extend({
     typeForRoot: function(root) {
         var res = this._super(root);
         console.log('ProductSerializer: typeForRoot(root='+root+') => '+res);
         return res;
     },
-    normalize: function(type, hash, prop) {
-        var res = this._super(type, hash, prop);
-//        console.log('ProductSerializer: normalize(type='+type+',hash='+JSON.stringify(hash)+',prop='+JSON.stringify(prop)+') => '+JSON.stringify(res));
-        return res;
+    normalizePayload: function(payload) {
+        if (payload.products) {
+            var normalizedPayload = { products: [] };
+            payload.products.forEach(function(item){
+                normalizedPayload.products.pushObject(item.product);
+            });
+            payload = normalizedPayload;
+            console.log('ProductSerializer: normalizePayload() => '+JSON.stringify(payload));
+        } else {
+            console.log('ProductSerializer: normalizePayload() => do nothing');
+        }
+        return payload;
     }
 });
-*/
 
 /** ROUTER MAP **/
 App.Router.map(function() {
