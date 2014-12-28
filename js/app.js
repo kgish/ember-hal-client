@@ -14,7 +14,30 @@ App = Ember.Application.create({
 /** ADAPTERS **/
 //App.ApplicationAdapter = DS.FixtureAdapter.extend({});
 
-App.ApplicationAdapter = DS.RESTAdapter.extend({});
+App.ApplicationAdapter = DS.RESTAdapter.extend({
+    buildURL: function(type, id, record) {
+        var url = this._super(type, id, record);
+        console.log('ApplicationAdapter: buildURL(type='+type+',id='+id+') => '+url);
+        return url;
+    },
+    ajaxSuccess: function(jqXHR, jsonPayload) {
+        var res = this._super(jqXHR, jsonPayload);
+        console.log('ApplicationAdapter: ajaxSuccess(jqXHR='+JSON.stringify(jqXHR)+',jsonPayload='+JSON.stringify(jsonPayload)+') => '+JSON.stringify(res));
+        return res;
+    },
+    ajaxError: function(jqXHR) {
+        var res = this._super(jqXHR);
+        console.log('ApplicationAdapter: ajaxError(jqXHR='+JSON.stringify(jqXHR)+')');
+        return res;
+        //var error = this._super(jqXHR);
+        //if (jqXHR && jqXHR.status === 422) {
+        //    var jsonErrors = Ember.$.parseJSON(jqXHR.responseText);
+        //    return new DS.InvalidError(jsonErrors);
+        //} else {
+        //    return error;
+        //}
+    }
+});
 
 DS.RESTAdapter.reopen({
     host: 'http://0.0.0.0:8080'
@@ -33,6 +56,23 @@ App.ProductAdapter = DS.RESTAdapter.extend({
         var url = this._super(type, id, record);
         console.log('ProductAdapter: buildURL(type='+type+',id='+id+') => '+url);
         return url;
+    },
+    ajaxSuccess: function(jqXHR, jsonPayload) {
+        var res = this._super(jqXHR, jsonPayload);
+        console.log('ProductAdapter: ajaxSuccess(jqXHR='+JSON.stringify(jqXHR)+',jsonPayload='+JSON.stringify(jsonPayload)+') => '+JSON.stringify(res));
+        return res;
+    },
+    ajaxError: function(jqXHR) {
+        var res = this._super(jqXHR);
+        console.log('ProductAdapter: ajaxError(jqXHR='+JSON.stringify(jqXHR)+')');
+        return res;
+        //var error = this._super(jqXHR);
+        //if (jqXHR && jqXHR.status === 422) {
+        //    var jsonErrors = Ember.$.parseJSON(jqXHR.responseText);
+        //    return new DS.InvalidError(jsonErrors);
+        //} else {
+        //    return error;
+        //}
     }
 });
 
