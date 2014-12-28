@@ -6,6 +6,9 @@ App = Ember.Application.create({
     //LOG_RESOLVER: true
 });
 
+
+// TODO handle network errors
+
 //Ember.LOG_BINDINGS = true;
 
 /** ADAPTERS **/
@@ -196,13 +199,21 @@ App.ProductEditController = Ember.ObjectController.extend({
 App.ProductsNewController = Ember.ObjectController.extend({
     needs: ['products'],
     isEditing: Ember.computed.alias('controllers.products.isEditing'),
+
     actions: {
         saveNewProduct: function() {
             var product = this.get('model');
             console.log('ProductsNewController: saveNewProduct() => '+JSON.stringify(product));
-            product.save();
-            this.set('isEditing', false);
-            this.transitionToRoute('product', product);
+            if (this.validProduct(product, true)) {
+                product.set('name', product.get('name').trim());
+                product.set('category', product.get('category').trim());
+                product.set('price', product.get('price').trim());
+                product.save();
+                this.set('isEditing', false);
+                this.transitionToRoute('product', product);
+            } else {
+               return false;
+            }
         },
         cancelNewProduct: function() {
             var product = this.get('model');
@@ -211,6 +222,32 @@ App.ProductsNewController = Ember.ObjectController.extend({
             console.log('ProductNewController: Create product => Cancelled');
             this.transitionToRoute('products');
         }
+    },
+
+    /* private */
+
+    //TODO make this globally accessable also for edit product.
+    validProduct: function(product, f) {
+        var name = product.get('name'),
+            category = product.get('category'),
+            price = product.get('price'),
+            re = new RegExp('^\\d+$');
+
+        if (!this._validString(name, 'name', f)) { return false; }
+        if (!(price && re.test(price.trim()))) {
+            if (f) { alert('Invalid price (must be a number)'); }
+            return false;
+        }
+        if (!this._validString(category, 'category', f)) { return false; }
+        return true;
+    },
+
+    _validString: function(s, n, f) {
+        if (!(s && s.trim().length)) {
+            if (f) { alert('Invalid '+n+' (must be a non-empty string)'); }
+            return false;
+        }
+        return true;
     }
 });
 
