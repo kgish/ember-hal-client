@@ -95,7 +95,7 @@
                 <h2>{{length}} {{pluralize length single='products'}}</h2>
                 <div class="list-group">
                     <div class="list-group-item">
-                        <button type="button" class="btn btn-primary" title="Create a new user" {{action "createProduct"}}>
+                        <button type="button" class="btn btn-sm" title="Create a new product" {{action "createProduct"}}>
                         <span class="glyphicon glyphicon-plus"></span> Create
                     </button>
                     </div>
@@ -116,20 +116,30 @@
         <div class="col-md-6">
             <h2>{{name}}</h2>
             <div class="list-group">
-                <div class="list-group-item">
-                    <button type="button" class="btn btn-primary" title="Edit this user" {{action "editProduct"}}>
-                        <span class="glyphicon glyphicon-edit"></span> Edit
-                    </button>
-                    <button type="button" class="btn btn-primary" title="Create a new channel" {{action "deleteProduct"}}>
-                        <span class="glyphicon glyphicon-remove"></span> Delete
-                    </button>
-                </div>
+                {{#unless isEditing}}
+                    <div class="list-group-item">
+                        <button type="button" class="btn btn-sm" title="Edit this product" {{action "editProduct"}}>
+                            <span class="glyphicon glyphicon-edit"></span> Edit
+                        </button>
+                        <button type="button" class="btn btn-sm" title="Delete this product" {{action "deleteProduct"}}>
+                            <span class="glyphicon glyphicon-remove"></span> Delete
+                        </button>
+                    </div>
+                {{/unless}}
                 <li class="list-group-item">
                     <div class="row">
                         <div class="col-md-5">Id</div>
                         <div class="col-md-5">{{id}}</div>
                     </div>
                 </li>
+                {{#if isEditing}}
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-md-5">Name</div>
+                            <div class="col-md-5">{{name}}</div>
+                        </div>
+                    </li>
+                {{/if}}
                 <li class="list-group-item">
                     <div class="row">
                         <div class="col-md-5">Price</div>
@@ -142,6 +152,16 @@
                         <div class="col-md-5">{{category}}</div>
                     </div>
                 </li>
+                {{#if isEditing}}
+                    <li class="list-group-item">
+                        <button type="button" class="btn btn-sm" title="Save changes to this product" {{action "saveProduct"}}>
+                            <span class="glyphicon glyphicon-save"></span> Save
+                        </button>
+                        <button type="button" class="btn btn-sm" title="Cancel changes to this product" {{action "cancelProduct"}}>
+                            <span class="glyphicon glyphicon-remove"></span> Cancel
+                        </button>
+                    </li>
+                {{/if}}
             </div>
         </div>
     </script>

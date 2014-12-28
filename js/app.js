@@ -112,7 +112,12 @@ App.ProductIndexRoute = Ember.Route.extend({
 App.ProductsController = Ember.ArrayController.extend({
     sortAscending: true,
     sortProperties: ['name'],
-    itemController: 'product'
+    itemController: 'product',
+    actions: {
+        createProduct: function() {
+            console.log('Create product');
+        }
+    }
 });
 
 App.ProductController = Ember.ObjectController.extend({
@@ -148,6 +153,25 @@ App.ProductController = Ember.ObjectController.extend({
         return 'glyphicon-'+modifier;
     }.property('name','category')
 */
+    isEditing: false,
+
+    actions: {
+        editProduct: function() {
+            console.log('Edit product');
+            this.set('isEditing', true);
+        },
+        deleteProduct: function() {
+            console.log('Delete product');
+        },
+        saveProduct: function() {
+            this.set('isEditing', false);
+            console.log('Save product: isEditing is '+this.get('isEditing'));
+        },
+        cancelProduct: function() {
+            console.log('Cancel product');
+            this.set('isEditing', false);
+        }
+    }
 });
 
 /** MODELS **/
