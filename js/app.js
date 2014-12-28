@@ -58,7 +58,10 @@ App.ProductSerializer = DS.RESTSerializer.extend({
 /** ROUTER MAP **/
 App.Router.map(function() {
     this.resource('products', function() {
-        this.resource('product', { path: ':product_id' }, function() {})
+        this.route('new');
+        this.resource('product', { path: ':product_id' }, function() {
+            this.route('edit');
+        });
     });
     this.route('categories');
     this.route('users');
@@ -70,7 +73,7 @@ App.Router.map(function() {
 /** ROUTES **/
 //App.IndexRoute = Ember.Route.extend({
 //    redirect: function() {
-//        console.log('IndexRoute: redirect');
+//        console.log('IndexRoute: redirect()');
 //        this.transitionTo('products');
 //    }
 //});
@@ -86,90 +89,90 @@ App.ProductsIndexRoute = Ember.Route.extend({
     afterModel: function() {
         var firstObject = this.modelFor('products').get('firstObject');
         if (firstObject) {
-            console.log('ProductsIndexRoute: afterModel => product/firstObject');
+            console.log('ProductsIndexRoute: afterModel() => product/firstObject');
             this.transitionTo('product', firstObject);
         } else {
-            console.log('ProductsIndexRoute: afterModel => products');
+            console.log('ProductsIndexRoute: afterModel() => products');
             this.transitionTo('products');
         }
     }
 });
 
-App.ProductIndexRoute = Ember.Route.extend({
-    afterModel: function() {
-        var firstObject = this.modelFor('product').get('firstObject');
-        if (firstObject) {
-            console.log('ProductIndexRoute: afterModel => product/firstObject');
-            this.transitionTo('product', firstObject);
-        } else {
-            console.log('ProductIndexRoute: afterModel => product');
-            this.transitionTo('product');
+App.ProductEditRoute = Ember.Route.extend({
+    actions: {
+        didTransition: function() {
+            console.log('ProductEditRoute: didTransition()');
+            this.controller.set('isEditing', true);
+            return true;
         }
     }
 });
 
+
+//App.ProductIndexRoute = Ember.Route.extend({
+//    afterModel: function() {
+//        var firstObject = this.modelFor('product').get('firstObject');
+//        if (firstObject) {
+//            console.log('ProductIndexRoute: afterModel() => product/firstObject');
+//            this.transitionTo('product', firstObject);
+//        } else {
+//            console.log('ProductIndexRoute: afterModel() => product');
+//            this.transitionTo('product');
+//        }
+//    }
+//});
+
 /** CONTROLLERS **/
 App.ProductsController = Ember.ArrayController.extend({
-    sortAscending: true,
-    sortProperties: ['name'],
+//    sortAscending: true,
+//    sortProperties: ['name'],
     itemController: 'product',
     actions: {
         createProduct: function() {
-            console.log('Create product');
+            console.log('ProductsController: Create product');
         }
     }
 });
 
 App.ProductController = Ember.ObjectController.extend({
-/*
-    glyphicon: function() {
-        var modifier;
-        var name = this.get('name').toLowerCase();
-        var category = this.get('ftype').toLowerCase();
-        if (category === 'none') {
-            switch(name) {
-                case 'inbox': modifier = 'inbox'; break;
-                case 'deleted items': modifier = 'trash'; break;
-                case 'outbox': modifier = 'log-out'; break;
-                case 'sent items': modifier = 'send'; break;
-                default: modifier = 'question-sign';
-            }
-        } else {
-            category = ftype.replace(/^ipf\./, '');
-            switch(category) {
-                case 'appointment': modifier = 'th'; break;
-                case 'deleted items': modifier = 'trash'; break;
-                case 'contact': modifier = 'user'; break;
-                case 'task': modifier = 'th-list'; break;
-                case 'configuration': modifier = 'cog'; break;
-                case 'note': modifier = 'tag'; break;
-                case 'note.outlookhomepage': modifier = 'tag'; break;
-                case 'stickynote': modifier = 'tags'; break;
-                case 'journal': modifier = 'book'; break;
-                default: modifier = 'question-sign';
-            }
-        }
-//        console.log('ProductController: glyphicon(name='+name+',category='+ftype+') => '+modifier);
-        return 'glyphicon-'+modifier;
-    }.property('name','category')
-*/
-    isEditing: false,
+    isEditing: false
+});
 
+App.ProductIndexController = Ember.ObjectController.extend({
+    needs: ['product'],
+    isEditing: Ember.computed.alias('controllers.product.isEditing'),
     actions: {
-        editProduct: function() {
-            console.log('Edit product');
+        editProduct: function(product) {
             this.set('isEditing', true);
+            this.transitionToRoute('product.edit', product);
         },
-        deleteProduct: function() {
-            console.log('Delete product');
-        },
-        saveProduct: function() {
+        deleteProduct: function(product) {
+            var id = product.get('id'),
+                name = product.get('name');
+            if (confirm('Are you sure you want to delete product '+name+' ('+id+') ?')) {
+                // => DELETE to /product/product_id
+                product.destroyRecord();
+            }
+            this.transitionToRoute('products');
+            console.log('ProductIndexController: Delete product => '+product.get('name'));
+        }
+    }
+});
+
+App.ProductEditController = Ember.ObjectController.extend({
+    needs: ['product'],
+    isEditing: Ember.computed.alias('controllers.product.isEditing'),
+    actions: {
+        saveProduct: function(product) {
             this.set('isEditing', false);
-            console.log('Save product: isEditing is '+this.get('isEditing'));
+            console.log('ProductEditController: Save product => '+product.get('name'));
+            this.transitionToRoute('product', product);
         },
-        cancelProduct: function() {
-            console.log('Cancel product');
+        cancelProduct: function(product) {
             this.set('isEditing', false);
+            product.rollback();
+            console.log('ProductEditController: Cancel product => '+product.get('name'));
+            this.transitionToRoute('product', product);
         }
     }
 });

@@ -112,58 +112,96 @@
         </div>
     </script>
 
-    <script type="text/x-handlebars" data-template-name="product">
+    <script type="text/x-handlebars" data-template-name="product/index">
         <div class="col-md-6">
             <h2>{{name}}</h2>
             <div class="list-group">
-                {{#unless isEditing}}
-                    <div class="list-group-item">
-                        <button type="button" class="btn btn-sm" title="Edit this product" {{action "editProduct"}}>
-                            <span class="glyphicon glyphicon-edit"></span> Edit
-                        </button>
-                        <button type="button" class="btn btn-sm" title="Delete this product" {{action "deleteProduct"}}>
-                            <span class="glyphicon glyphicon-remove"></span> Delete
-                        </button>
-                    </div>
-                {{/unless}}
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-md-5">Id</div>
-                        <div class="col-md-5">{{id}}</div>
-                    </div>
-                </li>
-                {{#if isEditing}}
-                    <li class="list-group-item">
-                        <div class="row">
-                            <div class="col-md-5">Name</div>
-                            <div class="col-md-5">{{name}}</div>
-                        </div>
-                    </li>
-                {{/if}}
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-md-5">Price</div>
-                        <div class="col-md-5">{{price}} {{pluralize price single='token'}}</div>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-md-5">Category</div>
-                        <div class="col-md-5">{{category}}</div>
-                    </div>
-                </li>
-                {{#if isEditing}}
-                    <li class="list-group-item">
-                        <button type="button" class="btn btn-sm" title="Save changes to this product" {{action "saveProduct"}}>
-                            <span class="glyphicon glyphicon-save"></span> Save
-                        </button>
-                        <button type="button" class="btn btn-sm" title="Cancel changes to this product" {{action "cancelProduct"}}>
-                            <span class="glyphicon glyphicon-remove"></span> Cancel
-                        </button>
-                    </li>
-                {{/if}}
+                <div class="list-group-item">
+                    <button type="button" class="btn btn-sm" title="Edit this product" {{action "editProduct" this}}>
+                    <span class="glyphicon glyphicon-edit"></span> Edit
+                    </button>
+                    <button type="button" class="btn btn-sm" title="Delete this product" {{action "deleteProduct" this}}>
+                    <span class="glyphicon glyphicon-remove"></span> Delete
+                    </button>
+                </div>
+                {{partial 'product/form'}}
             </div>
         </div>
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="product/edit">
+        <div class="col-md-6">
+            <h2>Edit -- {{name}}</h2>
+            <div class="list-group">
+                {{partial 'product/form' isEditing=isEditing}}
+                <li class="list-group-item">
+                    <button type="button" class="btn btn-sm" title="Save changes to this product" {{action "saveProduct" this}}>
+                        <span class="glyphicon glyphicon-save"></span> Save
+                    </button>
+                    <button type="button" class="btn btn-sm" title="Cancel changes to this product" {{action "cancelProduct" this}}>
+                        <span class="glyphicon glyphicon-remove"></span> Cancel
+                    </button>
+                </li>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="product/new">
+        <div class="col-md-6">
+            <h2>Create -- {{name}}</h2>
+            <div class="list-group">
+                {{partial 'product/form' isEditing=isEditing}}
+                <li class="list-group-item">
+                    <button type="button" class="btn btn-sm" title="Save changes to this product" {{action "saveProduct" this}}>
+                    <span class="glyphicon glyphicon-save"></span> Save
+                    </button>
+                    <button type="button" class="btn btn-sm" title="Cancel changes to this product" {{action "cancelProduct" this}}>
+                    <span class="glyphicon glyphicon-remove"></span> Cancel
+                    </button>
+                </li>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="product/_form">
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-md-5">Id</div>
+                <div class="col-md-5">{{id}}</div>
+            </div>
+        </li>
+        {{#if isEditing}}
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-md-5">Name</div>
+                    <div class="col-md-5">{{input class="form-control" placeholder="Name of product" value=name}}</div>
+                </div>
+            </li>
+        {{/if}}
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-md-5">Price</div>
+                <div class="col-md-5">
+                    {{#if isEditing}}
+                        {{input class="form-control" placeholder="Price of product" value=price}}
+                    {{else}}
+                        {{price}}&nbsp; {{pluralize price single='token'}}
+                    {{/if}}
+                </div>
+            </div>
+        </li>
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-md-5">Category</div>
+                <div class="col-md-5">
+                    {{#if isEditing}}
+                        {{input class="form-control" placeholder="Category of product" value=category}}
+                    {{else}}
+                        {{category}}
+                    {{/if}}
+                </div>
+            </div>
+        </li>
     </script>
 
 </head>
