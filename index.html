@@ -94,6 +94,11 @@
             <div class="col-md-6">
                 <h2>{{length}} {{pluralize length single='products'}}</h2>
                 <div class="list-group">
+                    <div class="list-group-item">
+                        <button type="button" class="btn btn-primary" title="Create a new user" {{action "createProduct"}}>
+                        <span class="glyphicon glyphicon-plus"></span> Create
+                    </button>
+                    </div>
                     {{#each}}
                         {{#link-to 'product' this class="list-group-item"}}
                             <span {{bind-attr title=category}} {{bind-attr class=":glyphicon glyphicon"}}></span> {{name}} <span class="badge">{{price}}</span>
@@ -111,6 +116,14 @@
         <div class="col-md-6">
             <h2>{{name}}</h2>
             <div class="list-group">
+                <div class="list-group-item">
+                    <button type="button" class="btn btn-primary" title="Edit this user" {{action "editProduct"}}>
+                        <span class="glyphicon glyphicon-edit"></span> Edit
+                    </button>
+                    <button type="button" class="btn btn-primary" title="Create a new channel" {{action "deleteProduct"}}>
+                        <span class="glyphicon glyphicon-remove"></span> Delete
+                    </button>
+                </div>
                 <li class="list-group-item">
                     <div class="row">
                         <div class="col-md-5">Id</div>
