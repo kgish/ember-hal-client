@@ -101,7 +101,7 @@
                     </div>
                     {{#each}}
                         {{#link-to 'product' this class="list-group-item"}}
-                            <span {{bind-attr title=category}} {{bind-attr class=":glyphicon glyphicon"}}></span> {{name}} <span class="badge">{{price}}</span>
+                            <span {{bind-attr title=category}} {{bind-attr class=":glyphicon glyphicon"}}></span> {{formatvalue name}} <span class="badge">{{formatvalue price placeholder='?'}}</span>
                         {{/link-to}}
                     {{else}}
                         <li class="list-group-item">No products</li>
@@ -114,7 +114,7 @@
 
     <script type="text/x-handlebars" data-template-name="product/index">
         <div class="col-md-6">
-            <h2>{{name}}</h2>
+            <h2>{{formatvalue name}}</h2>
             <div class="list-group">
                 <div class="list-group-item">
                     <button type="button" class="btn btn-sm" title="Edit this product" {{action "editProduct" this}}>
@@ -131,14 +131,14 @@
 
     <script type="text/x-handlebars" data-template-name="product/edit">
         <div class="col-md-6">
-            <h2>Edit -- {{name}}</h2>
+            <h2>Edit -- {{formatvalue name}}</h2>
             <div class="list-group">
                 {{partial 'product/form' isEditing=isEditing}}
                 <li class="list-group-item">
-                    <button type="button" class="btn btn-sm" title="Save changes to this product" {{action "saveProduct" this}}>
-                        <span class="glyphicon glyphicon-save"></span> Save
+                    <button type="button" class="btn btn-sm" title="Save changes to this product" {{action 'saveEditProduct' this}}>
+                        <span class="glyphicon glyphicon-ok"></span> Save
                     </button>
-                    <button type="button" class="btn btn-sm" title="Cancel changes to this product" {{action "cancelProduct" this}}>
+                    <button type="button" class="btn btn-sm" title="Cancel changes to this product" {{action 'cancelEditProduct' this}}>
                         <span class="glyphicon glyphicon-remove"></span> Cancel
                     </button>
                 </li>
@@ -146,16 +146,16 @@
         </div>
     </script>
 
-    <script type="text/x-handlebars" data-template-name="product/new">
+    <script type="text/x-handlebars" data-template-name="products/new">
         <div class="col-md-6">
-            <h2>Create -- {{name}}</h2>
+            <h2>Create -- {{formatvalue name}}</h2>
             <div class="list-group">
-                {{partial 'product/form' isEditing=isEditing}}
+                {{partial 'product/form' isEditing=isEditing this=controller.newProduct}}
                 <li class="list-group-item">
-                    <button type="button" class="btn btn-sm" title="Save changes to this product" {{action "saveProduct" this}}>
-                    <span class="glyphicon glyphicon-save"></span> Save
+                    <button type="button" class="btn btn-sm" title="Create new product" {{action 'saveNewProduct'}}>
+                    <span class="glyphicon glyphicon-ok"></span> Create
                     </button>
-                    <button type="button" class="btn btn-sm" title="Cancel changes to this product" {{action "cancelProduct" this}}>
+                    <button type="button" class="btn btn-sm" title="Cancel new product" {{action 'cancelNewProduct'}}>
                     <span class="glyphicon glyphicon-remove"></span> Cancel
                     </button>
                 </li>
@@ -164,12 +164,14 @@
     </script>
 
     <script type="text/x-handlebars" data-template-name="product/_form">
-        <li class="list-group-item">
-            <div class="row">
-                <div class="col-md-5">Id</div>
-                <div class="col-md-5">{{id}}</div>
-            </div>
-        </li>
+        {{#if id}}
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-md-5">Id</div>
+                    <div class="col-md-5">{{id}}</div>
+                </div>
+            </li>
+        {{/if}}
         {{#if isEditing}}
             <li class="list-group-item">
                 <div class="row">
@@ -185,7 +187,7 @@
                     {{#if isEditing}}
                         {{input class="form-control" placeholder="Price of product" value=price}}
                     {{else}}
-                        {{price}}&nbsp; {{pluralize price single='token'}}
+                        {{formatvalue price placeholder='?'}}&nbsp; {{pluralize price single='token'}}
                     {{/if}}
                 </div>
             </div>
@@ -197,7 +199,7 @@
                     {{#if isEditing}}
                         {{input class="form-control" placeholder="Category of product" value=category}}
                     {{else}}
-                        {{category}}
+                        {{formatvalue category}}
                     {{/if}}
                 </div>
             </div>

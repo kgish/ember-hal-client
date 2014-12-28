@@ -108,6 +108,19 @@ App.ProductEditRoute = Ember.Route.extend({
     }
 });
 
+App.ProductsNewRoute = Ember.Route.extend({
+    model: function() {
+        console.log('ProductsNewRoute: model()');
+        return this.store.createRecord('product');
+    },
+    actions: {
+        didTransition: function() {
+            console.log('ProductsNewRoute: didTransition()');
+            this.controller.set('isEditing', true);
+            return true;
+        }
+    }
+});
 
 //App.ProductIndexRoute = Ember.Route.extend({
 //    afterModel: function() {
@@ -124,23 +137,25 @@ App.ProductEditRoute = Ember.Route.extend({
 
 /** CONTROLLERS **/
 App.ProductsController = Ember.ArrayController.extend({
+    isEditing: false,
+
 //    sortAscending: true,
 //    sortProperties: ['name'],
     itemController: 'product',
     actions: {
         createProduct: function() {
             console.log('ProductsController: Create product');
+            this.transitionToRoute('products.new');
         }
     }
 });
 
 App.ProductController = Ember.ObjectController.extend({
-    isEditing: false
 });
 
 App.ProductIndexController = Ember.ObjectController.extend({
-    needs: ['product'],
-    isEditing: Ember.computed.alias('controllers.product.isEditing'),
+    needs: ['products'],
+    isEditing: Ember.computed.alias('controllers.products.isEditing'),
     actions: {
         editProduct: function(product) {
             this.set('isEditing', true);
@@ -150,29 +165,51 @@ App.ProductIndexController = Ember.ObjectController.extend({
             var id = product.get('id'),
                 name = product.get('name');
             if (confirm('Are you sure you want to delete product '+name+' ('+id+') ?')) {
-                // => DELETE to /product/product_id
-                product.destroyRecord();
+                console.log('ProductIndexController: Delete product => '+product.get('name'));
+                product.destroyRecord(); // => DELETE to /products/id
+            } else {
+                console.log('ProductIndexController: Delete product => Cancelled');
             }
             this.transitionToRoute('products');
-            console.log('ProductIndexController: Delete product => '+product.get('name'));
         }
     }
 });
 
 App.ProductEditController = Ember.ObjectController.extend({
-    needs: ['product'],
-    isEditing: Ember.computed.alias('controllers.product.isEditing'),
+    needs: ['products'],
+    isEditing: Ember.computed.alias('controllers.products.isEditing'),
     actions: {
-        saveProduct: function(product) {
+        saveEditProduct: function(product) {
             this.set('isEditing', false);
             console.log('ProductEditController: Save product => '+product.get('name'));
             this.transitionToRoute('product', product);
         },
-        cancelProduct: function(product) {
+        cancelEditProduct: function(product) {
             this.set('isEditing', false);
             product.rollback();
             console.log('ProductEditController: Cancel product => '+product.get('name'));
             this.transitionToRoute('product', product);
+        }
+    }
+});
+
+App.ProductsNewController = Ember.ObjectController.extend({
+    needs: ['products'],
+    isEditing: Ember.computed.alias('controllers.products.isEditing'),
+    actions: {
+        saveNewProduct: function() {
+            var product = this.get('model');
+            console.log('ProductsNewController: saveNewProduct() => '+JSON.stringify(product));
+            product.save();
+            this.set('isEditing', false);
+            this.transitionToRoute('product', product);
+        },
+        cancelNewProduct: function() {
+            var product = this.get('model');
+            product.destroyRecord();
+            this.set('isEditing', false);
+            console.log('ProductNewController: Create product => Cancelled');
+            this.transitionToRoute('products');
         }
     }
 });
@@ -220,3 +257,15 @@ Ember.Handlebars.helper('formatdate', function(value, options) {
     return moment(value).format('YYYY MMM DD hh:mm')
 });
 
+Ember.Handlebars.helper('formatvalue', function(value, options) {
+    var placeholder = options.hash.placeholder;
+    if (typeof value === 'undefined') {
+        return placeholder || '[UNDEFINED]'
+    } else if (value === null) {
+        return placeholder || '[NULL]'
+    } else if (typeof value === 'string' && value.length === 0) {
+        return placeholder || '[EMPTY]'
+    } else {
+        return value;
+    }
+});
