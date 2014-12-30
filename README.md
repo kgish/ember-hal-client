@@ -11,7 +11,17 @@ Here is an explanation about the Web API...
 
 ## Instructions
 
-Here are a bunch of instructions...
+In order to install and run the webmachine, run the following commands.
+
+    $ git clone https://github.com/kgish/ember-hal-template hal-client
+    $ cd hal-client
+    $ bundle install
+
+Start the client by running the following command.
+
+    $ python -m SimpleHTTPServer
+
+After which you can fire up you favorite browser and point it to [http://localhost:8000](http://localhost:8000).
 
 ## References
 
@@ -19,6 +29,7 @@ Here is a list of important references which I found very useful.
 
 * [Ember Data HAL Adapter](https://github.com/locks/ember-data-hal-adapter)
 * [HyperResource](https://github.com/gamache/hyperresource).
+* [Authentication in ember.js](http://log.simplabs.com/post/53016599611/authentication-in-ember-js)
 
 ## Author
 
