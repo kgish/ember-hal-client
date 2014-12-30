@@ -3,6 +3,8 @@
 This is a simple web client template for setting up an Ember application that communicates with
 a HAL/JSON web service using [HyperResource](https://github.com/gamache/hyperresource).
 
+![](images/screenshot.png?raw=true)
+
 ## HAL/JSON Web API
 
 Here is an explanation about the Web API...
