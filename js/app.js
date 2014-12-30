@@ -22,7 +22,8 @@ App.ApplicationAdapter = DS.RESTAdapter.extend({
     },
     ajaxSuccess: function(jqXHR, jsonPayload) {
         var res = this._super(jqXHR, jsonPayload);
-        console.log('ApplicationAdapter: ajaxSuccess(jqXHR='+JSON.stringify(jqXHR)+',jsonPayload='+JSON.stringify(jsonPayload)+') => '+JSON.stringify(res));
+        console.log('ApplicationAdapter: ajaxSuccess(jqXHR='+JSON.stringify(jqXHR)+',jsonPayload='+
+            JSON.stringify(jsonPayload)+') => '+JSON.stringify(res));
         return res;
     },
     ajaxError: function(jqXHR) {
@@ -59,7 +60,8 @@ App.ProductAdapter = DS.RESTAdapter.extend({
     },
     ajaxSuccess: function(jqXHR, jsonPayload) {
         var res = this._super(jqXHR, jsonPayload);
-        console.log('ProductAdapter: ajaxSuccess(jqXHR='+JSON.stringify(jqXHR)+',jsonPayload='+JSON.stringify(jsonPayload)+') => '+JSON.stringify(res));
+        console.log('ProductAdapter: ajaxSuccess(jqXHR='+JSON.stringify(jqXHR)+',jsonPayload='+
+            JSON.stringify(jsonPayload)+') => '+JSON.stringify(res));
         return res;
     },
     ajaxError: function(jqXHR) {
@@ -83,6 +85,7 @@ App.ProductSerializer = DS.RESTSerializer.extend({
         console.log('ProductSerializer: typeForRoot(root='+root+') => '+res);
         return res;
     },
+
     normalizePayload: function(payload) {
         if (payload.products) {
             var normalizedPayload = { products: [] };
@@ -95,7 +98,32 @@ App.ProductSerializer = DS.RESTSerializer.extend({
             console.log('ProductSerializer: normalizePayload() => do nothing');
         }
         return payload;
+    },
+
+    normalize: function(type, hash, property) {
+        //for (var prop in hash) {
+        //    if (prop == '_links' || prop == '_embedded' || prop.indexOf('http') === 0) {
+        //        continue;
+        //    }
+        //
+        //    var camelizedProp = prop.camelize();
+        //    if (prop != camelizedProp) {
+        //        hash[camelizedProp] = hash[prop];
+        //        delete hash[prop];
+        //    }
+        //}
+        var res = this._super(type, hash, property);
+        console.log('ProductSerializer: normalize(type='+JSON.stringify(type)+',hash='+JSON.stringify(hash)+
+            ',property='+property+') => '+JSON.stringify(res));
+        return res;
     }
+
+    //normalizeId: function(hash) {
+    //    var normalizedHash = hash;
+    //    //normalizedHash.id = hash._links.self.href;
+    //    console.log('ProductSerializer: normalizeId(hash='+JSON.stringify(hash)+') => '+JSON.stringify(normalizedHash));
+    //    return normalizedHash;
+    //}
 });
 
 /** ROUTER MAP **/
@@ -226,6 +254,7 @@ App.ProductEditController = Ember.ObjectController.extend({
     actions: {
         saveEditProduct: function(product) {
             this.set('isEditing', false);
+            product.save();
             console.log('ProductEditController: Save product => '+product.get('name'));
             this.transitionToRoute('product', product);
         },
