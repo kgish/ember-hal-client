@@ -5,6 +5,8 @@
     <meta charset="utf-8">
     <title>Demo application - v0.1</title>
     <link rel="stylesheet" href="css/bootstrap.css">
+    <!--<link rel="stylesheet" href="css/bootstrap.css">-->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.1/united/bootstrap.min.css">
     <link rel="stylesheet" href="css/main.css">
 
     <script src="js/libs/jquery-1.10.2.min.js"></script>
@@ -16,43 +18,35 @@
     <script src="js/app.js"></script>
 
     <script type="text/x-handlebars" data-template-name="application">
-        <div class="bs-docs-header" id="content">
-            <div class="container">
-                <h1>Demo application - v0.1</h1>
-                <p>This is an amazing demo to impress your family and friends.</p>
-            </div>
-        </div>
-        <header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
+        <div class="container">
+            <h1>Demo application - v0.1</h1>
+            <p>This is an amazing demo to impress your family and friends.</p>
+           </div>
+        <header class="navbar navbar-static-top" id="top" role="banner">
             <div class="container">
                 <div class="navbar-header">
-                    <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
                     {{#link-to "index" class="navbar-brand"}}Home{{/link-to}}
                 </div>
-                <nav class="collapse navbar-collapse bs-navbar-collapse">
+                <nav class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li>{{#link-to "products"}}Products{{/link-to}}</li>
                         <li>{{#link-to "categories"}}Categories{{/link-to}}</li>
                         <li>{{#link-to "users"}}Users{{/link-to}}</li>
+                        <li>{{#link-to "help"}}Help{{/link-to}}</li>
                         <li>{{#link-to "about"}}About{{/link-to}}</li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li>{{#link-to "admin"}}Admin{{/link-to}}</li>
+                        <li>{{#link-to "profile"}}Profile{{/link-to}}</li>
                         <li>{{#link-to "login"}}Login{{/link-to}}</li>
                     </ul>
                 </nav>
             </div>
         </header>
-        <div class="container bs-docs-container">
+        <div class="container">
             <div class="row">
                 <div class="col-md-10">
-                    <div class="bs-docs-section">
-                        {{outlet}}
-                    </div>
+                    {{outlet}}
                 </div>
             </div>
         </div>
@@ -86,6 +80,16 @@
     <script type="text/x-handlebars" data-template-name="admin">
         <h1 class="page-header">Admin</h1>
         <p>This is the admin page</p>
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="profile">
+        <h1 class="page-header">Profile</h1>
+        <p>This is the profile page</p>
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="help">
+        <h1 class="page-header">Help</h1>
+        <p>This is the help page</p>
     </script>
 
     <script type="text/x-handlebars" data-template-name="products">

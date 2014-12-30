@@ -108,8 +108,10 @@ App.Router.map(function() {
     });
     this.route('categories');
     this.route('users');
-    this.route('admin');
     this.route('about');
+    this.route('help');
+    this.route('admin');
+    this.route('profile');
     this.route('login');
 });
 
