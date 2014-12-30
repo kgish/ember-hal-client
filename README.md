@@ -27,6 +27,7 @@ Configure the RESTAdapter by editing the file `js/app.js` and modifying the `hos
 Start the client by running the following command.
 
     $ python -m SimpleHTTPServer
+    Serving HTTP on 0.0.0.0 port 8000 ...
 
 After which you can fire up you favorite browser and point it to [http://localhost:8000](http://localhost:8000).
 
