@@ -17,11 +17,86 @@
     <script src="js/libs/moment.js"></script>
     <script src="js/app.js"></script>
 
+    <script type="text/x-handlebars" data-template-name="application2">
+
+        <div class="navbar navbar-default" role="navigation">
+
+            <div class="container">
+
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    {{#if isAuthenticated}}
+                        {{#link-to 'secret' class="navbar-brand text-hide"}}Emberjs Authentication example{{/link-to}}
+                    {{else}}
+                        <a class="navbar-brand text-hide" href="#">Emberjs Authentication example</a>
+                    {{/if}}
+                </div>
+
+                <div class="navbar-collapse collapse">
+                    {{#if isAuthenticated}}
+                        <ul class="nav navbar-nav navbar-left">
+                            <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{currentUser.username}} <i class="fa fa-2x fa-gift"><span class="badge">2</span></i></a></li>
+                            {{#link-to 'sessions.index' tagName="li" href=false bubbles=false}}
+                                {{#link-to 'sessions.index' bubbles=false}}
+                                    <span class="glyphicon glyphicon-usd"></span> Some special item
+                                    {{#link-to 'sessions.index' tagName="span" href=false class="badge badge-action"}}click here{{/link-to}}
+                                {{/link-to}}
+                            {{/link-to}}
+                            <li><a href="#"><span class="badge">2</span> Item</a></li>
+                            <li><a href="#"><i class="fa fa-users"></i> Item</a></li>
+                        </ul>
+                    {{else}}
+                        {{#link-to 'users.signup' class="btn btn-info navbar-btn pull-left"}}SIGN UP{{/link-to}}
+                        <ul class="nav navbar-nav navbar-left">
+                            <li class="divider"></li>
+                            {{#link-to 'sessions.index' tagName="li" href=false}}{{#link-to 'sessions.index' bubbles=false}}LOGIN{{/link-to}}{{/link-to}}
+                        </ul>
+                    {{/if}}
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#">STATIC</a></li>
+                        <li><a href="#">STATIC</a></li>
+                        {{#if isAuthenticated}}
+                            <li><a href="#" {{action 'logout'}}>Logout</a></li>
+                        {{/if}}
+                    </ul>
+                    <ul class="nav navbar-nav navbar-absolute-top">
+                        <li class="dropdown">
+                            <a id="dLabel" role="button" data-toggle="dropdown" data-target="#">
+                                English <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dLabel">
+                                <li><a href="#"><i class="fa fa-flag fa-fw"></i> English</a></li>
+                                <li><a href="#"><i class="fa fa-flag fa-fw"></i> Spanish</a></li>
+                                <li><a href="#"><i class="fa fa-flag fa-fw"></i> French</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-10">
+                    {{outlet}}
+                </div>
+            </div>
+        </div>
+
+    </script>
+
     <script type="text/x-handlebars" data-template-name="application">
         <div class="container">
             <h1>Demo application - v0.1</h1>
             <p>This is an amazing demo to impress your family and friends.</p>
         </div>
+
         <div class="navbar navbar-default" role="navigation">
             <div class="container">
                 <div class="navbar-header">
@@ -39,10 +114,6 @@
                     <ul class="nav navbar-nav">
                         {{#if isAuthenticated}}
                             <li>{{#link-to "products"}}Products{{/link-to}}</li>
-                            {{#if isAdmin}}
-                                <li>{{#link-to "categories"}}Categories{{/link-to}}</li>
-                                <li>{{#link-to "users"}}Users{{/link-to}}</li>
-                            {{/if}}
                         {{/if}}
                         <li>{{#link-to "help"}}Help{{/link-to}}</li>
                         <li>{{#link-to "about"}}About{{/link-to}}</li>
@@ -52,10 +123,11 @@
                             {{#if isiAdmin}}
                                 <li>{{#link-to "admin"}}Admin{{/link-to}}</li>
                             {{/if}}
+                            <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{currentUser.username}} <i class="fa fa-2x fa-gift"><span class="badge">2</span></i></a></li>
                             <li>{{#link-to "profile"}}Profile{{/link-to}}</li>
                             <li><a href="#" {{action 'logout'}}>Logout</a></li>
                         {{else}}
-                            <li>{{#link-to 'signup'}}Sign up{{/link-to}}
+                            <li>{{#link-to 'users.signup'}}Sign up{{/link-to}}
                             <li>{{#link-to 'sessions.index'}}Login{{/link-to}}
                         {{/if}}
                     </ul>
@@ -88,16 +160,6 @@
     <script type="text/x-handlebars" data-template-name="login">
         <h1 class="page-header">Login</h1>
         <p>This is the login page</p>
-    </script>
-
-    <script type="text/x-handlebars" data-template-name="categories">
-        <h1 class="page-header">Categories</h1>
-        <p>This is the category page</p>
-    </script>
-
-    <script type="text/x-handlebars" data-template-name="users">
-        <h1 class="page-header">Users</h1>
-        <p>This is the users page</p>
     </script>
 
     <script type="text/x-handlebars" data-template-name="loading">
@@ -134,7 +196,7 @@
 
     </script>
 
-    <script type="text/x-handlebars" data-template-name="sessions">
+    <script type="text/x-handlebars" data-template-name="sessions/index">
         <div class="jumbotron">
             <form class="form-horizontal" {{action "loginUser" on="submit"}}>
                 <div class="form-group">
@@ -159,7 +221,7 @@
     </script>
 
 
-    <script type="text/x-handlebars" data-template-name="signup">
+    <script type="text/x-handlebars" data-template-name="users/signup">
         <h1 class="page-header">Sign up</h1>
         <div class="panel-body">
             <form class="form-horizontal" {{action "createUser" on="submit"}}>
