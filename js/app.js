@@ -76,11 +76,49 @@ App.ProductAdapter = DS.RESTAdapter.extend({
     }
 });
 
+App.UserSignupAdapter = DS.RESTAdapter.extend({
+    buildURL: function(type, id, record) {
+        var url = this._super(type, id, record);
+        console.log('UsersSignupAdapter: buildURL(type='+type+',id='+id+') => '+url);
+        return url;
+    }
+});
+
+App.SessionAdapter = DS.RESTAdapter.extend({
+    buildURL: function(type, id, record) {
+        var url = this._super(type, id, record);
+        console.log('SessionAdapter: buildURL(type='+type+',id='+id+') => '+url);
+        return url;
+    }
+});
+
+
 App.ApiKeyAdapter = DS.LSAdapter.extend({
     namespace: 'emberauth-keys'
 });
 
 /** SERIALIZERS **/
+App.ProductSerializer = DS.RESTSerializer.extend({
+    typeForRoot: function(root) {
+        var res = this._super(root);
+        console.log('ProductSerializer: typeForRoot(root='+root+') => '+res);
+        return res;
+    },
+    normalizePayload: function(payload) {
+        if (payload.products) {
+            var normalizedPayload = { products: [] };
+            payload.products.forEach(function(item){
+                normalizedPayload.products.pushObject(item.product);
+            });
+            payload = normalizedPayload;
+            console.log('ProductSerializer: normalizePayload() => '+JSON.stringify(payload));
+        } else {
+            console.log('ProductSerializer: normalizePayload() => do nothing');
+        }
+        return payload;
+    }
+});
+
 App.ProductSerializer = DS.RESTSerializer.extend({
     typeForRoot: function(root) {
         var res = this._super(root);
@@ -298,7 +336,7 @@ App.UsersSignupController = Ember.Controller.extend({
     needs: ['sessions'],
 
     actions: {
-        createUser: function() {
+        signupUser: function() {
             console.log('UsersSignupController: createUser');
             var _this = this;
 
@@ -428,8 +466,9 @@ App.SessionsController = Ember.Controller.extend({
                 password:          null
             });
 
+            // TODO use APP.SessionsAdapter = Em.RESTAdapter.extend()
             // send a POST request to the /sessions api with the form data
-            Ember.$.post('/session', data).then(
+            Ember.$.post('http://0.0.0.0:8080/session', data).then(
                 function(response) {
                     // set the ajax header with the returned access_token object
                     Ember.$.ajaxSetup({
