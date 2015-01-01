@@ -338,6 +338,8 @@ App.UsersSignupController = Ember.Controller.extend({
     actions: {
         signupUser: function() {
             console.log('UsersSignupController: createUser');
+            alert('Sorry, not yet implemented (be patient)');
+            this.transitionToRoute('index');
             var _this = this;
 
             // get the data from the form
@@ -466,7 +468,7 @@ App.SessionsController = Ember.Controller.extend({
                 password:          null
             });
 
-            // TODO use APP.SessionsAdapter = Em.RESTAdapter.extend()
+            // TODO use APP.SessionsAdapter = DS.RESTAdapter.extend()
             // send a POST request to the /sessions api with the form data
             Ember.$.post('http://0.0.0.0:8080/session', data).then(
                 function(response) {
