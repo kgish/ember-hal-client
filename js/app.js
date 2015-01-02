@@ -468,12 +468,14 @@ App.SessionsController = Ember.Controller.extend({
                 password:          null
             });
 
+            data = JSON.stringify(data);
+
             // TODO use APP.SessionsAdapter = DS.RESTAdapter.extend()
             var url = 'http://0.0.0.0:8080/session';
 
             // send a POST request to the /sessions api with the form data
             Ember.$.ajaxSetup({contentType: 'application/json; charset=utf-8'});
-            console.log('SessionsController: post(url='+url+ ',data='+JSON.stringify(data)+')');
+            console.log('SessionsController: post(url='+url+ ',data='+data+')');
             Ember.$.post(url, data).then(
                 function(response) {
                     console.log('SessionsController: post() => OK, response='+JSON.stringify(response));
@@ -491,13 +493,14 @@ App.SessionsController = Ember.Controller.extend({
 
                     // find a user based on the user_id returned from the request to the /sessions api
                     var user_id = response.api_key.user_id;
-                    console.log('SessionsController: find(user='+JSON.stringify(user)+',id='+user_id+')');
+                    console.log('SessionsController: find(\'user\',user_id='+user_id+')');
                     _this.store.find('user', user_id).then(
                         function(user) {
-                            console.log('SessionsController: find() => OK');
+                            var token = response.api_key.access_token;
+                            console.log('SessionsController: find() => OK, token='+token);
                             // set this controller token & current user properties based on the data from the user and access_token
                             _this.setProperties({
-                                token:       response.api_key.access_token,
+                                token:       token,
                                 currentUser: user.getProperties('username', 'name', 'email')
                             });
 
