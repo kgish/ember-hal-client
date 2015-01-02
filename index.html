@@ -123,7 +123,7 @@
         {{#if isAuthenticated}}
             <h2>To get started just click on one of the navigation links above.</h2>
         {{else}}
-            <h2>Please {{#link-to 'sessions.index'}}Login{{/link-to}} or {{#link-to 'users.signup'}}Sign up{{/link-to}}.</h2>
+            <h2>Please {{#link-to 'sessions.index'}}Login{{/link-to}} or {{#link-to 'users.signup'}}Sign up{{/link-to}}</h2>
         {{/if}}
     </script>
 
@@ -168,7 +168,7 @@
 
     <script type="text/x-handlebars" data-template-name="sessions">
         <h1 class="page-header">Login</h1>
-        <h2>Please enter your username and password.</h2>
+        <h2>Please enter your username and password</h2>
         <div class="jumbotron">
             <form class="form-horizontal" {{action "loginUser" on="submit"}}>
                 <div class="form-group">
@@ -195,7 +195,7 @@
 
     <script type="text/x-handlebars" data-template-name="users/signup">
         <h1 class="page-header">Signup</h1>
-        <h2>Please fill in the following fields and submit.</h2>
+        <h2>Please fill in the following fields and submit</h2>
         <div class="jumbotron">
             <form class="form-horizontal" {{action "signupUser" on="submit"}}>
                 <div class="form-group">
