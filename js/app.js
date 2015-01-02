@@ -469,11 +469,17 @@ App.SessionsController = Ember.Controller.extend({
             });
 
             // TODO use APP.SessionsAdapter = DS.RESTAdapter.extend()
+            var url = 'http://0.0.0.0:8080/session';
+
             // send a POST request to the /sessions api with the form data
-            Ember.$.post('http://0.0.0.0:8080/session', data).then(
+            Ember.$.ajaxSetup({contentType: 'application/json; charset=utf-8'});
+            console.log('SessionsController: post(url='+url+ ',data='+JSON.stringify(data)+')');
+            Ember.$.post(url, data).then(
                 function(response) {
+                    console.log('SessionsController: post() => OK, response='+JSON.stringify(response));
                     // set the ajax header with the returned access_token object
                     Ember.$.ajaxSetup({
+                        contentType: 'application/json; charset=utf-8',
                         headers: {
                             'Authorization': 'Bearer '+response.api_key.access_token
                         }
@@ -481,10 +487,14 @@ App.SessionsController = Ember.Controller.extend({
 
                     // create a apiKey record on the local storage based on the returned object
                     var key = _this.get('store').createRecord('apiKey', { accessToken: response.api_key.access_token });
+                    console.log('SessionsController: POST(OK) key='+JSON.stringify(key));
 
                     // find a user based on the user_id returned from the request to the /sessions api
-                    _this.store.find('user', response.api_key.user_id).then(
+                    var user_id = response.api_key.user_id;
+                    console.log('SessionsController: find(user='+JSON.stringify(user)+',id='+user_id+')');
+                    _this.store.find('user', user_id).then(
                         function(user) {
+                            console.log('SessionsController: find() => OK');
                             // set this controller token & current user properties based on the data from the user and access_token
                             _this.setProperties({
                                 token:       response.api_key.access_token,
@@ -504,10 +514,16 @@ App.SessionsController = Ember.Controller.extend({
                             } else {
                                 _this.transitionToRoute('secret');
                             }
+                        },
+                        function(error) {
+                            // TODO Handle errors better in gui
+                            console.log('SessionsController: find() => NOK, error='+JSON.stringify(error));
                         }
                     ); // find().then()
                 },
                 function(error) {
+                    // TODO Handle errors better in gui
+                    console.log('SessionsController: post() => NOK, error='+JSON.stringify(error));
                     if (error.status === 401) {
                         // If there is a authentication error the user is informed of it to try again
                         alert("wrong user or password, please try again");

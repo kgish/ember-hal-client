@@ -119,37 +119,32 @@
     </script>
 
     <script type="text/x-handlebars" data-template-name="index">
-        <h1 class="page-header">Home</h1>
+        <h1>Welcome!</h1>
         {{#if isAuthenticated}}
-            <p>To get started just click on one of the navigation links above.</p>
+            <h2>To get started just click on one of the navigation links above.</h2>
         {{else}}
-            <p>Please login or register.</p>
+            <h2>Please {{#link-to 'sessions.index'}}Login{{/link-to}} or {{#link-to 'users.signup'}}Sign up{{/link-to}}.</h2>
         {{/if}}
     </script>
 
     <script type="text/x-handlebars" data-template-name="about">
         <h1 class="page-header">About</h1>
-        <p>This is the about page</p>
-    </script>
-
-    <script type="text/x-handlebars" data-template-name="login">
-        <h1 class="page-header">Login</h1>
-        <p>This is the login page</p>
+        <h2>This is the about page.</h2>
     </script>
 
     <script type="text/x-handlebars" data-template-name="loading">
         <h1 class="page-header">Loading</h1>
-        <p>This is the loading template</p>
+        <h2>This is the loading template.</h2>
     </script>
 
     <script type="text/x-handlebars" data-template-name="error">
         <h1 class="page-header">Error</h1>
-        <p>This is the error template</p>
+        <h2>This is the error template.</h2>
     </script>
 
     <script type="text/x-handlebars" data-template-name="secret">
         <h1 class="page-header">Secret</h1>
-        <p>This is the secret template</p>
+        <h2>This is the secret template.</h2>
         <table class="table">
             <thead>
                 <tr>
@@ -172,6 +167,8 @@
     </script>
 
     <script type="text/x-handlebars" data-template-name="sessions">
+        <h1 class="page-header">Login</h1>
+        <h2>Please enter your username and password.</h2>
         <div class="jumbotron">
             <form class="form-horizontal" {{action "loginUser" on="submit"}}>
                 <div class="form-group">
@@ -187,7 +184,7 @@
 
     <script type="text/x-handlebars" data-template-name="users/user">
         <h1 class="page-header">User</h1>
-        <p>Profile page for {{name}}</p>
+        <h2>Profile page for {{name}}.</h2>
         <div class="panel-body">
             Name: {{name}} <br>
             Email: {{email}} <br>
@@ -197,6 +194,8 @@
 
 
     <script type="text/x-handlebars" data-template-name="users/signup">
+        <h1 class="page-header">Signup</h1>
+        <h2>Please fill in the following fields and submit.</h2>
         <div class="jumbotron">
             <form class="form-horizontal" {{action "signupUser" on="submit"}}>
                 <div class="form-group">
@@ -232,21 +231,22 @@
 
     <script type="text/x-handlebars" data-template-name="admin">
         <h1 class="page-header">Admin</h1>
-        <p>This is the admin page</p>
+        <h2>This is the admin page.</h2>
     </script>
 
     <script type="text/x-handlebars" data-template-name="profile">
         <h1 class="page-header">Profile</h1>
-        <p>This is the profile page</p>
+        <h2>This is the profile page.</h2>
     </script>
 
     <script type="text/x-handlebars" data-template-name="help">
         <h1 class="page-header">Help</h1>
-        <p>This is the help page</p>
+        <h2>This is the help page.</h2>
     </script>
 
     <script type="text/x-handlebars" data-template-name="products">
         <h1 class="page-header">Products</h1>
+        <h2>This is the products page.</h2>
         <div class="row">
             <div class="col-md-6">
                 <h2>{{length}} {{pluralize length single='products'}}</h2>
