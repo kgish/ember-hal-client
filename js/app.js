@@ -319,16 +319,32 @@ App.ApplicationController = Ember.Controller.extend({
     // creates a computed property called currentUser that will be
     // binded on the curretUser of the sessions controller and will return its value
     currentUser: (function() {
-        console.log('ApplicationController: currentUser()');
+//        console.log('ApplicationController: currentUser()');
         return this.get('controllers.sessions.currentUser');
     }).property('controllers.sessions.currentUser'),
 
     // creates a computed property called isAuthenticated that will be
     // binded on the curretUser of the sessions controller and will verify if the object is empty
     isAuthenticated: (function() {
-        var res = !Ember.isEmpty(this.get('controllers.sessions.currentUser'));
-        console.log('ApplicationController: isAuthenticated() => '+res);
-        return res;
+        return !Ember.isEmpty(this.get('controllers.sessions.currentUser'));
+    }).property('controllers.sessions.currentUser')
+});
+
+App.IndexController = Ember.Controller.extend({
+    // requires the sessions controller
+    needs: ['sessions'],
+
+    // creates a computed property called currentUser that will be
+    // binded on the curretUser of the sessions controller and will return its value
+    currentUser: (function() {
+//        console.log('ApplicationController: currentUser()');
+        return this.get('controllers.sessions.currentUser');
+    }).property('controllers.sessions.currentUser'),
+
+    // creates a computed property called isAuthenticated that will be
+    // binded on the curretUser of the sessions controller and will verify if the object is empty
+    isAuthenticated: (function() {
+        return !Ember.isEmpty(this.get('controllers.sessions.currentUser'));
     }).property('controllers.sessions.currentUser')
 });
 
@@ -501,7 +517,7 @@ App.SessionsController = Ember.Controller.extend({
                             // set this controller token & current user properties based on the data from the user and access_token
                             _this.setProperties({
                                 token:       response['api_key']['access_token'],
-                                currentUser: user.getProperties('username', 'name', 'email')
+                                currentUser: user.getProperties('username', 'name', 'email', 'id')
                             });
 
                             // set the relationship between the User and the ApiKey models & save the apiKey object
@@ -515,7 +531,7 @@ App.SessionsController = Ember.Controller.extend({
                                 attemptedTrans.retry();
                                 _this.set('attemptedTransition', null);
                             } else {
-                                _this.transitionToRoute('secret');
+                                _this.transitionToRoute('index');
                             }
                         },
                         function(error) {
