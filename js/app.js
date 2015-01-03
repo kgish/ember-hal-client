@@ -517,7 +517,7 @@ App.SessionsController = Ember.Controller.extend({
                             // set this controller token & current user properties based on the data from the user and access_token
                             _this.setProperties({
                                 token:       response['api_key']['access_token'],
-                                currentUser: user.getProperties('username', 'name', 'email', 'id')
+                                currentUser: user.getProperties('id', 'name', 'username', 'email', 'is_admin', 'login_date')
                             });
 
                             // set the relationship between the User and the ApiKey models & save the apiKey object
@@ -679,6 +679,9 @@ App.User = DS.Model.extend({
     username:   DS.attr('string'),
     password:   DS.attr('string'),
     password_confirmation: DS.attr('string'),
+    is_admin:   DS.attr('boolean'),
+    login_date: DS.attr('date'),
+    access_token: DS.attr('string'),
     apiKeys:    DS.hasMany('apiKey'),
     errors:     {}
 });
@@ -720,8 +723,11 @@ Ember.Handlebars.helper('pluralize', function(number, options) {
     return single.pluralize();
 });
 
-Ember.Handlebars.helper('formatdate', function(value, options) {
-    return moment(value).format('YYYY MMM DD hh:mm')
+Ember.Handlebars.helper('fromnow', function(context) {
+    var dd = ""+context;
+    var ss = dd.slice(4,24); // => Nov 11 2014 08:52:16
+    console.log('Helper fromnow: '+dd)
+    return new moment(ss,"MMM DD YYYY hh:mm:ss").fromNow(true);
 });
 
 Ember.Handlebars.helper('formatvalue', function(value, options) {
