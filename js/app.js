@@ -182,7 +182,7 @@ App.ApplicationRoute = Ember.Route.extend({
         logout: function() {
             console.log('ApplicationRoute: logout()');
             this.controllerFor('sessions').reset();
-            this.transitionTo('sessions');
+            this.transitionTo('index');
         }
     }
 });
