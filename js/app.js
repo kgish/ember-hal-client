@@ -480,27 +480,27 @@ App.SessionsController = Ember.Controller.extend({
                 function(response) {
                     console.log('SessionsController: post() => OK, response='+JSON.stringify(response));
                     // set the ajax header with the returned access_token object
+                    console.log('SessionsController: POST(OK) access_token='+response['api_key']['access_token']);
                     Ember.$.ajaxSetup({
                         contentType: 'application/json; charset=utf-8',
                         headers: {
-                            'Authorization': 'Bearer '+response.api_key.access_token
+                            'Authorization': 'Bearer '+response['api_key']['access_token']
                         }
                     });
 
                     // create a apiKey record on the local storage based on the returned object
-                    var key = _this.get('store').createRecord('apiKey', { accessToken: response.api_key.access_token });
+                    var key = _this.get('store').createRecord('apiKey', { accessToken: response['api_key']['access_token'] });
                     console.log('SessionsController: POST(OK) key='+JSON.stringify(key));
 
                     // find a user based on the user_id returned from the request to the /sessions api
-                    var user_id = response.api_key.user_id;
+                    var user_id = response['api_key']['user_id'];
                     console.log('SessionsController: find(\'user\',user_id='+user_id+')');
                     _this.store.find('user', user_id).then(
                         function(user) {
-                            var token = response.api_key.access_token;
-                            console.log('SessionsController: find() => OK, token='+token);
+                            console.log('SessionsController: find() => OK, token='+response['api_key']['access_token']);
                             // set this controller token & current user properties based on the data from the user and access_token
                             _this.setProperties({
-                                token:       token,
+                                token:       response['api_key']['access_token'],
                                 currentUser: user.getProperties('username', 'name', 'email')
                             });
 
