@@ -35,11 +35,13 @@ After which you can fire up you favorite browser and point it to [http://localho
 
 Here is a list of important references which I found very useful.
 
-* [HyperResource](https://github.com/gamache/hyperresource).
-* [Ember Data HAL Adapter](https://github.com/locks/ember-data-hal-adapter)
+* [(Better) Authentication in ember.js](http://log.simplabs.com/post/57702291669/better-authentication-in-ember-js)
 * [Authentication in ember.js](http://log.simplabs.com/post/53016599611/authentication-in-ember-js)
+* [Ember Data HAL Adapter](https://github.com/locks/ember-data-hal-adapter)
 * [Ember Data Local Storage Adapter](https://github.com/kurko/ember-localstorage-adapter)
+* [Emberjs Authentication the right way](http://webcloud.info/blog/2014/04/07/emberjs-authentication-the-right-way-javascript-version/) ([example](https://github.com/WebCloud/EmberJS-Auth-Example))
 * [HTTP 1.1 Headers Status](http://upload.wikimedia.org/wikipedia/commons/8/88/Http-headers-status.png)
+* [HyperResource](https://github.com/gamache/hyperresource).
 
 ## Author
 

@@ -1,9 +1,9 @@
 App = Ember.Application.create({
     LOG_TRANSITIONS: true,
-    LOG_TRANSITIONS_INTERNAL: true
-    //LOG_VIEW_LOOKUPS: true,
-    //LOG_ACTIVE_GENERATION: true,
-    //LOG_RESOLVER: true
+    LOG_TRANSITIONS_INTERNAL: true,
+    LOG_VIEW_LOOKUPS: false,
+    LOG_ACTIVE_GENERATION: false,
+    LOG_RESOLVER: false
 });
 
 
@@ -78,6 +78,27 @@ App.ProductAdapter = DS.RESTAdapter.extend({
     }
 });
 
+App.UserSignupAdapter = DS.RESTAdapter.extend({
+    buildURL: function(type, id, record) {
+        var url = this._super(type, id, record);
+        console.log('UsersSignupAdapter: buildURL(type='+type+',id='+id+') => '+url);
+        return url;
+    }
+});
+
+App.SessionAdapter = DS.RESTAdapter.extend({
+    buildURL: function(type, id, record) {
+        var url = this._super(type, id, record);
+        console.log('SessionAdapter: buildURL(type='+type+',id='+id+') => '+url);
+        return url;
+    }
+});
+
+
+App.ApiKeyAdapter = DS.LSAdapter.extend({
+    namespace: 'emberauth-keys'
+});
+
 /** SERIALIZERS **/
 App.ProductSerializer = DS.RESTSerializer.extend({
     typeForRoot: function(root) {
@@ -126,6 +147,27 @@ App.ProductSerializer = DS.RESTSerializer.extend({
     //}
 });
 
+App.ProductSerializer = DS.RESTSerializer.extend({
+    typeForRoot: function(root) {
+        var res = this._super(root);
+        console.log('ProductSerializer: typeForRoot(root='+root+') => '+res);
+        return res;
+    },
+    normalizePayload: function(payload) {
+        if (payload.products) {
+            var normalizedPayload = { products: [] };
+            payload.products.forEach(function(item){
+                normalizedPayload.products.pushObject(item.product);
+            });
+            payload = normalizedPayload;
+            console.log('ProductSerializer: normalizePayload() => '+JSON.stringify(payload));
+        } else {
+            console.log('ProductSerializer: normalizePayload() => do nothing');
+        }
+        return payload;
+    }
+});
+
 /** ROUTER MAP **/
 App.Router.map(function() {
     this.resource('products', function() {
@@ -134,22 +176,44 @@ App.Router.map(function() {
             this.route('edit');
         });
     });
-    this.route('categories');
-    this.route('users');
     this.route('about');
     this.route('help');
     this.route('admin');
     this.route('profile');
+
+    // Authentication stuff
     this.route('login');
+    this.resource('sessions', function() {
+        this.route('logout');
+        this.route('login');
+    });
+    this.resource('users', function() {
+        this.route('signup');
+        this.route('user', { path: '/user/:user_id' });
+    });
+    this.route('secret');
 });
 
 /** ROUTES **/
-//App.IndexRoute = Ember.Route.extend({
-//    redirect: function() {
-//        console.log('IndexRoute: redirect()');
-//        this.transitionTo('products');
-//    }
-//});
+App.LoadingRoute = Ember.Route.extend({
+    beforeModel: function() {
+        console.log('LoadingRoute: beforeModel()');
+        //Ember.$('.navbar-header').hide()
+    },
+    afterModel: function() {
+        console.log('LoadingRoute: afterModel()');
+        //Ember.$('.navbar-header').show()
+    }
+});
+App.ApplicationRoute = Ember.Route.extend({
+    actions: {
+        logout: function() {
+            console.log('ApplicationRoute: logout()');
+            this.controllerFor('sessions').reset();
+            this.transitionTo('index');
+        }
+    }
+});
 
 App.ProductsRoute = Ember.Route.extend({
     model: function() {
@@ -208,7 +272,315 @@ App.ProductsNewRoute = Ember.Route.extend({
 //    }
 //});
 
+// Create a base object for any authentication protected route with the
+// required verifications.
+App.AuthenticatedRoute = Ember.Route.extend({
+    // verify if the token property of the sessions controller is set before continuing with the request
+    // if it is not, redirect to the login route (sessions)
+    beforeModel: function(transition) {
+        console.log('AuthenticatedRoute: beforeModel()');
+        if (Ember.isEmpty(this.controllerFor('sessions').get('token'))) {
+            return this.redirectToLogin(transition);
+        }
+    },
+
+    // Redirect to the login page and store the current transition so we can
+    // run it again after login
+    redirectToLogin: function(transition) {
+        console.log('AuthenticatedRoute: redirectToLogin()');
+        this.controllerFor('sessions').set('attemptedTransition', transition);
+        return this.transitionTo('sessions');
+    },
+
+    actions: {
+        // recover from any error that may happen during the transition to this route
+        error: function(reason, transition) {
+            console.log('AuthenticatedRoute: error()');
+            // if the HTTP status is 401 (unauthorised), redirect to the login page
+            if (reason.status === 401) {
+                this.redirectToLogin(transition);
+            } else {
+                console.log('AuthenticatedRoute: unknown problem => '+reason.status);
+            }
+        }
+    }
+});
+
+App.SessionsRoute = Ember.Route.extend({
+    // setup the SessionsController by resetting it to avoid data from a past authentication
+    setupController: function(controller, context) {
+        console.log('SessionRoute: setupController()');
+        controller.reset()
+    },
+
+    beforeModel: function(transition) {
+        console.log('SessionRoute: beforeModel()');
+        // before proceeding any further, verify if the token property is not empty
+        // if it is, transition to the secret route
+        if (!Ember.isEmpty(this.controllerFor('sessions').get('token'))) {
+            this.transitionToRoute('secret');
+        }
+    }
+});
+
+App.SecretRoute = App.AuthenticatedRoute.extend({
+    model: function() {
+        console.log('SecretRoute: model()');
+        // instantiate the model for the SecretController as a list of created users
+        return this.store.find('user');
+    }
+});
+
+App.UsersSignupRoute = Ember.Route.extend({
+    model: function() {
+        console.log('UsersSignupRoute: model()');
+        // Define the model for the UsersSignupController as a new record from the User model
+        this.store.createRecord('user');
+    }
+});
+
 /** CONTROLLERS **/
+App.ApplicationController = Ember.Controller.extend({
+    // requires the sessions controller
+    needs: ['sessions'],
+
+    // creates a computed property called currentUser that will be
+    // binded on the curretUser of the sessions controller and will return its value
+    currentUser: (function() {
+//        console.log('ApplicationController: currentUser()');
+        return this.get('controllers.sessions.currentUser');
+    }).property('controllers.sessions.currentUser'),
+
+    // creates a computed property called isAuthenticated that will be
+    // binded on the curretUser of the sessions controller and will verify if the object is empty
+    isAuthenticated: (function() {
+        return !Ember.isEmpty(this.get('controllers.sessions.currentUser'));
+    }).property('controllers.sessions.currentUser')
+});
+
+App.IndexController = Ember.Controller.extend({
+    // requires the sessions controller
+    needs: ['sessions'],
+
+    // creates a computed property called currentUser that will be
+    // binded on the curretUser of the sessions controller and will return its value
+    currentUser: (function() {
+//        console.log('ApplicationController: currentUser()');
+        return this.get('controllers.sessions.currentUser');
+    }).property('controllers.sessions.currentUser'),
+
+    // creates a computed property called isAuthenticated that will be
+    // binded on the curretUser of the sessions controller and will verify if the object is empty
+    isAuthenticated: (function() {
+        return !Ember.isEmpty(this.get('controllers.sessions.currentUser'));
+    }).property('controllers.sessions.currentUser')
+});
+
+App.UsersSignupController = Ember.Controller.extend({
+    needs: ['sessions'],
+
+    actions: {
+        signupUser: function() {
+            console.log('UsersSignupController: createUser');
+            alert('Sorry, not yet implemented (be patient)');
+            this.transitionToRoute('index');
+            var _this = this;
+
+            // get the data from the form
+            var data = this.getProperties(
+                'firstName',
+                'lastName',
+                'email',
+                'username',
+                'password',
+                'password_confirmation'
+            );
+
+            // Compile the firstName & lastName into a single name property
+            data.name = "#{data.firstName} #{data.lastName}";
+
+            // Get the model passed from the UserSignupRoute
+            var user = this.get('model');
+
+            // Set the properties for the user based on the data from the form
+            user.setProperties(data);
+
+            // Save the user object into the database.
+            // POST => /users
+            user.save().then(
+                function(user) {
+                    // clear the form data
+                    _this.setProperties({
+                        name: null,
+                        email: null,
+                        username: null,
+                        password: null,
+                        password_confirmation: null
+                    });
+
+                    // Get the sessions controller object and set the properties to proceed to the login action
+                    var sessionsController = this.get('controllers.sessions');
+                    sessionsController.setProperties({
+                        username_or_email: data.username,
+                        password: data.password
+                    });
+
+                    // Remove the record from the localstorage to avoid
+                    // duplication on the users list as it is returned by
+                    // the server.
+                    user.deleteRecord();
+
+                    // Call the loginUser action to authenticate the created user
+                    sessionsController.send('loginUser');
+                },
+                // TODO
+                function(error) {
+                    // If server returns HTTP status 401 Unauthorized, create an
+                    // errors object to return to the user
+                    if (error.status == 401) {
+                        var errs = JSON.parse(error.responseText);
+                        user.set('errors', errs.errors)
+                    }
+                }
+            ); // save().then()
+        }
+    }
+});
+
+App.SessionsController = Ember.Controller.extend({
+    // Initialization method to verify if there is an access_token cookie set
+    // so we can set our ajax header with it to access the protected pages.
+    init: function() {
+        console.log('SessionsController: init');
+        this._super();
+        if (Ember.$.cookie('access_token')) {
+            Ember.$.ajaxSetup({
+                headers: {
+                    'Authorization':'Bearer '+Ember.$.cookie('access_token')
+                }
+            });
+        }
+    },
+
+    // Overwrite default attemptedTransition attribute from the Ember.Controller object
+    attemptedTransition: null,
+
+    // Create and set the token & current user objects based on the respective cookies
+    token:       Ember.$.cookie('access_token'),
+    currentUser: Ember.$.cookie('auth_user'),
+
+    // Create a observer binded to the token property of this controller to set/remove the authentication tokens
+    tokenChanged: (function() {
+        console.log('SessionsController: tokenChanged');
+        if (Ember.isEmpty(this.get('token'))) {
+            Ember.$.removeCookie('access_token');
+            Ember.$.removeCookie('auth_user');
+        } else {
+            Ember.$.cookie('access_token', this.get('token'));
+            Ember.$.cookie('auth_user', this.get('currentUser'));
+        }
+    }).observes('token'),
+
+    // reset the controller properties and the ajax header
+    reset: function() {
+        console.log('SessionsController: reset');
+        this.setProperties({
+            username_or_email: null,
+            password:          null,
+            token:             null,
+            currentUser:       null
+        });
+        Ember.$.ajaxSetup({
+            headers: {
+                'Authorization': 'Bearer none'
+            }
+        });
+    },
+
+    actions: {
+        loginUser: function () {
+            console.log('SessionsController: loginUser');
+            var _this = this;
+
+            // get the properties sent from the form and if there is any attemptedTransition set
+            var attemptedTrans = this.get('attemptedTransition');
+            var data = this.getProperties('username_or_email', 'password');
+
+            // clear the form fields
+            this.setProperties({
+                username_or_email: null,
+                password:          null
+            });
+
+            data = JSON.stringify(data);
+
+            // TODO use APP.SessionsAdapter = DS.RESTAdapter.extend()
+            var url = 'http://0.0.0.0:8080/session';
+
+            // send a POST request to the /sessions api with the form data
+            Ember.$.ajaxSetup({contentType: 'application/json; charset=utf-8'});
+            console.log('SessionsController: post(url='+url+ ',data='+data+')');
+            Ember.$.post(url, data).then(
+                function(response) {
+                    console.log('SessionsController: post() => OK, response='+JSON.stringify(response));
+                    // set the ajax header with the returned access_token object
+                    console.log('SessionsController: POST(OK) access_token='+response['api_key']['access_token']);
+                    Ember.$.ajaxSetup({
+                        contentType: 'application/json; charset=utf-8',
+                        headers: {
+                            'Authorization': 'Bearer '+response['api_key']['access_token']
+                        }
+                    });
+
+                    // create a apiKey record on the local storage based on the returned object
+                    var key = _this.get('store').createRecord('apiKey', { accessToken: response['api_key']['access_token'] });
+                    console.log('SessionsController: POST(OK) key='+JSON.stringify(key));
+
+                    // find a user based on the user_id returned from the request to the /sessions api
+                    var user_id = response['api_key']['user_id'];
+                    console.log('SessionsController: find(\'user\',user_id='+user_id+')');
+                    _this.store.find('user', user_id).then(
+                        function(user) {
+                            console.log('SessionsController: find() => OK, token='+response['api_key']['access_token']);
+                            // set this controller token & current user properties based on the data from the user and access_token
+                            _this.setProperties({
+                                token:       response['api_key']['access_token'],
+                                currentUser: user.getProperties('username', 'name', 'email', 'id')
+                            });
+
+                            // set the relationship between the User and the ApiKey models & save the apiKey object
+                            key.set('user', user);
+                            key.save();
+
+                            user.get('apiKeys').content.push(key);
+
+                            // check if there is any attemptedTransition to retry it or go to the secret route
+                            if (attemptedTrans) {
+                                attemptedTrans.retry();
+                                _this.set('attemptedTransition', null);
+                            } else {
+                                _this.transitionToRoute('index');
+                            }
+                        },
+                        function(error) {
+                            // TODO Handle errors better in gui
+                            console.log('SessionsController: find() => NOK, error='+JSON.stringify(error));
+                        }
+                    ); // find().then()
+                },
+                function(error) {
+                    // TODO Handle errors better in gui
+                    console.log('SessionsController: post() => NOK, error='+JSON.stringify(error));
+                    if (error.status === 401) {
+                        // If there is a authentication error the user is informed of it to try again
+                        alert("wrong user or password, please try again");
+                    }
+                }
+            ); // post().then()
+        }
+    }
+});
+
 App.ProductsController = Ember.ArrayController.extend({
     isEditing: false,
 
@@ -256,6 +628,7 @@ App.ProductEditController = Ember.ObjectController.extend({
             this.set('isEditing', false);
             product.save();
             console.log('ProductEditController: Save product => '+product.get('name'));
+            product.save();
             this.transitionToRoute('product', product);
         },
         cancelEditProduct: function(product) {
@@ -324,9 +697,24 @@ App.ProductsNewController = Ember.ObjectController.extend({
 
 /** MODELS **/
 App.Product = DS.Model.extend({
-    name: DS.attr('string'),
-    category: DS.attr('string'),
-    price: DS.attr('number')
+    name:       DS.attr('string'),
+    category:   DS.attr('string'),
+    price:      DS.attr('number')
+});
+
+App.User = DS.Model.extend({
+    name:       DS.attr('string'),
+    email:      DS.attr('string'),
+    username:   DS.attr('string'),
+    password:   DS.attr('string'),
+    password_confirmation: DS.attr('string'),
+    apiKeys:    DS.hasMany('apiKey'),
+    errors:     {}
+});
+
+App.ApiKey = DS.Model.extend({
+    accessToken: DS.attr('string'),
+    user:       DS.belongsTo('user', { async: true })
 });
 
 /** FIXTURES **/
