@@ -43,7 +43,7 @@ into this:
 
     {products: [{attributes},{...}]
 
-This is achieved by extending the product serializer and redefining
+This is achieved by extending the default `ProductSerializer` and redefining
 the `normalizePayload` hook like this:
 
     App.ProductSerializer = DS.RESTSerializer.extend({
