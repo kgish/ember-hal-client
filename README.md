@@ -1,17 +1,14 @@
 # HAL/JSON Client Template
 
-This is a simple web client template for setting up an Ember application that communicates with
-a HAL/JSON web service using [HyperResource](https://github.com/gamache/hyperresource).
+This is a simple web client template for setting up an Ember application
+that communicates with a HAL/JSON web service
+using [HyperResource](https://github.com/gamache/hyperresource).
 
 ![](images/screenshot.png?raw=true)
 
-## HAL/JSON Web API
-
-Here is an explanation about the Web API...
-
 ## Instructions
 
-In order to install and run the webmachine, run the following commands.
+In order to install and start this application, run the following commands.
 
     $ git clone https://github.com/kgish/ember-hal-template hal-client
     $ cd hal-client
@@ -29,7 +26,37 @@ Start the client by running the following command.
     $ python -m SimpleHTTPServer
     Serving HTTP on 0.0.0.0 port 8000 ...
 
-After which you can fire up you favorite browser and point it to [http://localhost:8000](http://localhost:8000).
+After which you can fire up you favorite browser and point it
+to [http://localhost:8000](http://localhost:8000).
+
+## HAL Adapter
+
+In order to get this application running properly with the ember default
+`RESTAdapter`, I had to do some serious tweaking.
+
+The server will return HAL/JSON payload which looks something like this:
+
+    {products: [{product: {attributes}},{...}]
+
+which before being passed through to the `RESTAdapter` needs to be converted
+into this:
+
+    {products: [{attributes},{...}]
+
+This is achieved by extending the product serializer and redefining
+the `normalizePayload` hook like this:
+
+    App.ProductSerializer = DS.RESTSerializer.extend({
+        normalizePayload: function(payload) {
+            if (payload.products) {
+                var normalizedPayload = { products: [] };
+                payload.products.forEach(function(item){
+                    normalizedPayload.products.pushObject(item.product);
+                });
+                payload = normalizedPayload;
+            }
+            return payload;
+    }
 
 ## References
 

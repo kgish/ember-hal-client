@@ -7,43 +7,47 @@
     <link rel="stylesheet" href="css/bootstrap-united.min.css">
     <link rel="stylesheet" href="css/main.css">
 
+    <!-- Placed at the end of the document so the pages load faster -->
     <script src="js/libs/jquery-1.10.2.min.js"></script>
     <script src="js/libs/jquery.cookie.js"></script>
     <script src="js/libs/handlebars-v1.3.0.js"></script>
     <script src="js/libs/ember-1.8.1.js"></script>
     <script src="js/libs/ember-data-1.0-beta-11.js"></script>
     <script src="js/libs/localstorage_adapter.js"></script>
-
     <script src="js/libs/moment.js"></script>
     <script src="js/app.js"></script>
 
-     <script type="text/x-handlebars" data-template-name="application">
+    <script type="text/x-handlebars" data-template-name="application">
 
-         <div class="container">
-             <h1>HAL/JSON Demo Application</h1>
-             <p>This is an amazing demo which will dazzle your family and friends.</p>
-         </div>
+        <div class="container">
+            <h1>HAL/JSON Demo Application</h1>
+            <p>An amazing demo which will dazzle my family and friends (and hopefully land <a href="http://github.com/kgish" target="_blank">me</a> a job).</p>
+        </div>
 
         <div class="navbar navbar-default" role="navigation">
-
             <div class="container">
-
                 <div class="navbar-header">
                     {{#link-to "index" class="navbar-brand"}}Home{{/link-to}}
                 </div>
 
                 <div class="navbar-collapse collapse">
-                        <ul class="nav navbar-nav navbar-left">
-                            {{#if isAuthenticated}}
-                                <li>{{#link-to 'products'}}Products{{/link-to}}</li>
+                    <ul class="nav navbar-nav navbar-left">
+                        {{#if isAuthenticated}}
+                            <li>{{#link-to 'products'}}Products{{/link-to}}</li>
+                            {{#if isAdmin}}
                                 <li>{{#link-to 'secret'}}Users{{/link-to}}</li>
                             {{/if}}
-                            <li>{{#link-to 'help'}}Help{{/link-to}}</li>
-                            <li>{{#link-to 'about'}}About{{/link-to}}</li>
-                        </ul>
+                        {{/if}}
+                        <li>{{#link-to 'help'}}Help{{/link-to}}</li>
+                        <li>{{#link-to 'about'}}About{{/link-to}}</li>
+                    </ul>
                     <ul class="nav navbar-nav navbar-right">
                         {{#if isAuthenticated}}
-                            <li>{{#link-to 'users.user' currentUser.id}}<span class="glyphicon glyphicon-user"></span> {{currentUser.username}}{{/link-to}}</li>
+                        <p class="navbar-text">{{hostname}}</p>
+                            <li>{{#link-to 'users.user' currentUser.id}}
+                                    <span class="glyphicon glyphicon-user"></span>
+                                    {{currentUser.name}} ({{#if isAdmin}} admin {{else}} user {{/if}})
+                                {{/link-to}}</li>
                             <li><a href="#" {{action 'logout'}}>Logout</a></li>
                         {{else}}
                             <li>{{#link-to 'users.signup'}}Sign up{{/link-to}}</li>
@@ -52,7 +56,6 @@
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>
-
         </div>
 
         <div class="container">
@@ -63,102 +66,69 @@
             </div>
         </div>
 
-    </script>
-
-    <script type="text/x-handlebars" data-template-name="application0">
-        <div class="container">
-            <h1>Demo application - v0.1</h1>
-            <p>This is an amazing demo to impress your family and friends.</p>
-        </div>
-
-        <div class="navbar navbar-default" role="navigation">
+        <div class="navbar navbar-fixed-bottom">
             <div class="container">
-                <div class="navbar-header">
-                    <div class="navbar-header">
-                        {{#link-to "index" class="navbar-brand"}}Home{{/link-to}}
-                    </div>
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                </div>
-                <div class="collapse navbar-collapse">
-                    <ul class="nav navbar-nav navbar-left">
-                        {{#if isAuthenticated}}
-                            <li>{{#link-to 'products'}}Products{{/link-to}}</li>
-                            <li>{{#link-to 'secret'}}Users{{/link-to}}</li>
-                        {{/if}}
-                        <li>{{#link-to "help"}}Help{{/link-to}}</li>
-                        <li>{{#link-to "about"}}About{{/link-to}}</li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        {{#if isAuthenticated}}
-                            {{#if isAdmin}}
-                                <li>{{#link-to "admin"}}Admin{{/link-to}}</li>
-                            {{/if}}
-                            <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{currentUser.username}} <i class="fa fa-2x fa-gift"><span class="badge">2</span></i></a></li>
-                            <li>{{#link-to "profile"}}Profile{{/link-to}}</li>
-                            <li><a href="#" {{action 'logout'}}>Logout</a></li>
-                        {{else}}
-                            <li>{{#link-to 'users.signup'}}Sign up{{/link-to}}</li>
-                            <li>{{#link-to 'sessions.index'}}Login{{/link-to}}</li>
-                        {{/if}}
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-10">
-                    {{outlet}}
-                </div>
+                <ul class="nav navbar-nav navbar-left">
+                    <div class="text-muted">Brought to you by <a href="mailto:kiffin.gish@planet.nl">Kiffin</a></div>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <a href="http://www.facebook.com/kiffin.gish" target="_blank"> <img src="/images/facebook.png" title="Facebook"/> </a>
+                    <a href="http://twitter.com/kiffin" target="_blank"> <img src="/images/twitter.png" title="Twitter"/> </a>
+                    <a href="http://www.google.com/+KiffinGish" target="_blank"> <img src="/images/googleplus.png" title="Google+"/> </a>
+                    <a href="http://www.linkedin.com/in/kiffin" target="_blank"> <img src="/images/linkedin.png" title="LinkedIn"/> </a>
+                    <a href="http://github.com/kgish" target="_blank"> <img src="/images/github.png" title="Github"/> </a>
+                </ul>
             </div>
         </div>
     </script>
 
     <script type="text/x-handlebars" data-template-name="index">
-        <h1>Welcome!</h1>
+        <h2 class="page-header">Welcome!</h2>
         {{#if isAuthenticated}}
-            <h2>To get started just click on one of the navigation links above.</h2>
+            <p>To get started just click on one of the navigation links above.</p>
         {{else}}
-            <h2>Please {{#link-to 'sessions.index'}}Login{{/link-to}} or {{#link-to 'users.signup'}}Sign up{{/link-to}}</h2>
+            <p>Sorry, in order to continue you will either have to {{#link-to 'sessions.index'}}login{{/link-to}} or {{#link-to 'users.signup'}}register{{/link-to}}.</p>
         {{/if}}
     </script>
 
     <script type="text/x-handlebars" data-template-name="about">
-        <h1 class="page-header">About</h1>
-        <h2>This is the about page.</h2>
+        <h2 class="page-header">About</h2>
+        <p>This is a simple web client template based on the <a href="http://www.emberjs.com">ember framework</a> that communicates with a <a href="https://github.com/kgish/ruby-webmachine-roar-template">HAL/JSON web service</a>.</p>
+        <p>For more information, please have a look <a href="https://github.com/kgish/ember-hal-template">here</a>.</p>
     </script>
 
     <script type="text/x-handlebars" data-template-name="loading">
-        <h1 class="page-header">Loading</h1>
-        <h2>This is the loading template.</h2>
+        <h2 class="page-header">Loading</h2>
+        <p>This is the loading template.</p>
     </script>
 
     <script type="text/x-handlebars" data-template-name="error">
-        <h1 class="page-header">Error</h1>
-        <h2>This is the error template.</h2>
+        <h2 class="page-header">Error</h2>
+        <p>This is the error template.</p>
     </script>
 
     <script type="text/x-handlebars" data-template-name="secret">
-        <h1 class="page-header">Secret</h1>
-        <h2>This is the secret template.</h2>
+        <h2 class="page-header">Users</h2>
         <table class="table">
             <thead>
                 <tr>
+                    <th>Id</th>
+                    <th>User</th>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Username</th>
+                    <th>Login</th>
+                    <th>Admin</th>
                 </tr>
             </thead>
             <tbody>
                 {{#each model}}
                     <tr>
-                        <td>{{#link-to 'users.user' this}}{{name}}{{/link-to}}</td>
+                        <td>{{id}}</td>
+                        <td>{{#link-to 'users.user' this}}{{username}}{{/link-to}}</td>
+                        <td>{{name}}</td>
                         <td>{{email}}</td>
-                        <td>{{username}}</td>
+                        <td>{{fromnow login_date}}</td>
+                        <td>{{is_admin}}</td>
                     </tr>
                 {{/each}}
             </tbody>
@@ -167,89 +137,117 @@
     </script>
 
     <script type="text/x-handlebars" data-template-name="sessions">
-        <h1 class="page-header">Login</h1>
-        <h2>Please enter your username and password</h2>
+        <h2 class="page-header">Login</h2>
+        <p>Please enter your username and password.</p>
         <div class="jumbotron">
             <form class="form-horizontal" {{action "loginUser" on="submit"}}>
                 <div class="form-group">
-                    {{input value=username_or_email type="text" class="form-control input-lg" id="username" placeholder="Enter username"}}
+                    {{input value=username_or_email type="text" class="form-control" id="username" placeholder="Enter username"}}
                 </div>
                 <div class="form-group">
-                    {{input value=password type="password" class="form-control input-lg" id="password" placeholder="Password"}}
+                    {{input value=password type="password" class="form-control" id="password" placeholder="Password"}}
                 </div>
-                <button type="submit" class="btn btn-primary btn-lg">Login</button>
+                <button type="submit" class="btn btn-primary btn-sm">Login</button>
             </form>
         </div>
     </script>
 
     <script type="text/x-handlebars" data-template-name="users/user">
-        <h1 class="page-header">User</h1>
-        <h2>Profile page for {{name}}.</h2>
-        <div class="panel-body">
-            Name: {{name}} <br>
-            Email: {{email}} <br>
-            Username: {{username}} <br>
-        </div>
+        <h2 class="page-header">Profile</h2>
+        <form class="form-horizontal" {{action "editProfile" on="submit"}}>
+            <table class="table">
+                <thead>
+                    <tr>
+                        {{#if isAdmin}}
+                            <th></th>
+                        {{/if}}
+                        <th></th><th></th><th></th>
+                        {{#if isAdmin}}
+                            <th></th><th></th>
+                        {{/if}}
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#if isAdmin}}
+                        <tr><td>Id</td><td>{{id}}</td></tr>
+                    {{/if}}
+                    <tr><td>User</td><td>{{username}}</td></tr>
+                    <tr><td>Name</td><td>{{name}}</td></tr>
+                    <tr><td>Email</td><td>{{email}}</td></tr>
+                    {{#if isAdmin}}
+                        <tr><td>Login</td><td>{{fromnow login_date}}</td></tr>
+                        <tr><td>Admin</td><td>{{is_admin}}</td></tr>
+                    {{/if}}
+                </tbody>
+            </table>
+            <button type="submit" class="btn btn-primary btn-sm">Edit</button>
+        </form>
     </script>
 
 
     <script type="text/x-handlebars" data-template-name="users/signup">
-        <h1 class="page-header">Signup</h1>
-        <h2>Please fill in the following fields and submit</h2>
+        <h2 class="page-header">Signup</h2>
+        <p>You too can signup for this pretty amazing service.</p>
         <div class="jumbotron">
             <form class="form-horizontal" {{action "signupUser" on="submit"}}>
                 <div class="form-group">
-                    {{input type="text" value=firstName class="form-control input-lg" id="firstName" placeholder="First name"}}
+                    {{input type="text" value=firstName class="form-control" id="firstName" placeholder="First name"}}
                 </div>
                 <div class="form-group">
-                    {{input type="text" value=lastName class="form-control input-lg" id="lastName" placeholder="Last name"}}
+                    {{input type="text" value=lastName class="form-control" id="lastName" placeholder="Last name"}}
                 </div>
                 <div class="form-group">
-                    {{input type="email" value=email class="form-control input-lg" id="email" placeholder="Email"}}
+                    {{input type="email" value=email class="form-control" id="email" placeholder="Email"}}
                 </div>
                 <div class="form-group">
-                    {{input type="text" value=username class="form-control input-lg" id="username" placeholder="Username"}}
+                    {{input type="text" value=username class="form-control" id="username" placeholder="Username"}}
                 </div>
                 <div class="form-group">
-                    {{input type="password" value=password class="form-control input-lg" id="password" placeholder="Password"}}
+                    {{input type="password" value=password class="form-control" id="password" placeholder="Password"}}
                 </div>
                 <div class="form-group">
-                    {{input type="password" value=password_confirmation class="form-control input-lg" id="password_confirmation" placeholder="Repeat your password"}}
+                    {{input type="password" value=password_confirmation class="form-control" id="password_confirmation" placeholder="Repeat your password"}}
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-lg">Sign up</button>
+                    <button type="submit" class="btn btn-primary btn-sm">Sign up</button>
                 </div>
             </form>
         </div>
     </script>
 
-    <script type="text/x-handlebars" data-template-name="admin">
-        <h1 class="page-header">Admin</h1>
-        <h2>This is the admin page.</h2>
-    </script>
+    <!--<script type="text/x-handlebars" data-template-name="admin">-->
+        <!--<h2 class="page-header">Admin</h2>-->
+        <!--<p>This is the admin page.</p>-->
+    <!--</script>-->
 
-    <script type="text/x-handlebars" data-template-name="profile">
-        <h1 class="page-header">Profile</h1>
-        <h2>This is the profile page.</h2>
-    </script>
+    <!--<script type="text/x-handlebars" data-template-name="profile">-->
+        <!--<h2 class="page-header">Profile</h2>-->
+        <!--<p>This is the profile page.</p>-->
+    <!--</script>-->
 
     <script type="text/x-handlebars" data-template-name="help">
-        <h1 class="page-header">Help</h1>
-        <h2>This is the help page.</h2>
+        <h2 class="page-header">Help</h2>
+        <p>You can {{#link-to 'sessions.index'}}login{{/link-to}} by using one of the following two demo accounts:</p>
+        <ul>
+            <li>kiffin/pindakaas (admin)</li>
+            <li>henri/escargot (user)</li>
+        </ul>
+        <p>Depending on whether you are an admin or regular user you will be given access accordingly.</p>
     </script>
 
     <script type="text/x-handlebars" data-template-name="products">
-        <h1 class="page-header">Products</h1>
-        <h2>This is the products page.</h2>
+        <h2 class="page-header">Products</h2>
         <div class="row">
             <div class="col-md-6">
                 <h2>{{length}} {{pluralize length single='products'}}</h2>
                 <div class="list-group">
-                    <div class="list-group-item">
-                        <button type="button" class="btn btn-sm" title="Create a new product" {{action "createProduct"}}>
-                        <span class="glyphicon glyphicon-plus"></span> Create
-                    </button>
-                    </div>
+                    {{#if isAdmin}}
+                        <div class="list-group-item">
+                            <button type="button" class="btn btn-primary btn-sm" title="Create a new product" {{action "createProduct"}}>
+                                <span class="glyphicon glyphicon-plus"></span> Create
+                            </button>
+                        </div>
+                    {{/if}}
                     {{#each}}
                         {{#link-to 'product' this class="list-group-item"}}
                             <span {{bind-attr title=category}} {{bind-attr class=":glyphicon glyphicon"}}></span> {{formatvalue name}} <span class="badge">{{formatvalue price placeholder='?'}}</span>
@@ -267,14 +265,16 @@
         <div class="col-md-6">
             <h2>{{formatvalue name}}</h2>
             <div class="list-group">
-                <div class="list-group-item">
-                    <button type="button" class="btn btn-sm" title="Edit this product" {{action "editProduct" this}}>
-                    <span class="glyphicon glyphicon-edit"></span> Edit
-                    </button>
-                    <button type="button" class="btn btn-sm" title="Delete this product" {{action "deleteProduct" this}}>
-                    <span class="glyphicon glyphicon-remove"></span> Delete
-                    </button>
-                </div>
+                {{#if isAdmin}}
+                    <div class="list-group-item">
+                        <button type="button" class="btn btn-primary btn-sm" title="Edit this product" {{action "editProduct" this}}>
+                            <span class="glyphicon glyphicon-edit"></span> Edit
+                        </button>
+                        <button type="button" class="btn btn-primary btn-sm" title="Delete this product" {{action "deleteProduct" this}}>
+                            <span class="glyphicon glyphicon-remove"></span> Delete
+                        </button>
+                    </div>
+                {{/if}}
                 {{partial 'product/form'}}
             </div>
         </div>
@@ -286,10 +286,10 @@
             <div class="list-group">
                 {{partial 'product/form' isEditing=isEditing}}
                 <li class="list-group-item">
-                    <button type="button" class="btn btn-sm" title="Save changes to this product" {{action 'saveEditProduct' this}}>
+                    <button type="button" class="btn btn-primary btn-sm" title="Save changes to this product" {{action 'saveEditProduct' this}}>
                         <span class="glyphicon glyphicon-ok"></span> Save
                     </button>
-                    <button type="button" class="btn btn-sm" title="Cancel changes to this product" {{action 'cancelEditProduct' this}}>
+                    <button type="button" class="btn btn-primary btn-sm" title="Cancel changes to this product" {{action 'cancelEditProduct' this}}>
                         <span class="glyphicon glyphicon-remove"></span> Cancel
                     </button>
                 </li>
@@ -299,14 +299,18 @@
 
     <script type="text/x-handlebars" data-template-name="products/new">
         <div class="col-md-6">
+<<<<<<< HEAD
             <h2>Create -- {{name}}</h2>
+=======
+        <h2>Create -- {{formatvalue name}}</h2>
+>>>>>>> authentication
             <div class="list-group">
                 {{partial 'product/form' isEditing=isEditing this=controller.newProduct}}
                 <li class="list-group-item">
-                    <button type="button" class="btn btn-sm" title="Create new product" {{action 'saveNewProduct'}}>
+                    <button type="button" class="btn btn-primary btn-sm" title="Create new product" {{action 'saveNewProduct'}}>
                     <span class="glyphicon glyphicon-ok"></span> Create
                     </button>
-                    <button type="button" class="btn btn-sm" title="Cancel new product" {{action 'cancelNewProduct'}}>
+                    <button type="button" class="btn btn-primary btn-sm" title="Cancel new product" {{action 'cancelNewProduct'}}>
                     <span class="glyphicon glyphicon-remove"></span> Cancel
                     </button>
                 </li>
