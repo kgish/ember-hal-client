@@ -316,6 +316,9 @@ App.ApplicationController = Ember.Controller.extend({
     // requires the sessions controller
     needs: ['sessions'],
 
+    // TODO
+    hostname: 'localhost:8080',
+
     // creates a computed property called currentUser that will be
     // binded on the curretUser of the sessions controller and will return its value
     currentUser: (function() {
@@ -327,6 +330,12 @@ App.ApplicationController = Ember.Controller.extend({
     // binded on the curretUser of the sessions controller and will verify if the object is empty
     isAuthenticated: (function() {
         return !Ember.isEmpty(this.get('controllers.sessions.currentUser'));
+    }).property('controllers.sessions.currentUser'),
+
+    isAdmin: (function() {
+        var res = this.get('controllers.sessions.currentUser.is_admin');
+        console.log('ApplicationController: isAdmin() => '+res);
+        return res;
     }).property('controllers.sessions.currentUser')
 });
 
@@ -681,7 +690,6 @@ App.User = DS.Model.extend({
     password_confirmation: DS.attr('string'),
     is_admin:   DS.attr('boolean'),
     login_date: DS.attr('date'),
-    access_token: DS.attr('string'),
     apiKeys:    DS.hasMany('apiKey'),
     errors:     {}
 });
@@ -727,7 +735,7 @@ Ember.Handlebars.helper('fromnow', function(context) {
     var dd = ""+context;
     var ss = dd.slice(4,24); // => Nov 11 2014 08:52:16
     console.log('Helper fromnow: '+dd)
-    return new moment(ss,"MMM DD YYYY hh:mm:ss").fromNow(true);
+    return new moment(ss,"MMM DD YYYY hh:mm:ss").fromNow();
 });
 
 Ember.Handlebars.helper('formatvalue', function(value, options) {

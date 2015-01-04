@@ -41,7 +41,18 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         {{#if isAuthenticated}}
-                            <li>{{#link-to 'users.user' currentUser.id}}<span class="glyphicon glyphicon-user"></span> {{currentUser.name}}{{/link-to}}</li>
+                        <p class="navbar-text">{{hostname}}</p>
+                            <li>{{#link-to 'users.user' currentUser.id}}
+                                    <span class="glyphicon glyphicon-user"></span>
+                                    {{currentUser.name}}
+                                    (
+                                    {{#if isAdmin}}
+                                        admin
+                                    {{else}}
+                                        user
+                                    {{/if}}
+                                    )
+                                {{/link-to}}</li>
                             <li><a href="#" {{action 'logout'}}>Logout</a></li>
                         {{else}}
                             <li>{{#link-to 'users.signup'}}Sign up{{/link-to}}</li>
@@ -160,7 +171,6 @@
                     <tr><td>Email</td><td>{{email}}</td></tr>
                     <tr><td>Login</td><td>{{fromnow login_date}}</td></tr>
                     <tr><td>Admin</td><td>{{is_admin}}</td></tr>
-                    <tr><td>Token</td><td>{{access_token}}</td></tr>
                 </tbody>
             </table>
             <button type="submit" class="btn btn-primary btn-lg">Edit</button>
