@@ -92,7 +92,6 @@ App.SessionAdapter = DS.RESTAdapter.extend({
     }
 });
 
-
 App.ApiKeyAdapter = DS.LSAdapter.extend({
     namespace: 'emberauth-keys'
 });
@@ -150,8 +149,8 @@ App.Router.map(function() {
     });
     this.route('about');
     this.route('help');
-    this.route('admin');
-    this.route('profile');
+//    this.route('admin');
+//    this.route('profile');
 
     // Authentication stuff
     this.route('login');
@@ -161,7 +160,7 @@ App.Router.map(function() {
     });
     this.resource('users', function() {
         this.route('signup');
-        this.route('user', { path: '/user/:user_id' });
+        this.route('user', { path: '/profile/:user_id' });
     });
     this.route('secret');
 });
@@ -297,44 +296,48 @@ App.SessionsRoute = Ember.Route.extend({
 
 App.SecretRoute = App.AuthenticatedRoute.extend({
     model: function() {
+        // Instantiate the model for the SecretController as a list of created users
         console.log('SecretRoute: model()');
-        // instantiate the model for the SecretController as a list of created users
         return this.store.find('user');
     }
 });
 
 App.UsersSignupRoute = Ember.Route.extend({
     model: function() {
-        console.log('UsersSignupRoute: model()');
         // Define the model for the UsersSignupController as a new record from the User model
+        console.log('UsersSignupRoute: model()');
         this.store.createRecord('user');
     }
 });
 
 /** CONTROLLERS **/
 App.ApplicationController = Ember.Controller.extend({
-    // requires the sessions controller
+    // Requires the sessions controller
     needs: ['sessions'],
 
     // TODO
     hostname: 'localhost:8080',
 
+    // TODO: Not DRY
     // creates a computed property called currentUser that will be
     // binded on the curretUser of the sessions controller and will return its value
     currentUser: (function() {
-//        console.log('ApplicationController: currentUser()');
-        return this.get('controllers.sessions.currentUser');
+        var res = this.get('controllers.sessions.currentUser');
+        console.log('ApplicationController: currentUser='+JSON.stringify(res));
+        return res;
     }).property('controllers.sessions.currentUser'),
 
     // creates a computed property called isAuthenticated that will be
     // binded on the curretUser of the sessions controller and will verify if the object is empty
     isAuthenticated: (function() {
-        return !Ember.isEmpty(this.get('controllers.sessions.currentUser'));
+        var res = !Ember.isEmpty(this.get('controllers.sessions.currentUser'));
+        console.log('ApplicationController: isAuthenticated='+res);
+        return res;
     }).property('controllers.sessions.currentUser'),
 
     isAdmin: (function() {
         var res = this.get('controllers.sessions.currentUser.is_admin');
-        console.log('ApplicationController: isAdmin() => '+res);
+        console.log('ApplicationController: currentUser='+res);
         return res;
     }).property('controllers.sessions.currentUser')
 });
@@ -343,17 +346,21 @@ App.IndexController = Ember.Controller.extend({
     // requires the sessions controller
     needs: ['sessions'],
 
+    // TODO: not DRY need to centralize
     // creates a computed property called currentUser that will be
     // binded on the curretUser of the sessions controller and will return its value
     currentUser: (function() {
-//        console.log('ApplicationController: currentUser()');
-        return this.get('controllers.sessions.currentUser');
+        var res = this.get('controllers.sessions.currentUser');
+        console.log('IndexController: currentUser='+JSON.stringify(res));
+        return res;
     }).property('controllers.sessions.currentUser'),
 
     // creates a computed property called isAuthenticated that will be
     // binded on the curretUser of the sessions controller and will verify if the object is empty
     isAuthenticated: (function() {
-        return !Ember.isEmpty(this.get('controllers.sessions.currentUser'));
+        var res = !Ember.isEmpty(this.get('controllers.sessions.currentUser'));
+        console.log('IndexController: isAuthenticated='+res);
+        return res;
     }).property('controllers.sessions.currentUser')
 });
 
@@ -563,11 +570,18 @@ App.SessionsController = Ember.Controller.extend({
 });
 
 App.ProductsController = Ember.ArrayController.extend({
+    needs: ['sessions'],
     isEditing: false,
 
-//    sortAscending: true,
-//    sortProperties: ['name'],
+    sortAscending: true,
+    sortProperties: ['name'],
     itemController: 'product',
+
+    isAdmin: (function() {
+        var res = this.get('controllers.sessions.currentUser.is_admin');
+        console.log('ProductsController: currentUser='+res);
+        return res;
+    }).property('controllers.sessions.currentUser'),
     actions: {
         createProduct: function() {
             console.log('ProductsController: Create product');
@@ -576,12 +590,48 @@ App.ProductsController = Ember.ArrayController.extend({
     }
 });
 
-App.ProductController = Ember.ObjectController.extend({
+App.ProductsNewController = Ember.ObjectController.extend({
+    // TODO: Not DRY
+    needs: ['sessions'],
+    isAdmin: (function() {
+        var res = this.get('controllers.sessions.currentUser.is_admin');
+        console.log('ProductsNewController: isAdmin = '+res)
+        return res;
+    }).property('controllers.sessions.currentUser')
 });
 
+App.ProductController = Ember.ObjectController.extend({
+//    // TODO: Not DRY
+//    needs: ['sessions'],
+//    isAdmin: (function() {
+//        var res = this.get('controllers.sessions.currentUser.is_admin');
+//        console.log('ProductController: isAdmin = '+res)
+//        return res;
+//    }).property('controllers.sessions.currentUser'),
+});
+
+App.ProductEditController = Ember.ObjectController.extend({
+    // TODO: Not DRY
+    needs: ['sessions'],
+    isAdmin: (function() {
+        var res = this.get('controllers.sessions.currentUser.is_admin');
+        console.log('ProductEditController: isAdmin = '+res)
+        return res;
+    }).property('controllers.sessions.currentUser')
+});
+
+
 App.ProductIndexController = Ember.ObjectController.extend({
-    needs: ['products'],
+    needs: ['products', 'sessions'],
     isEditing: Ember.computed.alias('controllers.products.isEditing'),
+
+    // TODO: Not DRY
+    isAdmin: (function() {
+        var res = this.get('controllers.sessions.currentUser.is_admin');
+        console.log('ProductIndexController: isAdmin = '+res)
+        return res;
+    }).property('controllers.sessions.currentUser'),
+
     actions: {
         editProduct: function(product) {
             this.set('isEditing', true);
@@ -672,6 +722,22 @@ App.ProductsNewController = Ember.ObjectController.extend({
             return false;
         }
         return true;
+    }
+});
+
+App.UsersUserController = Ember.ObjectController.extend({
+    // TODO: Not DRY
+    needs: ['sessions'],
+    isAdmin: (function() {
+        var res = this.get('controllers.sessions.currentUser.is_admin');
+        console.log('UsersUserController: isAdmin = '+res)
+        return res;
+    }).property('controllers.sessions.currentUser'),
+
+    actions: {
+        editProfile: function() {
+            alert('Sorry, not yet implemented (be patient)');
+        }
     }
 });
 
