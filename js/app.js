@@ -118,27 +118,6 @@ App.ProductSerializer = DS.RESTSerializer.extend({
     }
 });
 
-App.ProductSerializer = DS.RESTSerializer.extend({
-    typeForRoot: function(root) {
-        var res = this._super(root);
-        console.log('ProductSerializer: typeForRoot(root='+root+') => '+res);
-        return res;
-    },
-    normalizePayload: function(payload) {
-        if (payload.products) {
-            var normalizedPayload = { products: [] };
-            payload.products.forEach(function(item){
-                normalizedPayload.products.pushObject(item.product);
-            });
-            payload = normalizedPayload;
-            console.log('ProductSerializer: normalizePayload() => '+JSON.stringify(payload));
-        } else {
-            console.log('ProductSerializer: normalizePayload() => do nothing');
-        }
-        return payload;
-    }
-});
-
 /** ROUTER MAP **/
 App.Router.map(function() {
     this.resource('products', function() {
