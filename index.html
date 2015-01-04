@@ -87,7 +87,7 @@
 
     <script type="text/x-handlebars" data-template-name="about">
         <h2 class="page-header">About</h2>
-        <p>This is a simple web client template based on the <a href="http://www.emberjs.com">ember framework</a> that communicates with a HAL/JSON web service using HyperResource.</p>
+        <p>This is a simple web client template based on the <a href="http://www.emberjs.com">ember framework</a> that communicates with a <a href="https://github.com/kgish/ruby-webmachine-roar-template">HAL/JSON web service</a>.</p>
         <p>For more information, please have a look <a href="https://github.com/kgish/ember-hal-template">here</a>.</p>
     </script>
 
@@ -210,7 +210,12 @@
 
     <script type="text/x-handlebars" data-template-name="help">
         <h2 class="page-header">Help</h2>
-        <p>This is the help page.</p>
+        <p>You can {{#link-to 'sessions.index'}}login{{/link-to}} by using one of the following two demo accounts:</p>
+        <ul>
+            <li>kiffin/pindakaas (admin)</li>
+            <li>henri/escargot (user)</li>
+        </ul>
+        <p>Depending on whether you are an admin or regular user you will be given access accordingly.</p>
     </script>
 
     <script type="text/x-handlebars" data-template-name="products">
