@@ -58,6 +58,15 @@ the `normalizePayload` hook like this:
             return payload;
     }
 
+## Thanks
+
+I had a look at the [Ember Data HAL Adapter](https://github.com/locks/ember-data-hal-adapter)
+written by [Ricardo Mendes](https://github.com/locks), but unfortunately could
+not get it to work.
+
+However, reading through the code was very enlightening
+and gave me the opportunity to pull out some valuable code snippets, thanks.
+
 ## References
 
 Here is a list of important references which I found very useful.
