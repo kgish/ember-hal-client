@@ -58,7 +58,7 @@
             </div>
         </div>
 
-        <div class="container">
+        <div id="content" class="container">
             <div class="row">
                 <div class="col-md-10">
                     {{outlet}}
@@ -69,14 +69,13 @@
         <div class="navbar navbar-fixed-bottom">
             <div class="container">
                 <ul class="nav navbar-nav navbar-left">
-                    <div class="text-muted">Brought to you by <a href="mailto:kiffin.gish@planet.nl">Kiffin</a></div>
+                    <li class="text-muted"><span>Brought to you by <a href="mailto:kiffin.gish@planet.nl">Kiffin</a></span></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <a href="http://www.facebook.com/kiffin.gish" target="_blank"> <img src="/images/facebook.png" title="Facebook"/> </a>
-                    <a href="http://twitter.com/kiffin" target="_blank"> <img src="/images/twitter.png" title="Twitter"/> </a>
-                    <a href="http://www.google.com/+KiffinGish" target="_blank"> <img src="/images/googleplus.png" title="Google+"/> </a>
-                    <a href="http://www.linkedin.com/in/kiffin" target="_blank"> <img src="/images/linkedin.png" title="LinkedIn"/> </a>
-                    <a href="http://github.com/kgish" target="_blank"> <img src="/images/github.png" title="Github"/> </a>
+                    <li><a href="http://github.com/kgish" target="_blank"><img src="/images/github.png" title="Github"/></a></li>
+                    <li><a href="http://twitter.com/kiffin" target="_blank"><img src="/images/twitter.png" title="Twitter"/></a></li>
+                    <li><a href="http://www.facebook.com/kiffin.gish" target="_blank"><img src="/images/facebook.png" title="Facebook"/></a></li>
+                    <li><a href="http://www.google.com/+KiffinGish" target="_blank"><img src="/images/googleplus.png" title="Google+"/></a></li>
                 </ul>
             </div>
         </div>
@@ -227,6 +226,8 @@
 
     <script type="text/x-handlebars" data-template-name="help">
         <h2 class="page-header">Help</h2>
+        ￼
+
         <p>You can {{#link-to 'sessions.index'}}login{{/link-to}} by using one of the following two demo accounts:</p>
         <ul>
             <li>kiffin/pindakaas (admin)</li>

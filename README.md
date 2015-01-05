@@ -77,7 +77,7 @@ Here is a list of important references which I found very useful.
 * [Ember Data Local Storage Adapter](https://github.com/kurko/ember-localstorage-adapter)
 * [Emberjs Authentication the right way](http://webcloud.info/blog/2014/04/07/emberjs-authentication-the-right-way-javascript-version/) ([example](https://github.com/WebCloud/EmberJS-Auth-Example))
 * [HTTP 1.1 Headers Status](http://upload.wikimedia.org/wikipedia/commons/8/88/Http-headers-status.png)
-* [HyperResource](https://github.com/gamache/hyperresource).
+* [HyperResource](https://github.com/gamache/hyperresource)
 
 ## Author
 
