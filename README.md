@@ -11,9 +11,9 @@ using [HyperResource](https://github.com/gamache/hyperresource).
 In order to install and start this application, run the following commands.
 
 ```bash
-    $ git clone https://github.com/kgish/ember-hal-template hal-client
-    $ cd hal-client
-    $ bundle install
+$ git clone https://github.com/kgish/ember-hal-template hal-client
+$ cd hal-client
+$ bundle install
 ```
 
 Configure the RESTAdapter by editing the file `js/app.js` and modifying the `host` like this:
@@ -27,8 +27,10 @@ DS.RESTAdapter.reopen({
 
 Start the client by running the following command.
 
-    $ python -m SimpleHTTPServer
-    Serving HTTP on 0.0.0.0 port 8000 ...
+```bash
+$ python -m SimpleHTTPServer
+Serving HTTP on 0.0.0.0 port 8000 ...
+```
 
 After which you can fire up you favorite browser and point it
 to [http://localhost:8000](http://localhost:8000).
@@ -48,8 +50,8 @@ which before being passed through to the `RESTAdapter` needs to be converted
 into this:
 
 ```javascript
-    {products: [{attributes},{...}]
-````
+{products: [{attributes},{...}]
+```
 
 This is achieved by extending the default `ProductSerializer` and redefining
 the `normalizePayload` hook like this:
