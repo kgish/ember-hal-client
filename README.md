@@ -10,9 +10,11 @@ using [HyperResource](https://github.com/gamache/hyperresource).
 
 In order to install and start this application, run the following commands.
 
+```bash
     $ git clone https://github.com/kgish/ember-hal-template hal-client
     $ cd hal-client
     $ bundle install
+```
 
 Configure the RESTAdapter by editing the file `js/app.js` and modifying the `host` like this:
 
@@ -38,12 +40,16 @@ In order to get this application running properly with the ember default
 
 The server will return HAL/JSON payload which looks something like this:
 
-    {products: [{product: {attributes}},{...}]
+```javascript
+{products: [{product: {attributes}},{...}]
+```
 
 which before being passed through to the `RESTAdapter` needs to be converted
 into this:
 
+```javascript
     {products: [{attributes},{...}]
+````
 
 This is achieved by extending the default `ProductSerializer` and redefining
 the `normalizePayload` hook like this:
@@ -83,7 +89,6 @@ Here is a list of important references which I found very useful.
 * [Ember Data Local Storage Adapter](https://github.com/kurko/ember-localstorage-adapter)
 * [Emberjs Authentication the right way](http://webcloud.info/blog/2014/04/07/emberjs-authentication-the-right-way-javascript-version/) ([example](https://github.com/WebCloud/EmberJS-Auth-Example))
 * [HTTP 1.1 Headers Status](http://upload.wikimedia.org/wikipedia/commons/8/88/Http-headers-status.png)
-* [HyperResource](https://github.com/gamache/hyperresource)
 
 ## Author
 
