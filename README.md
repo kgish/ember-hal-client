@@ -1,4 +1,4 @@
-# HAL/JSON Client Template
+# Ember HAL Template
 
 This is a simple web client template for setting up an Ember application
 that communicates with a HAL/JSON web service
@@ -46,17 +46,21 @@ into this:
 This is achieved by extending the default `ProductSerializer` and redefining
 the `normalizePayload` hook like this:
 
-    App.ProductSerializer = DS.RESTSerializer.extend({
-        normalizePayload: function(payload) {
-            if (payload.products) {
-                var normalizedPayload = { products: [] };
-                payload.products.forEach(function(item){
-                    normalizedPayload.products.pushObject(item.product);
-                });
-                payload = normalizedPayload;
-            }
-            return payload;
+```javascript
+App.ProductSerializer = DS.RESTSerializer.extend({
+    normalizePayload: function(payload) {
+        if (payload.products) {
+            var normalizedPayload = { products: [] };
+            payload.products.forEach(function(item){
+                normalizedPayload.products.pushObject(item.product);
+            });
+            payload = normalizedPayload;
+        }
+        return payload;
     }
+    ...
+});
+```
 
 ## Thanks
 
@@ -64,8 +68,8 @@ I had a look at the [Ember Data HAL Adapter](https://github.com/locks/ember-data
 written by [Ricardo Mendes](https://github.com/locks), but unfortunately could
 not get it to work.
 
-However, reading through the code was very enlightening
-and gave me the opportunity to pull out some valuable code snippets, thanks.
+However, reading through the code was very enlightening and gave me the
+opportunity to pull out some valuable code snippets, thanks.
 
 ## References
 
