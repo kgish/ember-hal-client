@@ -16,10 +16,12 @@ In order to install and start this application, run the following commands.
 
 Configure the RESTAdapter by editing the file `js/app.js` and modifying the `host` like this:
 
-    // js/app.js
-    DS.RESTAdapter.reopen({
-        host: 'http://0.0.0.0:8080' // <= change ip and port
-    });
+```javascript
+// js/app.js
+DS.RESTAdapter.reopen({
+    host: 'http://0.0.0.0:8080' // <= change ip and port
+});
+```
 
 Start the client by running the following command.
 
