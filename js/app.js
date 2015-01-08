@@ -78,6 +78,32 @@ App.ProductAdapter = DS.RESTAdapter.extend({
     }
 });
 
+App.UserAdapter = DS.RESTAdapter.extend({
+    buildURL: function(type, id, record) {
+        var url = this._super(type, id, record);
+        console.log('UserAdapter: buildURL(type='+type+',id='+id+') => '+url);
+        return url;
+    },
+    ajaxSuccess: function(jqXHR, jsonPayload) {
+        var res = this._super(jqXHR, jsonPayload);
+        console.log('UserAdapter: ajaxSuccess(jqXHR='+JSON.stringify(jqXHR)+',jsonPayload='+
+        JSON.stringify(jsonPayload)+') => '+JSON.stringify(res));
+        return res;
+    },
+    ajaxError: function(jqXHR) {
+        var res = this._super(jqXHR);
+        console.log('UserAdapter: ajaxError(jqXHR='+JSON.stringify(jqXHR)+')');
+        return res;
+        //var error = this._super(jqXHR);
+        //if (jqXHR && jqXHR.status === 422) {
+        //    var jsonErrors = Ember.$.parseJSON(jqXHR.responseText);
+        //    return new DS.InvalidError(jsonErrors);
+        //} else {
+        //    return error;
+        //}
+    }
+});
+
 App.UserSignupAdapter = DS.RESTAdapter.extend({
     buildURL: function(type, id, record) {
         var url = this._super(type, id, record);
@@ -107,7 +133,8 @@ App.ProductSerializer = DS.RESTSerializer.extend({
     },
 
     normalizePayload: function(payload) {
-        if (payload.products) {
+        console.log('ProductSerializer: normalizePayload(payload='+JSON.stringify(payload)+')');
+        if (payload['products']) {
             var normalizedPayload = { products: [] };
             payload.products.forEach(function(item){
                 normalizedPayload.products.pushObject(item.product);
@@ -138,12 +165,90 @@ App.ProductSerializer = DS.RESTSerializer.extend({
         return res;
     }
 
-    //normalizeId: function(hash) {
-    //    var normalizedHash = hash;
-    //    //normalizedHash.id = hash._links.self.href;
-    //    console.log('ProductSerializer: normalizeId(hash='+JSON.stringify(hash)+') => '+JSON.stringify(normalizedHash));
-    //    return normalizedHash;
-    //}
+    normalizeId: function(hash) {
+        var normalizedHash = hash;
+        //normalizedHash.id = hash._links.self.href;
+        console.log('ProductSerializer: normalizeId(hash='+JSON.stringify(hash)+') => '+JSON.stringify(normalizedHash));
+        return normalizedHash;
+    }
+});
+
+App.UserSerializer = DS.RESTSerializer.extend({
+    typeForRoot: function(root) {
+        var res = this._super(root);
+        console.log('UserSerializer: typeForRoot(root='+root+') => '+res);
+        return res;
+    },
+
+//  payload = {
+//      "_links": {
+//          "self": {
+//              "href": "/users/1"
+//          },
+//          "curies": [
+//              {
+//                  "name": "ht",
+//                  "href": "http://0.0.0.0:8080:/rels/{rel}",
+//                  "templated": true
+//              }
+//          ]
+//      },
+//      "name": "Kiffin Gish",
+//      "username": "kiffin",
+//      "email": "kiffin.gish@planet.nl",
+//      "is_admin": true,
+//      "login_date": "2015-01-08"
+//  }
+//
+//  Needs to be converted to:
+//
+//  payload = {
+    "id" : 1,
+//      "name": "Kiffin Gish",
+//      "username": "kiffin",
+//      "email": "kiffin.gish@planet.nl",
+//      "is_admin": true,
+//      "login_date": "2015-01-08"
+//  }
+    normalizePayload: function(payload) {
+        console.log('UserSerializer: normalizePayload(payload='+JSON.stringify(payload)+')');
+        if (payload['_links'] && payload['_links']['self']) {
+            var normalizedPayload = { products: [] };
+            payload.products.forEach(function(item){
+                normalizedPayload.products.pushObject(item.product);
+            });
+            payload = normalizedPayload;
+            console.log('UserSerializer: normalizePayload() => '+JSON.stringify(payload));
+        } else {
+            console.log('UserSerializer: normalizePayload() => do nothing');
+        }
+        return payload;
+    },
+
+    normalize: function(type, hash, property) {
+        //for (var prop in hash) {
+        //    if (prop == '_links' || prop == '_embedded' || prop.indexOf('http') === 0) {
+        //        continue;
+        //    }
+        //
+        //    var camelizedProp = prop.camelize();
+        //    if (prop != camelizedProp) {
+        //        hash[camelizedProp] = hash[prop];
+        //        delete hash[prop];
+        //    }
+        //}
+        var res = this._super(type, hash, property);
+        console.log('UserSerializer: normalize(type='+JSON.stringify(type)+',hash='+JSON.stringify(hash)+
+        ',property='+property+') => '+JSON.stringify(res));
+        return res;
+    }
+
+    normalizeId: function(hash) {
+        var normalizedHash = hash;
+        //normalizedHash.id = hash._links.self.href;
+        console.log('UserSerializer: normalizeId(hash='+JSON.stringify(hash)+') => '+JSON.stringify(normalizedHash));
+        return normalizedHash;
+    }
 });
 
 /** ROUTER MAP **/
