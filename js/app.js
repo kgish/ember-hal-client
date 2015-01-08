@@ -163,7 +163,7 @@ App.ProductSerializer = DS.RESTSerializer.extend({
         console.log('ProductSerializer: normalize(type='+JSON.stringify(type)+',hash='+JSON.stringify(hash)+
             ',property='+property+') => '+JSON.stringify(res));
         return res;
-    }
+    },
 
     normalizeId: function(hash) {
         var normalizedHash = hash;
@@ -241,7 +241,7 @@ App.UserSerializer = DS.RESTSerializer.extend({
         console.log('UserSerializer: normalize(type='+JSON.stringify(type)+',hash='+JSON.stringify(hash)+
         ',property='+property+') => '+JSON.stringify(res));
         return res;
-    }
+    },
 
     normalizeId: function(hash) {
         var normalizedHash = hash;
