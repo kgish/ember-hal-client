@@ -1147,7 +1147,7 @@ App.Product.reopenClass({
 /** HANDLEBAR HELPERS **/
 Ember.Handlebars.helper('truncate', function(value, options) {
     if (value) {
-        var maxlen = options.hash.maxlen || 50;
+        var maxlen = options.hash['maxlen'] || 50;
         if (/\s/g.test(value)) {
             return value;
         } else if (value.length > maxlen) {
@@ -1168,12 +1168,12 @@ Ember.Handlebars.helper('pluralize', function(number, options) {
 Ember.Handlebars.helper('fromnow', function(context) {
     var dd = ""+context;
     var ss = dd.slice(4,24); // => Nov 11 2014 08:52:16
-    console.log('Helper fromnow: '+dd)
+    console.log('Helper fromnow: '+dd);
     return new moment(ss,"MMM DD YYYY hh:mm:ss").fromNow();
 });
 
 Ember.Handlebars.helper('formatvalue', function(value, options) {
-    var placeholder = options.hash.placeholder;
+    var placeholder = options.hash['placeholder'];
     if (typeof value === 'undefined') {
         return placeholder || '[UNDEFINED]'
     } else if (value === null) {
