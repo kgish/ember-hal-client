@@ -144,6 +144,8 @@ App.ProductSerializer = DS.RESTSerializer.extend({
         return normalizedPayload;
     },
 
+// private
+
     _normalizeResource: function(payload) {
         var links = payload['_links'],
             href = links['self']['href'],
