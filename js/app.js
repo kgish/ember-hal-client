@@ -64,6 +64,7 @@ App.ProductAdapter = DS.RESTAdapter.extend({
             JSON.stringify(jsonPayload)+') => '+JSON.stringify(res));
         return res;
     },
+    // TODO: Handle errors by displaying in gui
     ajaxError: function(jqXHR) {
         var res = this._super(jqXHR);
         console.log('ProductAdapter: ajaxError(jqXHR='+JSON.stringify(jqXHR)+')');
@@ -131,34 +132,26 @@ App.ProductSerializer = DS.RESTSerializer.extend({
         console.log('ProductSerializer: typeForRoot(root='+root+') => '+res);
         return res;
     },
-
     normalizePayload: function(payload) {
         console.log('ProductSerializer: normalizePayload(payload='+JSON.stringify(payload)+')');
-        if (payload['products']) {
-            var normalizedPayload = { products: [] };
-            payload.products.forEach(function(item){
-                normalizedPayload.products.pushObject(item.product);
-            });
-            payload = normalizedPayload;
-            console.log('ProductSerializer: normalizePayload() => '+JSON.stringify(payload));
+        var normalizedPayload = {};
+        if (payload['_links']) {
+            var links = payload['_links'],
+                href = links['self']['href'];
+            console.log('ProductSerializer: normalizePayload() => href='+href);
+            if (href === '/products') {
+                normalizedPayload = this._normalizeCollection(payload)
+            } else {
+                normalizedPayload = this._normalizeResource(payload)
+            }
+            console.log('ProductSerializer: normalizePayload() => '+JSON.stringify(normalizedPayload));
         } else {
-            console.log('ProductSerializer: normalizePayload() => do nothing');
+            console.log('ProductSerializer: normalizePayload() => unknown payload format!');
         }
-        return payload;
+        return normalizedPayload;
     },
 
     normalize: function(type, hash, property) {
-        //for (var prop in hash) {
-        //    if (prop == '_links' || prop == '_embedded' || prop.indexOf('http') === 0) {
-        //        continue;
-        //    }
-        //
-        //    var camelizedProp = prop.camelize();
-        //    if (prop != camelizedProp) {
-        //        hash[camelizedProp] = hash[prop];
-        //        delete hash[prop];
-        //    }
-        //}
         var res = this._super(type, hash, property);
         console.log('ProductSerializer: normalize(type='+JSON.stringify(type)+',hash='+JSON.stringify(hash)+
             ',property='+property+') => '+JSON.stringify(res));
@@ -170,6 +163,113 @@ App.ProductSerializer = DS.RESTSerializer.extend({
         //normalizedHash.id = hash._links.self.href;
         console.log('ProductSerializer: normalizeId(hash='+JSON.stringify(hash)+') => '+JSON.stringify(normalizedHash));
         return normalizedHash;
+    },
+
+    /* private */
+
+    _normalizeResource: function(payload) {
+/*
+     For a single resource, the incoming payload from the API Server looks likes this:
+
+     payload = {
+        _links: {
+            self: {
+                href: '/products/5'
+            },
+            curies: [
+                {
+                    name:      'ht',
+                    href:      'http://0.0.0.0:8080:/rels/{rel}',
+                    templated: true
+                }
+            ]
+        },
+        name:     'horse',
+        category: 'animal',
+        price:    3021
+     }
+
+     Needs to be converted to this:
+
+     payload = {
+        product: {
+            id:       5,
+            name:     'horse',
+            category: 'animal',
+            price:    3021
+        }
+     }
+*/
+        var links = payload['_links'],
+            href = links['self']['href'],
+            id = href.replace(/^\/[^\/]+\//, ''),
+            normalizedPayload = {
+            product: {
+                id:       id,
+                name:     payload['name'],
+                category: payload['category'],
+                price:    payload['price']
+            }
+        };
+        return normalizedPayload;
+    },
+
+    _normalizeCollection: function(payload) {
+/*
+    For a collection of resources, the incoming payload from the API Server looks likes this:
+
+    payload = {
+        _links: {
+            self: {
+                href: '/products'
+            },
+            curies: [
+                {
+                    name:      'ht',
+                    href:      'http://localhost:8080:/rels/{rel}',
+                    templated: true
+                }
+            ],
+            ht:product: [
+                {
+                    'href':     '/products/1',
+                    'name':     'dragon',
+                    'category': 'health',
+                    'price':    2241
+                },
+                ...
+            ]
+        }
+    }
+
+    Needs to be converted to this:
+
+    payload = {
+        products: [
+            {
+                id:         5,
+                name:     'horse',
+                category: 'animal',
+                price:    3021
+            },
+            ...
+        ]
+    }
+*/
+        var links = payload['_links'],
+            href = links['self']['href'],
+            products = links['ht:product'];
+        var list = [];
+        products.forEach(function(product){
+            var id = product.href.replace(/^\/[^\/]+\//, '');
+            list.push({
+                id:       id,
+                name:     product['name'],
+                category: product['category'],
+                price:    product['price']
+            });
+        });
+        return { products: list };
     }
 });
 
@@ -179,64 +279,26 @@ App.UserSerializer = DS.RESTSerializer.extend({
         console.log('UserSerializer: typeForRoot(root='+root+') => '+res);
         return res;
     },
-
-//  payload = {
-//      "_links": {
-//          "self": {
-//              "href": "/users/1"
-//          },
-//          "curies": [
-//              {
-//                  "name": "ht",
-//                  "href": "http://0.0.0.0:8080:/rels/{rel}",
-//                  "templated": true
-//              }
-//          ]
-//      },
-//      "name": "Kiffin Gish",
-//      "username": "kiffin",
-//      "email": "kiffin.gish@planet.nl",
-//      "is_admin": true,
-//      "login_date": "2015-01-08"
-//  }
-//
-//  Needs to be converted to:
-//
-//  payload = {
-    "id" : 1,
-//      "name": "Kiffin Gish",
-//      "username": "kiffin",
-//      "email": "kiffin.gish@planet.nl",
-//      "is_admin": true,
-//      "login_date": "2015-01-08"
-//  }
     normalizePayload: function(payload) {
         console.log('UserSerializer: normalizePayload(payload='+JSON.stringify(payload)+')');
-        if (payload['_links'] && payload['_links']['self']) {
-            var normalizedPayload = { products: [] };
-            payload.products.forEach(function(item){
-                normalizedPayload.products.pushObject(item.product);
-            });
-            payload = normalizedPayload;
-            console.log('UserSerializer: normalizePayload() => '+JSON.stringify(payload));
+        var normalizedPayload = {};
+        if (payload['_links']) {
+            var links = payload['_links'],
+                href = links['self']['href'];
+            console.log('UserSerializer: normalizePayload() => href='+href);
+            if (href === '/users') {
+                normalizedPayload = this._normalizeCollection(payload)
+            } else {
+                normalizedPayload = this._normalizeResource(payload)
+            }
+            console.log('UserSerializer: normalizePayload() => '+JSON.stringify(normalizedPayload));
         } else {
-            console.log('UserSerializer: normalizePayload() => do nothing');
+            console.log('UserSerializer: normalizePayload() => unknown payload format!');
         }
-        return payload;
+        return normalizedPayload;
     },
 
     normalize: function(type, hash, property) {
-        //for (var prop in hash) {
-        //    if (prop == '_links' || prop == '_embedded' || prop.indexOf('http') === 0) {
-        //        continue;
-        //    }
-        //
-        //    var camelizedProp = prop.camelize();
-        //    if (prop != camelizedProp) {
-        //        hash[camelizedProp] = hash[prop];
-        //        delete hash[prop];
-        //    }
-        //}
         var res = this._super(type, hash, property);
         console.log('UserSerializer: normalize(type='+JSON.stringify(type)+',hash='+JSON.stringify(hash)+
         ',property='+property+') => '+JSON.stringify(res));
@@ -248,6 +310,125 @@ App.UserSerializer = DS.RESTSerializer.extend({
         //normalizedHash.id = hash._links.self.href;
         console.log('UserSerializer: normalizeId(hash='+JSON.stringify(hash)+') => '+JSON.stringify(normalizedHash));
         return normalizedHash;
+    },
+
+    /* private */
+
+    _normalizeResource: function(payload) {
+/*
+     For a single resource, the incoming payload from the API Server looks likes this:
+
+     payload = {
+        _links: {
+            self: {
+                href: '/users/2"
+            },
+            curies: [
+                {
+                    name:      'ht',
+                    href:      'http://0.0.0.0:8080:/rels/{rel}',
+                    templated: true
+                }
+            ],
+            name:       'Henri Bergson',
+            username:   'henri',
+            email:      'henri.bergson@gmail.com',
+            is_admin:   false,
+            login_date: '2004-12-13'
+        }
+     }
+
+     Needs to be converted to this:
+
+     payload = {
+        users: {
+            id:         2,
+            name:       'Henri Bergson',
+            username:   'henri',
+            email:      'henri.bergson@gmail.com',
+            is_admin:   false,
+            login_date: '2004-12-13'
+        }
+     }
+*/
+        var links = payload['_links'],
+            href = links['self']['href'],
+            id = href.replace(/^\/[^\/]+\//, ''),
+            normalizedPayload = {
+                user: {
+                    id:         id,
+                    name:       payload['name'],
+                    username:   payload['username'],
+                    email:      payload['email'],
+                    is_admin:   payload['is_admin'],
+                    login_date: payload['login_date']
+                }
+            };
+        return normalizedPayload;
+    },
+
+    _normalizeCollection: function(payload) {
+/*
+     For a collection of resources, the incoming payload from the API Server looks likes this:
+
+     payload = {
+        _links: {
+            self: {
+                href: '/users'
+            },
+            curies: [
+                {
+                    name: 'ht',
+                    href: 'http://localhost:8080:/rels/{rel}',
+                    templated: true
+                }
+            ],
+            ht:user: [
+                {
+                    href: '/users/2"
+                    name:       'Henri Bergson',
+                    username:   'henri',
+                    email:      'henri.bergson@gmail.com',
+                    is_admin:   false,
+                    login_date: '2004-12-13'
+                },
+                ...
+            ]
+        }
+     }
+
+     Needs to be converted to this:
+
+     payload = {
+        users: [
+            {
+                id:         2,
+                name:       'Henri Bergson',
+                username:   'henri',
+                email:      'henri.bergson@gmail.com',
+                is_admin:   false,
+                login_date: '2004-12-13'
+            },
+            ...
+        ]
+     }
+*/
+        var links = payload['_links'],
+            href = links['self']['href'],
+            users = links['ht:user'];
+        var list = [];
+        users.forEach(function(user){
+            var id = user.href.replace(/^\/[^\/]+\//, '');
+            list.push({
+                id:         id,
+                name:       user['name'],
+                username:   user['username'],
+                email:      user['email'],
+                is_admin:   user['is_admin'],
+                login_date: user['login_date']
+            });
+        });
+        return { users: list };
     }
 });
 

@@ -4,6 +4,7 @@
 
     <meta charset="utf-8">
     <title>HAL/JSON Demo Application</title>
+    <!--<link rel="stylesheet" href="css/bootstrap.min.css">-->
     <link rel="stylesheet" href="css/bootstrap-united.min.css">
     <link rel="stylesheet" href="css/main.css">
 
@@ -103,7 +104,7 @@
 
     <script type="text/x-handlebars" data-template-name="error">
         <h2 class="page-header">Error</h2>
-        <p>This is the error template.</p>
+        <p>Oops, looks like something went wrong.</p>
     </script>
 
     <script type="text/x-handlebars" data-template-name="secret">
@@ -211,16 +212,6 @@
         </div>
     </script>
 
-    <!--<script type="text/x-handlebars" data-template-name="admin">-->
-        <!--<h2 class="page-header">Admin</h2>-->
-        <!--<p>This is the admin page.</p>-->
-    <!--</script>-->
-
-    <!--<script type="text/x-handlebars" data-template-name="profile">-->
-        <!--<h2 class="page-header">Profile</h2>-->
-        <!--<p>This is the profile page.</p>-->
-    <!--</script>-->
-
     <script type="text/x-handlebars" data-template-name="help">
         <h2 class="page-header">Help</h2>
         ￼
@@ -297,11 +288,7 @@
 
     <script type="text/x-handlebars" data-template-name="products/new">
         <div class="col-md-6">
-<<<<<<< HEAD
             <h2>Create -- {{name}}</h2>
-=======
-        <h2>Create -- {{formatvalue name}}</h2>
->>>>>>> authentication
             <div class="list-group">
                 {{partial 'product/form' isEditing=isEditing this=controller.newProduct}}
                 <li class="list-group-item">
