@@ -14,112 +14,112 @@ App = Ember.Application.create({
 /** ADAPTERS **/
 //App.ApplicationAdapter = DS.FixtureAdapter.extend({});
 
-App.ApplicationAdapter = DS.RESTAdapter.extend({
-    buildURL: function(type, id, record) {
-        var url = this._super(type, id, record);
-        console.log('ApplicationAdapter: buildURL(type='+type+',id='+id+') => '+url);
-        return url;
-    },
-    ajaxSuccess: function(jqXHR, jsonPayload) {
-        var res = this._super(jqXHR, jsonPayload);
-        console.log('ApplicationAdapter: ajaxSuccess(jqXHR='+JSON.stringify(jqXHR)+',jsonPayload='+
-            JSON.stringify(jsonPayload)+') => '+JSON.stringify(res));
-        return res;
-    },
-    ajaxError: function(jqXHR) {
-        var res = this._super(jqXHR);
-        console.log('ApplicationAdapter: ajaxError(jqXHR='+JSON.stringify(jqXHR)+')');
-        return res;
-        //var error = this._super(jqXHR);
-        //if (jqXHR && jqXHR.status === 422) {
-        //    var jsonErrors = Ember.$.parseJSON(jqXHR.responseText);
-        //    return new DS.InvalidError(jsonErrors);
-        //} else {
-        //    return error;
-        //}
-    }
-});
+//App.ApplicationAdapter = DS.RESTAdapter.extend({
+//    buildURL: function(type, id, record) {
+//        var url = this._super(type, id, record);
+//        console.log('ApplicationAdapter: buildURL(type='+type+',id='+id+') => '+url);
+//        return url;
+//    },
+//    ajaxSuccess: function(jqXHR, jsonPayload) {
+//        var res = this._super(jqXHR, jsonPayload);
+//        console.log('ApplicationAdapter: ajaxSuccess(jqXHR='+JSON.stringify(jqXHR)+',jsonPayload='+
+//            JSON.stringify(jsonPayload)+') => '+JSON.stringify(res));
+//        return res;
+//    },
+//    ajaxError: function(jqXHR) {
+//        var res = this._super(jqXHR);
+//        console.log('ApplicationAdapter: ajaxError(jqXHR='+JSON.stringify(jqXHR)+')');
+//        return res;
+//        //var error = this._super(jqXHR);
+//        //if (jqXHR && jqXHR.status === 422) {
+//        //    var jsonErrors = Ember.$.parseJSON(jqXHR.responseText);
+//        //    return new DS.InvalidError(jsonErrors);
+//        //} else {
+//        //    return error;
+//        //}
+//    }
+//});
 
 DS.RESTAdapter.reopen({
     host: 'http://0.0.0.0:8080'
 });
 
-App.ProductsAdapter = DS.RESTAdapter.extend({
-    buildURL: function(type, id, record) {
-        var url = this._super(type, id, record);
-        console.log('ProductsAdapter: buildURL(type='+type+',id='+id+') => '+url);
-        return url;
-    }
-});
-
-App.ProductAdapter = DS.RESTAdapter.extend({
-    buildURL: function(type, id, record) {
-        var url = this._super(type, id, record);
-        console.log('ProductAdapter: buildURL(type='+type+',id='+id+') => '+url);
-        return url;
-    },
-    ajaxSuccess: function(jqXHR, jsonPayload) {
-        var res = this._super(jqXHR, jsonPayload);
-        console.log('ProductAdapter: ajaxSuccess(jqXHR='+JSON.stringify(jqXHR)+',jsonPayload='+
-            JSON.stringify(jsonPayload)+') => '+JSON.stringify(res));
-        return res;
-    },
-    // TODO: Handle errors by displaying in gui
-    ajaxError: function(jqXHR) {
-        var res = this._super(jqXHR);
-        console.log('ProductAdapter: ajaxError(jqXHR='+JSON.stringify(jqXHR)+')');
-        return res;
-        //var error = this._super(jqXHR);
-        //if (jqXHR && jqXHR.status === 422) {
-        //    var jsonErrors = Ember.$.parseJSON(jqXHR.responseText);
-        //    return new DS.InvalidError(jsonErrors);
-        //} else {
-        //    return error;
-        //}
-    }
-});
-
-App.UserAdapter = DS.RESTAdapter.extend({
-    buildURL: function(type, id, record) {
-        var url = this._super(type, id, record);
-        console.log('UserAdapter: buildURL(type='+type+',id='+id+') => '+url);
-        return url;
-    },
-    ajaxSuccess: function(jqXHR, jsonPayload) {
-        var res = this._super(jqXHR, jsonPayload);
-        console.log('UserAdapter: ajaxSuccess(jqXHR='+JSON.stringify(jqXHR)+',jsonPayload='+
-        JSON.stringify(jsonPayload)+') => '+JSON.stringify(res));
-        return res;
-    },
-    ajaxError: function(jqXHR) {
-        var res = this._super(jqXHR);
-        console.log('UserAdapter: ajaxError(jqXHR='+JSON.stringify(jqXHR)+')');
-        return res;
-        //var error = this._super(jqXHR);
-        //if (jqXHR && jqXHR.status === 422) {
-        //    var jsonErrors = Ember.$.parseJSON(jqXHR.responseText);
-        //    return new DS.InvalidError(jsonErrors);
-        //} else {
-        //    return error;
-        //}
-    }
-});
-
-App.UserSignupAdapter = DS.RESTAdapter.extend({
-    buildURL: function(type, id, record) {
-        var url = this._super(type, id, record);
-        console.log('UsersSignupAdapter: buildURL(type='+type+',id='+id+') => '+url);
-        return url;
-    }
-});
-
-App.SessionAdapter = DS.RESTAdapter.extend({
-    buildURL: function(type, id, record) {
-        var url = this._super(type, id, record);
-        console.log('SessionAdapter: buildURL(type='+type+',id='+id+') => '+url);
-        return url;
-    }
-});
+//App.ProductsAdapter = DS.RESTAdapter.extend({
+//    buildURL: function(type, id, record) {
+//        var url = this._super(type, id, record);
+//        console.log('ProductsAdapter: buildURL(type='+type+',id='+id+') => '+url);
+//        return url;
+//    }
+//});
+//
+//App.ProductAdapter = DS.RESTAdapter.extend({
+//    buildURL: function(type, id, record) {
+//        var url = this._super(type, id, record);
+//        console.log('ProductAdapter: buildURL(type='+type+',id='+id+') => '+url);
+//        return url;
+//    },
+//    ajaxSuccess: function(jqXHR, jsonPayload) {
+//        var res = this._super(jqXHR, jsonPayload);
+//        console.log('ProductAdapter: ajaxSuccess(jqXHR='+JSON.stringify(jqXHR)+',jsonPayload='+
+//            JSON.stringify(jsonPayload)+') => '+JSON.stringify(res));
+//        return res;
+//    },
+//    // TODO: Handle errors by displaying in gui
+//    ajaxError: function(jqXHR) {
+//        var res = this._super(jqXHR);
+//        console.log('ProductAdapter: ajaxError(jqXHR='+JSON.stringify(jqXHR)+')');
+//        return res;
+//        //var error = this._super(jqXHR);
+//        //if (jqXHR && jqXHR.status === 422) {
+//        //    var jsonErrors = Ember.$.parseJSON(jqXHR.responseText);
+//        //    return new DS.InvalidError(jsonErrors);
+//        //} else {
+//        //    return error;
+//        //}
+//    }
+//});
+//
+//App.UserAdapter = DS.RESTAdapter.extend({
+//    buildURL: function(type, id, record) {
+//        var url = this._super(type, id, record);
+//        console.log('UserAdapter: buildURL(type='+type+',id='+id+') => '+url);
+//        return url;
+//    },
+//    ajaxSuccess: function(jqXHR, jsonPayload) {
+//        var res = this._super(jqXHR, jsonPayload);
+//        console.log('UserAdapter: ajaxSuccess(jqXHR='+JSON.stringify(jqXHR)+',jsonPayload='+
+//        JSON.stringify(jsonPayload)+') => '+JSON.stringify(res));
+//        return res;
+//    },
+//    ajaxError: function(jqXHR) {
+//        var res = this._super(jqXHR);
+//        console.log('UserAdapter: ajaxError(jqXHR='+JSON.stringify(jqXHR)+')');
+//        return res;
+//        //var error = this._super(jqXHR);
+//        //if (jqXHR && jqXHR.status === 422) {
+//        //    var jsonErrors = Ember.$.parseJSON(jqXHR.responseText);
+//        //    return new DS.InvalidError(jsonErrors);
+//        //} else {
+//        //    return error;
+//        //}
+//    }
+//});
+//
+//App.UserSignupAdapter = DS.RESTAdapter.extend({
+//    buildURL: function(type, id, record) {
+//        var url = this._super(type, id, record);
+//        console.log('UsersSignupAdapter: buildURL(type='+type+',id='+id+') => '+url);
+//        return url;
+//    }
+//});
+//
+//App.SessionAdapter = DS.RESTAdapter.extend({
+//    buildURL: function(type, id, record) {
+//        var url = this._super(type, id, record);
+//        console.log('SessionAdapter: buildURL(type='+type+',id='+id+') => '+url);
+//        return url;
+//    }
+//});
 
 App.ApiKeyAdapter = DS.LSAdapter.extend({
     namespace: 'emberauth-keys'
@@ -149,7 +149,6 @@ App.ApplicationSerializer = DS.RESTSerializer.extend({
                 For this demo application, resource = 'product' or 'user' but this generic
                 serializer should handle any other resource from the HAL/JSON.
             */
-
             var idn = m[3] || 'none';
             console.log('ApplicationSerializer: normalizePayload() => href='+href+',resource='+m[1]+',id='+idn);
             if (m[3]) {
@@ -189,8 +188,8 @@ App.ApplicationSerializer = DS.RESTSerializer.extend({
             for (var key in resource) {
                 if (key === 'href') continue;
                 next[key] = resource[key];
-                list.push(next);
             }
+            list.push(next);
         });
         normalizedPayload[resource+'s'] = list;
         return normalizedPayload;
