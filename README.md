@@ -244,20 +244,24 @@ You are probably scratching your head trying to get to grips with those two
 mangled-looking regular expressions I used, so I will try and explain them.
 
 ```javascript
-href.match(/^\/([^\/]+)s(\/(.*))?$/);
+m = href.match(/^\/([^\/]+)s(\/(.*))?$/);
 ```
-The value of href is either '/{name}s' or '/{name}s/id'
-    If href = '/products' then m[1,2,3] = 'product', undefined, undefined
-    If href = '/products/22' then m[1,2,3] = 'product', '/22', '22'
-Therefore if m[3] is undefined then payload is a 'collection' otherwise
-it's a resource with a given id = m[3]
 
-For this demo application, resource = 'product' or 'user' but this generic
+The value of href is either '/{name}s' or '/{name}s/id'
+
+* If href = `/products` then `m[1,2,3] = 'product', undefined, undefined`
+* If href = `/products/22` then `m[1,2,3] = 'product', '/22', '22'`
+
+Therefore if `m[3]` is undefined then payload is a `collection` otherwise
+it's a plain-vanilla `resource` with `id = m[3]`.
+
+For this demo application, resource = `product` or `user` but this generic
 serializer should handle any other resource from the HAL/JSON.
 
 ```javascript
-resource.href.replace(/^\/[^\/]+\//, '');
+id = resource.href.replace(/^\/[^\/]+\//, '');
 ```
+
 Given a string like `/products/23` strip off the beginning and return the
 terminating string after the last backlash `23`.
 
