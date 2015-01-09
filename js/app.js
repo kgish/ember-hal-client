@@ -168,7 +168,8 @@ App.ApplicationSerializer = DS.RESTSerializer.extend({
 
     _normalizeResource: function(payload, resource, id) {
         var normalizedPayload = {};
-        normalizedPayload[resource][id] = id;
+        normalizedPayload[resource] = {};
+        normalizedPayload[resource]['id'] = id;
         for (var key in payload) {
             if (key === '_links') continue;
             normalizedPayload[resource][key] = payload[key];
@@ -951,7 +952,7 @@ App.ProductsNewController = Ember.ObjectController.extend({
     needs: ['sessions'],
     isAdmin: (function() {
         var res = this.get('controllers.sessions.currentUser.is_admin');
-        console.log('ProductsNewController: isAdmin = '+res)
+        console.log('ProductsNewController: isAdmin = '+res);
         return res;
     }).property('controllers.sessions.currentUser')
 });
@@ -961,9 +962,9 @@ App.ProductController = Ember.ObjectController.extend({
     needs: ['sessions'],
     isAdmin: (function() {
         var res = this.get('controllers.sessions.currentUser.is_admin');
-        console.log('ProductController: isAdmin = '+res)
+        console.log('ProductController: isAdmin = '+res);
         return res;
-    }).property('controllers.sessions.currentUser'),
+    }).property('controllers.sessions.currentUser')
 });
 
 App.ProductEditController = Ember.ObjectController.extend({
@@ -971,7 +972,7 @@ App.ProductEditController = Ember.ObjectController.extend({
     needs: ['sessions'],
     isAdmin: (function() {
         var res = this.get('controllers.sessions.currentUser.is_admin');
-        console.log('ProductEditController: isAdmin = '+res)
+        console.log('ProductEditController: isAdmin = '+res);
         return res;
     }).property('controllers.sessions.currentUser')
 });
@@ -984,7 +985,7 @@ App.ProductIndexController = Ember.ObjectController.extend({
     // TODO: Not DRY
     isAdmin: (function() {
         var res = this.get('controllers.sessions.currentUser.is_admin');
-        console.log('ProductIndexController: isAdmin = '+res)
+        console.log('ProductIndexController: isAdmin = '+res);
         return res;
     }).property('controllers.sessions.currentUser'),
 
@@ -1087,7 +1088,7 @@ App.UsersUserController = Ember.ObjectController.extend({
     needs: ['sessions'],
     isAdmin: (function() {
         var res = this.get('controllers.sessions.currentUser.is_admin');
-        console.log('UsersUserController: isAdmin = '+res)
+        console.log('UsersUserController: isAdmin = '+res);
         return res;
     }).property('controllers.sessions.currentUser'),
 
@@ -1103,7 +1104,7 @@ App.SecretController = Ember.ObjectController.extend({
     needs: ['sessions'],
     isAdmin: (function() {
         var res = this.get('controllers.sessions.currentUser.is_admin');
-        console.log('SecretController: isAdmin = '+res)
+        console.log('SecretController: isAdmin = '+res);
         return res;
     }).property('controllers.sessions.currentUser')
 });
