@@ -35,22 +35,93 @@ Serving HTTP on 0.0.0.0 port 8000 ...
 After which you can fire up you favorite browser and point it
 to [http://localhost:8000](http://localhost:8000).
 
-## HAL Adapter
+## HAL Serializer
 
 In order to get this application running properly with the ember default
 `RESTAdapter`, I had to do some serious tweaking.
 
-The server will return HAL/JSON payload which looks something like this:
+The server will return HAL/JSON payload which looks needs to be
+reformatted before passing on to the client.
+
+For a `single` resource, the incoming payload from the API Server looks
+likes this:
 
 ```javascript
-{products: [{product: {attributes}},{...}]
+payload = {
+    _links: {
+        self: {
+            href: '/products/5'
+        },
+        curies: [
+            {
+                name:      'ht',
+                href:      'http://0.0.0.0:8080:/rels/{rel}',
+                templated: true
+            }
+        ]
+    },
+    name:     'horse',
+    category: 'animal',
+    price:    3021
+}
 ```
 
-which before being passed through to the `RESTAdapter` needs to be converted
-into this:
+Which needs to be converted to this:
 
 ```javascript
-{products: [{attributes},{...}]
+payload = {
+    product: {
+        id:       5,
+        name:     'horse',
+        category: 'animal',
+        price:    3021
+    }
+}
+```
+
+For a `collection` of resources, the incoming payload from the API Server
+will look like this:
+
+```javascript
+payload = {
+    _links: {
+        self: {
+            href: '/products'
+        },
+        curies: [
+            {
+                name:      'ht',
+                href:      'http://localhost:8080:/rels/{rel}',
+                templated: true
+            }
+        ],
+        ht:product: [
+            {
+                'href':     '/products/1',
+                'name':     'dragon',
+                'category': 'health',
+                'price':    2241
+            },
+            ...
+        ]
+    }
+}
+```
+
+Which needs to be converted to this:
+
+```javascript
+payload = {
+    products: [
+        {
+            id:         5,
+            name:     'horse',
+            category: 'animal',
+            price:    3021
+        },
+        ...
+    ]
+}
 ```
 
 This is achieved by extending the default `ProductSerializer` and redefining
@@ -58,19 +129,60 @@ the `normalizePayload` hook like this:
 
 ```javascript
 App.ProductSerializer = DS.RESTSerializer.extend({
-    normalizePayload: function(payload) {
-        if (payload.products) {
-            var normalizedPayload = { products: [] };
-            payload.products.forEach(function(item){
-                normalizedPayload.products.pushObject(item.product);
-            });
-            payload = normalizedPayload;
-        }
-        return payload;
-    }
     ...
+    normalizePayload: function(payload) {
+        var normalizedPayload = {};
+        if (payload['_links']) {
+            var links = payload['_links'],
+                href = links['self']['href'];
+            if (href === '/products') {
+                normalizedPayload = this._normalizeCollection(payload)
+            } else {
+                normalizedPayload = this._normalizeResource(payload)
+            }
+        }
+        return normalizedPayload;
+    },
+
+    _normalizeResource: function(payload) {
+        var links = payload['_links'],
+            href = links['self']['href'],
+            id = href.replace(/^\/[^\/]+\//, ''),
+            normalizedPayload = {
+            product: {
+                id:       id,
+                name:     payload['name'],
+                category: payload['category'],
+                price:    payload['price']
+            }
+        };
+        return normalizedPayload;
+    },
+
+    _normalizeCollection: function(payload) {
+        var links = payload['_links'],
+            href = links['self']['href'],
+            products = links['ht:product'];
+        var list = [];
+        products.forEach(function(product){
+            var id = product.href.replace(/^\/[^\/]+\//, '');
+            list.push({
+                id:       id,
+                name:     product['name'],
+                category: product['category'],
+                price:    product['price']
+            });
+        });
+        return { products: list };
+    }
 });
 ```
+The same will need to be done with the `user` resource, or in the future any
+newer resources that must be accessed by the client.
+
+Of course, this is not very efficient having to copy code for each resource,
+so a better more generic handling should be done centrally at the level of
+the `ApplicationSerializer`.
 
 ## Thanks
 
