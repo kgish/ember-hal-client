@@ -211,7 +211,7 @@ App.ApplicationSerializer = DS.RESTSerializer.extend({
 
     _normalizeResource: function(payload, resource, id) {
         var normalizedPayload = {};
-        normalizedPayload[resource][id] = id;
+        normalizedPayload[resource]['id'] = id;
         for (var key in payload) {
             if (key === '_links') continue;
             normalizedPayload[resource][key] = payload[key];
@@ -231,8 +231,8 @@ App.ApplicationSerializer = DS.RESTSerializer.extend({
             for (var key in resource) {
                 if (key === 'href') continue;
                 next[key] = resource[key];
-                list.push(next);
             }
+            list.push(next);
         });
         normalizedPayload[resource+'s'] = list;
         return normalizedPayload;
@@ -263,7 +263,7 @@ id = resource.href.replace(/^\/[^\/]+\//, '');
 ```
 
 Given a string like `/products/23` strip off the beginning and return the
-terminating string after the last backlash `23`.
+terminating string after the last backlash resulting in `23`.
 
 ## Thanks
 
