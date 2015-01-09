@@ -109,30 +109,34 @@
 
     <script type="text/x-handlebars" data-template-name="secret">
         <h2 class="page-header">Users</h2>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>User</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Login</th>
-                    <th>Admin</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#each model}}
+        {{#if isAdmin}}
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>{{id}}</td>
-                        <td>{{#link-to 'users.user' this}}{{username}}{{/link-to}}</td>
-                        <td>{{name}}</td>
-                        <td>{{email}}</td>
-                        <td>{{fromnow login_date}}</td>
-                        <td>{{is_admin}}</td>
+                        <th>Id</th>
+                        <th>User</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Login</th>
+                        <th>Admin</th>
                     </tr>
-                {{/each}}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {{#each model}}
+                        <tr>
+                            <td>{{id}}</td>
+                            <td>{{#link-to 'users.user' this}}{{username}}{{/link-to}}</td>
+                            <td>{{name}}</td>
+                            <td>{{email}}</td>
+                            <td>{{fromnow login_date}}</td>
+                            <td>{{is_admin}}</td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        {{else}}
+        <p>Oops, you are not allowed to be here.</p>
+        {{/if}}
 
     </script>
 
@@ -161,9 +165,9 @@
                         {{#if isAdmin}}
                             <th></th>
                         {{/if}}
-                        <th></th><th></th><th></th>
+                        <th></th><th></th><th></th><th></th>
                         {{#if isAdmin}}
-                            <th></th><th></th>
+                            <th></th>
                         {{/if}}
                     </tr>
                 </thead>
@@ -174,8 +178,8 @@
                     <tr><td>User</td><td>{{username}}</td></tr>
                     <tr><td>Name</td><td>{{name}}</td></tr>
                     <tr><td>Email</td><td>{{email}}</td></tr>
+                    <tr><td>Login</td><td>{{fromnow login_date}}</td></tr>
                     {{#if isAdmin}}
-                        <tr><td>Login</td><td>{{fromnow login_date}}</td></tr>
                         <tr><td>Admin</td><td>{{is_admin}}</td></tr>
                     {{/if}}
                 </tbody>

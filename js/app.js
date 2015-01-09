@@ -126,311 +126,374 @@ App.ApiKeyAdapter = DS.LSAdapter.extend({
 });
 
 /** SERIALIZERS **/
-App.ProductSerializer = DS.RESTSerializer.extend({
+App.ApplicationSerializer = DS.RESTSerializer.extend({
     typeForRoot: function(root) {
         var res = this._super(root);
-        console.log('ProductSerializer: typeForRoot(root='+root+') => '+res);
+        console.log('ApplicationSerializer: typeForRoot(root='+root+') => '+res);
         return res;
     },
     normalizePayload: function(payload) {
-        console.log('ProductSerializer: normalizePayload(payload='+JSON.stringify(payload)+')');
+        console.log('ApplicationSerializer: normalizePayload(payload='+JSON.stringify(payload)+')');
         var normalizedPayload = {};
         if (payload['_links']) {
             var links = payload['_links'],
-                href = links['self']['href'];
-            console.log('ProductSerializer: normalizePayload() => href='+href);
-            if (href === '/products') {
-                normalizedPayload = this._normalizeCollection(payload)
+                href = links['self']['href'],
+                m = href.match(/^\/([^\/]+)s(\/(.*))?$/);
+            /*
+                The value of href is either '/{name}s' or '/{name}s/id'
+                    If href = '/products' then m[1,2,3] = 'product', undefined, undefined
+                    If href = '/products/22' then m[1,2,3] = 'product', '/22', '22'
+                Therefore if m[3] is undefined then payload is a 'collection' otherwise
+                it's a resource with a given id = m[3]
+
+                For this demo application, resource = 'product' or 'user' but this generic
+                serializer should handle any other resource from the HAL/JSON.
+            */
+
+            var idn = m[3] || 'none';
+            console.log('ApplicationSerializer: normalizePayload() => href='+href+',resource='+m[1]+',id='+idn);
+            if (m[3]) {
+                normalizedPayload = this._normalizeResource(payload, m[1], m[3])
             } else {
-                normalizedPayload = this._normalizeResource(payload)
+                normalizedPayload = this._normalizeCollection(payload, m[1], 'ht')
             }
-            console.log('ProductSerializer: normalizePayload() => '+JSON.stringify(normalizedPayload));
+            console.log('ApplicationSerializer: normalizePayload() => '+JSON.stringify(normalizedPayload));
         } else {
-            console.log('ProductSerializer: normalizePayload() => unknown payload format!');
+            console.log('ApplicationSerializer: normalizePayload() => unknown payload format!');
         }
         return normalizedPayload;
-    },
-
-    normalize: function(type, hash, property) {
-        var res = this._super(type, hash, property);
-        console.log('ProductSerializer: normalize(type='+JSON.stringify(type)+',hash='+JSON.stringify(hash)+
-            ',property='+property+') => '+JSON.stringify(res));
-        return res;
-    },
-
-    normalizeId: function(hash) {
-        var normalizedHash = hash;
-        //normalizedHash.id = hash._links.self.href;
-        console.log('ProductSerializer: normalizeId(hash='+JSON.stringify(hash)+') => '+JSON.stringify(normalizedHash));
-        return normalizedHash;
     },
 
     /* private */
 
-    _normalizeResource: function(payload) {
-/*
-     For a single resource, the incoming payload from the API Server looks likes this:
-
-     payload = {
-        _links: {
-            self: {
-                href: '/products/5'
-            },
-            curies: [
-                {
-                    name:      'ht',
-                    href:      'http://0.0.0.0:8080:/rels/{rel}',
-                    templated: true
-                }
-            ]
-        },
-        name:     'horse',
-        category: 'animal',
-        price:    3021
-     }
-
-     Needs to be converted to this:
-
-     payload = {
-        product: {
-            id:       5,
-            name:     'horse',
-            category: 'animal',
-            price:    3021
-        }
-     }
-*/
-        var links = payload['_links'],
-            href = links['self']['href'],
-            id = href.replace(/^\/[^\/]+\//, ''),
-            normalizedPayload = {
-            product: {
-                id:       id,
-                name:     payload['name'],
-                category: payload['category'],
-                price:    payload['price']
-            }
-        };
-        return normalizedPayload;
-    },
-
-    _normalizeCollection: function(payload) {
-/*
-    For a collection of resources, the incoming payload from the API Server looks likes this:
-
-    payload = {
-        _links: {
-            self: {
-                href: '/products'
-            },
-            curies: [
-                {
-                    name:      'ht',
-                    href:      'http://localhost:8080:/rels/{rel}',
-                    templated: true
-                }
-            ],
-            ht:product: [
-                {
-                    'href':     '/products/1',
-                    'name':     'dragon',
-                    'category': 'health',
-                    'price':    2241
-                },
-                ...
-            ]
-        }
-    }
-
-    Needs to be converted to this:
-
-    payload = {
-        products: [
-            {
-                id:         5,
-                name:     'horse',
-                category: 'animal',
-                price:    3021
-            },
-            ...
-        ]
-    }
-*/
-        var links = payload['_links'],
-            href = links['self']['href'],
-            products = links['ht:product'];
-        var list = [];
-        products.forEach(function(product){
-            var id = product.href.replace(/^\/[^\/]+\//, '');
-            list.push({
-                id:       id,
-                name:     product['name'],
-                category: product['category'],
-                price:    product['price']
-            });
-        });
-        return { products: list };
-    }
-});
-
-App.UserSerializer = DS.RESTSerializer.extend({
-    typeForRoot: function(root) {
-        var res = this._super(root);
-        console.log('UserSerializer: typeForRoot(root='+root+') => '+res);
-        return res;
-    },
-    normalizePayload: function(payload) {
-        console.log('UserSerializer: normalizePayload(payload='+JSON.stringify(payload)+')');
+    _normalizeResource: function(payload, resource, id) {
         var normalizedPayload = {};
-        if (payload['_links']) {
-            var links = payload['_links'],
-                href = links['self']['href'];
-            console.log('UserSerializer: normalizePayload() => href='+href);
-            if (href === '/users') {
-                normalizedPayload = this._normalizeCollection(payload)
-            } else {
-                normalizedPayload = this._normalizeResource(payload)
-            }
-            console.log('UserSerializer: normalizePayload() => '+JSON.stringify(normalizedPayload));
-        } else {
-            console.log('UserSerializer: normalizePayload() => unknown payload format!');
+        normalizedPayload[resource][id] = id;
+        for (var key in payload) {
+            if (key === '_links') continue;
+            normalizedPayload[resource][key] = payload[key];
         }
         return normalizedPayload;
     },
 
-    normalize: function(type, hash, property) {
-        var res = this._super(type, hash, property);
-        console.log('UserSerializer: normalize(type='+JSON.stringify(type)+',hash='+JSON.stringify(hash)+
-        ',property='+property+') => '+JSON.stringify(res));
-        return res;
-    },
-
-    normalizeId: function(hash) {
-        var normalizedHash = hash;
-        //normalizedHash.id = hash._links.self.href;
-        console.log('UserSerializer: normalizeId(hash='+JSON.stringify(hash)+') => '+JSON.stringify(normalizedHash));
-        return normalizedHash;
-    },
-
-    /* private */
-
-    _normalizeResource: function(payload) {
-/*
-     For a single resource, the incoming payload from the API Server looks likes this:
-
-     payload = {
-        _links: {
-            self: {
-                href: '/users/2"
-            },
-            curies: [
-                {
-                    name:      'ht',
-                    href:      'http://0.0.0.0:8080:/rels/{rel}',
-                    templated: true
-                }
-            ],
-            name:       'Henri Bergson',
-            username:   'henri',
-            email:      'henri.bergson@gmail.com',
-            is_admin:   false,
-            login_date: '2004-12-13'
-        }
-     }
-
-     Needs to be converted to this:
-
-     payload = {
-        users: {
-            id:         2,
-            name:       'Henri Bergson',
-            username:   'henri',
-            email:      'henri.bergson@gmail.com',
-            is_admin:   false,
-            login_date: '2004-12-13'
-        }
-     }
-*/
+    _normalizeCollection: function(payload, resource, name) {
+        var normalizedPayload = {};
         var links = payload['_links'],
-            href = links['self']['href'],
-            id = href.replace(/^\/[^\/]+\//, ''),
-            normalizedPayload = {
-                user: {
-                    id:         id,
-                    name:       payload['name'],
-                    username:   payload['username'],
-                    email:      payload['email'],
-                    is_admin:   payload['is_admin'],
-                    login_date: payload['login_date']
-                }
-            };
-        return normalizedPayload;
-    },
-
-    _normalizeCollection: function(payload) {
-/*
-     For a collection of resources, the incoming payload from the API Server looks likes this:
-
-     payload = {
-        _links: {
-            self: {
-                href: '/users'
-            },
-            curies: [
-                {
-                    name: 'ht',
-                    href: 'http://localhost:8080:/rels/{rel}',
-                    templated: true
-                }
-            ],
-            ht:user: [
-                {
-                    href: '/users/2"
-                    name:       'Henri Bergson',
-                    username:   'henri',
-                    email:      'henri.bergson@gmail.com',
-                    is_admin:   false,
-                    login_date: '2004-12-13'
-                },
-                ...
-            ]
-        }
-     }
-
-     Needs to be converted to this:
-
-     payload = {
-        users: [
-            {
-                id:         2,
-                name:       'Henri Bergson',
-                username:   'henri',
-                email:      'henri.bergson@gmail.com',
-                is_admin:   false,
-                login_date: '2004-12-13'
-            },
-            ...
-        ]
-     }
-*/
-        var links = payload['_links'],
-            href = links['self']['href'],
-            users = links['ht:user'];
+            resources = links[name+':'+resource];
         var list = [];
-        users.forEach(function(user){
-            var id = user.href.replace(/^\/[^\/]+\//, '');
-            list.push({
-                id:         id,
-                name:       user['name'],
-                username:   user['username'],
-                email:      user['email'],
-                is_admin:   user['is_admin'],
-                login_date: user['login_date']
-            });
+        resources.forEach(function(resource) {
+            var id = resource.href.replace(/^\/[^\/]+\//, '');
+            var next = {};
+            next['id'] = id;
+            for (var key in resource) {
+                if (key === 'href') continue;
+                next[key] = resource[key];
+                list.push(next);
+            }
         });
-        return { users: list };
+        normalizedPayload[resource+'s'] = list;
+        return normalizedPayload;
     }
 });
+
+//App.ProductSerializer = DS.RESTSerializer.extend({
+//    typeForRoot: function(root) {
+//        var res = this._super(root);
+//        console.log('ProductSerializer: typeForRoot(root='+root+') => '+res);
+//        return res;
+//    },
+//    normalizePayload: function(payload) {
+//        console.log('ProductSerializer: normalizePayload(payload='+JSON.stringify(payload)+')');
+//        var normalizedPayload = {};
+//        if (payload['_links']) {
+//            var links = payload['_links'],
+//                href = links['self']['href'];
+//            console.log('ProductSerializer: normalizePayload() => href='+href);
+//            if (href === '/products') {
+//                normalizedPayload = this._normalizeCollection(payload)
+//            } else {
+//                normalizedPayload = this._normalizeResource(payload)
+//            }
+//            console.log('ProductSerializer: normalizePayload() => '+JSON.stringify(normalizedPayload));
+//        } else {
+//            console.log('ProductSerializer: normalizePayload() => unknown payload format!');
+//        }
+//        return normalizedPayload;
+//    },
+//
+//    normalize: function(type, hash, property) {
+//        var res = this._super(type, hash, property);
+//        console.log('ProductSerializer: normalize(type='+JSON.stringify(type)+',hash='+JSON.stringify(hash)+
+//            ',property='+property+') => '+JSON.stringify(res));
+//        return res;
+//    },
+//
+//    //normalizeId: function(hash) {
+//    //    var normalizedHash = hash;
+//    //    //normalizedHash.id = hash._links.self.href;
+//    //    console.log('ProductSerializer: normalizeId(hash='+JSON.stringify(hash)+') => '+JSON.stringify(normalizedHash));
+//    //    return normalizedHash;
+//    //},
+//
+//    /* private */
+//
+//    _normalizeResource: function(payload) {
+///*
+//     For a single resource, the incoming payload from the API Server looks likes this:
+//
+//     payload = {
+//        _links: {
+//            self: {
+//                href: '/products/5'
+//            },
+//            curies: [
+//                {
+//                    name:      'ht',
+//                    href:      'http://0.0.0.0:8080:/rels/{rel}',
+//                    templated: true
+//                }
+//            ]
+//        },
+//        name:     'horse',
+//        category: 'animal',
+//        price:    3021
+//     }
+//
+//     Needs to be converted to this:
+//
+//     payload = {
+//        product: {
+//            id:       5,
+//            name:     'horse',
+//            category: 'animal',
+//            price:    3021
+//        }
+//     }
+//*/
+//        var links = payload['_links'],
+//            href = links['self']['href'],
+//            id = href.replace(/^\/[^\/]+\//, ''),
+//            normalizedPayload = {
+//            product: {
+//                id:       id,
+//                name:     payload['name'],
+//                category: payload['category'],
+//                price:    payload['price']
+//            }
+//        };
+//        return normalizedPayload;
+//    },
+//
+//    _normalizeCollection: function(payload) {
+///*
+//    For a collection of resources, the incoming payload from the API Server looks likes this:
+//
+//    payload = {
+//        _links: {
+//            self: {
+//                href: '/products'
+//            },
+//            curies: [
+//                {
+//                    name:      'ht',
+//                    href:      'http://localhost:8080:/rels/{rel}',
+//                    templated: true
+//                }
+//            ],
+//            ht:product: [
+//                {
+//                    'href':     '/products/1',
+//                    'name':     'dragon',
+//                    'category': 'health',
+//                    'price':    2241
+//                },
+//                ...
+//            ]
+//        }
+//    }
+//
+//    Needs to be converted to this:
+//
+//    payload = {
+//        products: [
+//            {
+//                id:         5,
+//                name:     'horse',
+//                category: 'animal',
+//                price:    3021
+//            },
+//            ...
+//        ]
+//    }
+//*/
+//        var links = payload['_links'],
+//            href = links['self']['href'],
+//            products = links['ht:product'];
+//        var list = [];
+//        products.forEach(function(product){
+//            var id = product.href.replace(/^\/[^\/]+\//, '');
+//            list.push({
+//                id:       id,
+//                name:     product['name'],
+//                category: product['category'],
+//                price:    product['price']
+//            });
+//        });
+//        return { products: list };
+//    }
+//});
+
+//App.UserSerializer = DS.RESTSerializer.extend({
+//    typeForRoot: function(root) {
+//        var res = this._super(root);
+//        console.log('UserSerializer: typeForRoot(root='+root+') => '+res);
+//        return res;
+//    },
+//    normalizePayload: function(payload) {
+//        console.log('UserSerializer: normalizePayload(payload='+JSON.stringify(payload)+')');
+//        var normalizedPayload = {};
+//        if (payload['_links']) {
+//            var links = payload['_links'],
+//                href = links['self']['href'];
+//            console.log('UserSerializer: normalizePayload() => href='+href);
+//            if (href === '/users') {
+//                normalizedPayload = this._normalizeCollection(payload)
+//            } else {
+//                normalizedPayload = this._normalizeResource(payload)
+//            }
+//            console.log('UserSerializer: normalizePayload() => '+JSON.stringify(normalizedPayload));
+//        } else {
+//            console.log('UserSerializer: normalizePayload() => unknown payload format!');
+//        }
+//        return normalizedPayload;
+//    },
+//
+//    normalize: function(type, hash, property) {
+//        var res = this._super(type, hash, property);
+//        console.log('UserSerializer: normalize(type='+JSON.stringify(type)+',hash='+JSON.stringify(hash)+
+//        ',property='+property+') => '+JSON.stringify(res));
+//        return res;
+//    },
+//
+//    /* private */
+//
+//    _normalizeResource: function(payload) {
+///*
+//     For a single resource, the incoming payload from the API Server looks likes this:
+//
+//     payload = {
+//        _links: {
+//            self: {
+//                href: '/users/2"
+//            },
+//            curies: [
+//                {
+//                    name:      'ht',
+//                    href:      'http://0.0.0.0:8080:/rels/{rel}',
+//                    templated: true
+//                }
+//            ],
+//            name:       'Henri Bergson',
+//            username:   'henri',
+//            email:      'henri.bergson@gmail.com',
+//            is_admin:   false,
+//            login_date: '2004-12-13'
+//        }
+//     }
+//
+//     Needs to be converted to this:
+//
+//     payload = {
+//        users: {
+//            id:         2,
+//            name:       'Henri Bergson',
+//            username:   'henri',
+//            email:      'henri.bergson@gmail.com',
+//            is_admin:   false,
+//            login_date: '2004-12-13'
+//        }
+//     }
+//*/
+//        var links = payload['_links'],
+//            href = links['self']['href'],
+//            id = href.replace(/^\/[^\/]+\//, ''),
+//            normalizedPayload = {
+//                user: {
+//                    id:         id,
+//                    name:       payload['name'],
+//                    username:   payload['username'],
+//                    email:      payload['email'],
+//                    is_admin:   payload['is_admin'],
+//                    login_date: payload['login_date']
+//                }
+//            };
+//        return normalizedPayload;
+//    },
+//
+//    _normalizeCollection: function(payload) {
+///*
+//     For a collection of resources, the incoming payload from the API Server looks likes this:
+//
+//     payload = {
+//        _links: {
+//            self: {
+//                href: '/users'
+//            },
+//            curies: [
+//                {
+//                    name: 'ht',
+//                    href: 'http://localhost:8080:/rels/{rel}',
+//                    templated: true
+//                }
+//            ],
+//            ht:user: [
+//                {
+//                    href: '/users/2"
+//                    name:       'Henri Bergson',
+//                    username:   'henri',
+//                    email:      'henri.bergson@gmail.com',
+//                    is_admin:   false,
+//                    login_date: '2004-12-13'
+//                },
+//                ...
+//            ]
+//        }
+//     }
+//
+//     Needs to be converted to this:
+//
+//     payload = {
+//        users: [
+//            {
+//                id:         2,
+//                name:       'Henri Bergson',
+//                username:   'henri',
+//                email:      'henri.bergson@gmail.com',
+//                is_admin:   false,
+//                login_date: '2004-12-13'
+//            },
+//            ...
+//        ]
+//     }
+//*/
+//        var links = payload['_links'],
+//            href = links['self']['href'],
+//            users = links['ht:user'];
+//        var list = [];
+//        users.forEach(function(user){
+//            var id = user.href.replace(/^\/[^\/]+\//, '');
+//            list.push({
+//                id:         id,
+//                name:       user['name'],
+//                username:   user['username'],
+//                email:      user['email'],
+//                is_admin:   user['is_admin'],
+//                login_date: user['login_date']
+//            });
+//        });
+//        return { users: list };
+//    }
+//});
 
 /** ROUTER MAP **/
 App.Router.map(function() {
@@ -894,13 +957,13 @@ App.ProductsNewController = Ember.ObjectController.extend({
 });
 
 App.ProductController = Ember.ObjectController.extend({
-//    // TODO: Not DRY
-//    needs: ['sessions'],
-//    isAdmin: (function() {
-//        var res = this.get('controllers.sessions.currentUser.is_admin');
-//        console.log('ProductController: isAdmin = '+res)
-//        return res;
-//    }).property('controllers.sessions.currentUser'),
+    // TODO: Not DRY
+    needs: ['sessions'],
+    isAdmin: (function() {
+        var res = this.get('controllers.sessions.currentUser.is_admin');
+        console.log('ProductController: isAdmin = '+res)
+        return res;
+    }).property('controllers.sessions.currentUser'),
 });
 
 App.ProductEditController = Ember.ObjectController.extend({
@@ -1034,6 +1097,17 @@ App.UsersUserController = Ember.ObjectController.extend({
         }
     }
 });
+
+App.SecretController = Ember.ObjectController.extend({
+    // TODO: Not DRY
+    needs: ['sessions'],
+    isAdmin: (function() {
+        var res = this.get('controllers.sessions.currentUser.is_admin');
+        console.log('SecretController: isAdmin = '+res)
+        return res;
+    }).property('controllers.sessions.currentUser')
+});
+
 
 /** MODELS **/
 App.Product = DS.Model.extend({

@@ -35,7 +35,7 @@ Serving HTTP on 0.0.0.0 port 8000 ...
 After which you can fire up you favorite browser and point it
 to [http://localhost:8000](http://localhost:8000).
 
-## HAL Serializer
+## HAL Serializer (kind of)
 
 In order to get this application running properly with the ember default
 `RESTAdapter`, I had to do some serious tweaking.
@@ -144,7 +144,7 @@ App.ProductSerializer = DS.RESTSerializer.extend({
         return normalizedPayload;
     },
 
-// private
+    /* private */
 
     _normalizeResource: function(payload) {
         var links = payload['_links'],
@@ -182,9 +182,84 @@ App.ProductSerializer = DS.RESTSerializer.extend({
 The same will need to be done with the `user` resource, or in the future any
 newer resources that must be accessed by the client.
 
+## HAL Serializer (Pro)
+
 Of course, this is not very efficient having to copy code for each resource,
 so a better more generic handling should be done centrally at the level of
-the `ApplicationSerializer`.
+the `ApplicationSerializer`. This is how it looks.
+
+```javascript
+App.ApplicationSerializer = DS.RESTSerializer.extend({
+    ...
+    normalizePayload: function(payload) {
+        var normalizedPayload = {};
+        if (payload['_links']) {
+            var links = payload['_links'],
+                href = links['self']['href'],
+                m = href.match(/^\/([^\/]+)s(\/(.*))?$/); // See below.
+            var idn = m[3] || 'none';
+            if (m[3]) {
+                normalizedPayload = this._normalizeResource(payload, m[1], m[3])
+            } else {
+                normalizedPayload = this._normalizeCollection(payload, m[1], 'ht')
+            }
+        }
+        return normalizedPayload;
+    },
+
+    /* private */
+
+    _normalizeResource: function(payload, resource, id) {
+        var normalizedPayload = {};
+        normalizedPayload[resource][id] = id;
+        for (var key in payload) {
+            if (key === '_links') continue;
+            normalizedPayload[resource][key] = payload[key];
+        }
+        return normalizedPayload;
+    },
+
+    _normalizeCollection: function(payload, resource, name) {
+        var normalizedPayload = {};
+        var links = payload['_links'],
+            resources = links[name+':'+resource];
+        var list = [];
+        resources.forEach(function(resource) {
+            var id = resource.href.replace(/^\/[^\/]+\//, ''); // See below.
+            var next = {};
+            next['id'] = id;
+            for (var key in resource) {
+                if (key === 'href') continue;
+                next[key] = resource[key];
+                list.push(next);
+            }
+        });
+        normalizedPayload[resource+'s'] = list;
+        return normalizedPayload;
+    }
+});
+```
+
+You are probably scratching your head trying to get to grips with those two
+mangled-looking regular expressions I used, so I will try and explain them.
+
+```javascript
+href.match(/^\/([^\/]+)s(\/(.*))?$/);
+```
+The value of href is either '/{name}s' or '/{name}s/id'
+    If href = '/products' then m[1,2,3] = 'product', undefined, undefined
+    If href = '/products/22' then m[1,2,3] = 'product', '/22', '22'
+Therefore if m[3] is undefined then payload is a 'collection' otherwise
+it's a resource with a given id = m[3]
+
+For this demo application, resource = 'product' or 'user' but this generic
+serializer should handle any other resource from the HAL/JSON.
+
+```javascript
+resource.href.replace(/^\/[^\/]+\//, '');
+```
+Given a string like `/products/23` strip off the beginning and return the
+terminating string after the last backlash `23`.
 
 ## Thanks
 
