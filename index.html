@@ -99,7 +99,7 @@
 
     <script type="text/x-handlebars" data-template-name="loading">
         <h2 class="page-header">Loading</h2>
-        <p>This is the loading template.</p>
+        <p>Loading, please wait ...</p>
     </script>
 
     <script type="text/x-handlebars" data-template-name="error">
@@ -118,6 +118,7 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th>Login</th>
+                        <th>Token</th>
                         <th>Admin</th>
                     </tr>
                 </thead>
@@ -129,6 +130,7 @@
                             <td>{{name}}</td>
                             <td>{{email}}</td>
                             <td>{{fromnow login_date}}</td>
+                            <td>{{truncate access_token}}</td>
                             <td>{{is_admin}}</td>
                         </tr>
                     {{/each}}
@@ -167,7 +169,7 @@
                         {{/if}}
                         <th></th><th></th><th></th><th></th>
                         {{#if isAdmin}}
-                            <th></th>
+                            <th></th><th></th>
                         {{/if}}
                     </tr>
                 </thead>
@@ -180,6 +182,7 @@
                     <tr><td>Email</td><td>{{email}}</td></tr>
                     <tr><td>Login</td><td>{{fromnow login_date}}</td></tr>
                     {{#if isAdmin}}
+                        <tr><td>Token</td><td>{{access_token}}</td></tr>
                         <tr><td>Admin</td><td>{{is_admin}}</td></tr>
                     {{/if}}
                 </tbody>
