@@ -754,3 +754,8 @@ Ember.Handlebars.helper('formatvalue', function(value, options) {
         return value;
     }
 });
+
+Ember.Handlebars.helper('yesno', function(b) {
+    return b ? 'yes' : 'no';
+});
+

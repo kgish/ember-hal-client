@@ -118,7 +118,6 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th>Login</th>
-                        <th>Token</th>
                         <th>Admin</th>
                     </tr>
                 </thead>
@@ -130,8 +129,7 @@
                             <td>{{name}}</td>
                             <td>{{email}}</td>
                             <td>{{fromnow login_date}}</td>
-                            <td>{{truncate access_token}}</td>
-                            <td>{{is_admin}}</td>
+                            <td>{{yesno is_admin}}</td>
                         </tr>
                     {{/each}}
                 </tbody>
@@ -183,7 +181,7 @@
                     <tr><td>Login</td><td>{{fromnow login_date}}</td></tr>
                     {{#if isAdmin}}
                         <tr><td>Token</td><td>{{access_token}}</td></tr>
-                        <tr><td>Admin</td><td>{{is_admin}}</td></tr>
+                        <tr><td>Admin</td><td>{{yesno is_admin}}</td></tr>
                     {{/if}}
                 </tbody>
             </table>
@@ -221,14 +219,15 @@
 
     <script type="text/x-handlebars" data-template-name="help">
         <h2 class="page-header">Help</h2>
-        ￼
-
-        <p>You can {{#link-to 'sessions.index'}}login{{/link-to}} by using one of the following two demo accounts:</p>
+        <p>
+            Depending on whether you are an admin or regular user you will be given access accordingly.
+            You can {{#link-to 'sessions.index'}}login{{/link-to}} by using one of the following demo accounts:
+        </p>
         <ul>
             <li>kiffin/pindakaas (admin)</li>
             <li>henri/escargot (user)</li>
+            <li>bhogan/holeinone (user)</li>
         </ul>
-        <p>Depending on whether you are an admin or regular user you will be given access accordingly.</p>
     </script>
 
     <script type="text/x-handlebars" data-template-name="products">
