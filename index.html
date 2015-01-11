@@ -219,15 +219,29 @@
 
     <script type="text/x-handlebars" data-template-name="help">
         <h2 class="page-header">Help</h2>
-        <p>
-            Depending on whether you are an admin or regular user you will be given access accordingly.
-            You can {{#link-to 'sessions.index'}}login{{/link-to}} by using one of the following demo accounts:
-        </p>
-        <ul>
-            <li>kiffin/pindakaas (admin)</li>
-            <li>henri/escargot (user)</li>
-            <li>bhogan/holeinone (user)</li>
-        </ul>
+        <p>Depending on whether you are an admin or regular user you will be given access accordingly.</p>
+        <table class="table">
+            <thead>
+                <tr><th>Username</th><th>Password</th><th>Role</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>kiffin</td><td>pindakaas</td><td>admin</td></tr>
+                <tr><td>henri</td><td>escargot</td><td>user</td></tr>
+                <tr><td>bhogan</td><td>holeinone</td><td>user</td></tr>
+            </tbody>
+        </table>
+        <p>The role provides the person with certain access privileges illustrated in the following table.</p>
+        <table class="table">
+            <thead>
+                <tr><th></th><th>Products</th><th></th><th></th><th></th><th>Users</th><th></th><th></th><th></th><th>Profile</th><th></th></tr>
+                <tr><th>Role</th><th>view</th><th>new</th><th>edit</th><th>delete</th><th>view</th><th>new</th><th>edit</th><th>delete</th><th>view</th><th>edit</th></tr>
+            </thead>
+            <tbody>
+                <tr><th>admin</th><th>x</th><th>x</th><th>x</th><th>x</th><th>x</th><th>x</th><th>x</th><th>x</th><th>x</th><th>x</th></tr>
+                <tr><th>user</th><th>x</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th>x</th><th>x</th></tr>
+            </tbody>
+        </table>
+        <p>Now you can {{#link-to 'sessions.index'}}login{{/link-to}} and enjoy the hidden powers of your new roles.</p>
     </script>
 
     <script type="text/x-handlebars" data-template-name="products">
