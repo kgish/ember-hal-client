@@ -596,7 +596,6 @@ App.ProductEditController = Ember.ObjectController.extend({
             this.set('isEditing', false);
             product.save();
             console.log('ProductEditController: Save product => '+product.get('name'));
-            product.save();
             this.transitionToRoute('product', product);
         },
         cancelEditProduct: function(product) {
