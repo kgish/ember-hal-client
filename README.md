@@ -13,7 +13,6 @@ In order to install and start this application, run the following commands.
 ```bash
 $ git clone https://github.com/kgish/ember-hal-template hal-client
 $ cd hal-client
-$ bundle install
 ```
 
 Configure the RESTAdapter by editing the file `js/app.js` and modifying the `host` like this:
