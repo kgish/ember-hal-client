@@ -4,7 +4,7 @@ This is a simple web client template for setting up an Ember application
 that communicates with a compatible HAL/JSON web service, for example
 [ruby-webmachine-roar-template](https://github.com/kgish/ruby-webmachine-roar-template).
 
-![](images/screenshot.png?raw=true)
+![](images/screenshot-1.png?raw=true)
 
 ## Instructions
 
