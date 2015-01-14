@@ -1,0 +1,11 @@
+<h2 class="page-header">Welcome!</h2>
+{{#if isAuthenticated}}
+    <p>
+        To get started just click on one of the navigation links above.
+    </p>
+{{else}}
+    <p>
+        Sorry, in order to continue you will either have to {{#link-to 'sessions.index'}}login{{/link-to}}
+        or {{#link-to 'users.signup'}}register{{/link-to}}.
+    </p>
+{{/if}}
