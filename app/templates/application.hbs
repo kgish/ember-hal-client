@@ -1,3 +1,48 @@
-<h2 id="title">Welcome to Ember.js</h2>
+<div class="container">
+    <h1>HAL/JSON Demo Application</h1>
+    <p>
+        An amazing demo which will dazzle my family and friends (and hopefully
+        land <a href="http://github.com/kgish" target="_blank">me</a> a job).
+    </p>
+</div>
 
-{{outlet}}
+<div class="navbar navbar-default" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            {{#link-to "index" class="navbar-brand"}}Home{{/link-to}}
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-left">
+                {{#if isAuthenticated}}
+                    <li>{{#link-to 'products'}}Products{{/link-to}}</li>
+                    {{#if isAdmin}}
+                        <li>{{#link-to 'secret'}}Users{{/link-to}}</li>
+                    {{/if}}
+                {{/if}}
+                <li>{{#link-to 'help'}}Help{{/link-to}}</li>
+                <li>{{#link-to 'about'}}About{{/link-to}}</li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {{#if isAuthenticated}}
+                <p class="navbar-text">{{hostname}}</p>
+                    <li>{{#link-to 'users.user' currentUser.id}}
+                            <span class="glyphicon glyphicon-user"></span>
+                            {{currentUser.name}} ({{#if isAdmin}} admin {{else}} user {{/if}})
+                        {{/link-to}}</li>
+                    <li><a href="#" {{action 'logout'}}>Logout</a></li>
+                {{else}}
+                    <li>{{#link-to 'users.signup'}}Sign up{{/link-to}}</li>
+                    <li>{{#link-to 'sessions.index'}}Login{{/link-to}}</li>
+                {{/if}}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div id="content" class="container">
+    <div class="row">
+        <div class="col-md-10">
+            {{outlet}}
+        </div>
+    </div>
+</div>
