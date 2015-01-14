@@ -6,33 +6,63 @@ that communicates with a compatible HAL/JSON web service, for example
 
 ![](images/screenshot.png?raw=true)
 
-## Instructions
+## Prerequisites
+
+You will need the following things properly installed on your computer.
+
+* [Git](http://git-scm.com/)
+* [Node.js](http://nodejs.org/) (with NPM)
+* [Bower](http://bower.io/)
+* [Ember CLI](http://www.ember-cli.com/)
+* [PhantomJS](http://phantomjs.org/)
+
+## Installation
 
 In order to install and start this application, run the following commands.
 
 ```bash
 $ git clone https://github.com/kgish/ember-hal-template hal-client
 $ cd hal-client
+$ npm install
+$ bower install
 ```
 
-Configure the RESTAdapter by editing the file `js/app.js` and modifying the `host` like this:
+## Configuration
 
 ```javascript
 // js/app.js
 DS.RESTAdapter.reopen({
     host: 'http://0.0.0.0:8080' // <= change ip and port
 });
-```
 
+## Running / Development
+
+```
 Start the client by running the following command.
 
 ```bash
-$ python -m SimpleHTTPServer
-Serving HTTP on 0.0.0.0 port 8000 ...
+$ ember server
+version: 0.1.6
+Livereload server on port 35729
+Serving on http://0.0.0.0:4200/
 ```
 
 After which you can fire up you favorite browser and point it
-to [http://localhost:8000](http://localhost:8000).
+to [http://localhost:4200](http://localhost:4200).
+
+### Running Tests
+
+* `ember test`
+* `ember test --server`
+
+### Building
+
+* `ember build` (development)
+* `ember build --environment production` (production)
+
+### Deploying
+
+This is what it takes to deploy this application.
 
 ## HAL Serializer (kind of)
 
@@ -284,6 +314,12 @@ Here is a list of important references which I found very useful.
 * [Emberjs Authentication the right way](http://webcloud.info/blog/2014/04/07/emberjs-authentication-the-right-way-javascript-version/) ([example](https://github.com/WebCloud/EmberJS-Auth-Example))
 * [HTTP 1.1 Headers Status](http://upload.wikimedia.org/wikipedia/commons/8/88/Http-headers-status.png)
 
+## Further Reading / Useful Links
+
+* [ember.js](http://emberjs.com/)
+* [ember-cli](http://www.ember-cli.com/)
+* [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
+
 ## Author
 
-Feel free to contact me at Kiffin Gish <kiffin.gish@planet.nl>
+Kiffin Gish <kiffin.gish@planet.nl>
