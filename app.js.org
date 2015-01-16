@@ -1,0 +1,470 @@
+App = Ember.Application.create({});
+
+// TODO handle network errors
+
+
+/** ADAPTERS **/
+
+DS.RESTAdapter.reopen({});
+
+App.ApiKeyAdapter = DS.LSAdapter.extend({});
+
+/** SERIALIZERS **/
+App.ApplicationSerializer = DS.RESTSerializer.extend({});
+
+/** ROUTER MAP **/
+App.Router.map(function() {});
+
+/** ROUTES **/
+App.LoadingRoute = Ember.Route.extend({
+    beforeModel: function() {
+        console.log('LoadingRoute: beforeModel()');
+        //Ember.$('.navbar-header').hide()
+    },
+    afterModel: function() {
+        console.log('LoadingRoute: afterModel()');
+        //Ember.$('.navbar-header').show()
+    }
+});
+App.ApplicationRoute = Ember.Route.extend({
+    actions: {
+        logout: function() {
+            console.log('ApplicationRoute: logout()');
+            this.controllerFor('sessions').reset();
+            this.transitionTo('index');
+        }
+    }
+});
+
+App.ProductsRoute = Ember.Route.extend({
+    model: function() {
+        console.log('ProductsRoute: model()');
+        return this.store.find('product');
+    }
+});
+
+App.ProductsIndexRoute = Ember.Route.extend({
+    afterModel: function() {
+        var firstObject = this.modelFor('products').get('firstObject');
+        if (firstObject) {
+            console.log('ProductsIndexRoute: afterModel() => product/firstObject');
+            this.transitionTo('product', firstObject);
+        } else {
+            console.log('ProductsIndexRoute: afterModel() => products');
+            this.transitionTo('products');
+        }
+    }
+});
+
+App.ProductEditRoute = Ember.Route.extend({
+    actions: {
+        didTransition: function() {
+            console.log('ProductEditRoute: didTransition()');
+            this.controller.set('isEditing', true);
+            return true;
+        }
+    }
+});
+
+App.ProductsNewRoute = Ember.Route.extend({
+    model: function() {
+        console.log('ProductsNewRoute: model()');
+        return this.store.createRecord('product');
+    },
+    actions: {
+        didTransition: function() {
+            console.log('ProductsNewRoute: didTransition()');
+            this.controller.set('isEditing', true);
+            return true;
+        }
+    }
+});
+
+// Create a base object for any authentication protected route with the
+// required verifications.
+App.AuthenticatedRoute = Ember.Route.extend({
+    // verify if the token property of the sessions controller is set before continuing with the request
+    // if it is not, redirect to the login route (sessions)
+    beforeModel: function(transition) {
+        console.log('AuthenticatedRoute: beforeModel()');
+        if (Ember.isEmpty(this.controllerFor('sessions').get('token'))) {
+            return this.redirectToLogin(transition);
+        }
+    },
+
+    // Redirect to the login page and store the current transition so we can
+    // run it again after login
+    redirectToLogin: function(transition) {
+        console.log('AuthenticatedRoute: redirectToLogin()');
+        this.controllerFor('sessions').set('attemptedTransition', transition);
+        return this.transitionTo('sessions');
+    },
+
+    actions: {
+        // recover from any error that may happen during the transition to this route
+        error: function(reason, transition) {
+            console.log('AuthenticatedRoute: error()');
+            // if the HTTP status is 401 (unauthorised), redirect to the login page
+            if (reason.status === 401) {
+                this.redirectToLogin(transition);
+            } else {
+                console.log('AuthenticatedRoute: unknown problem => '+reason.status);
+            }
+        }
+    }
+});
+
+App.SessionsRoute = Ember.Route.extend({
+    // setup the SessionsController by resetting it to avoid data from a past authentication
+    setupController: function(controller, context) {
+        console.log('SessionRoute: setupController()');
+        controller.reset()
+    },
+
+    beforeModel: function(transition) {
+        console.log('SessionRoute: beforeModel()');
+        // before proceeding any further, verify if the token property is not empty
+        // if it is, transition to the secret route
+        if (!Ember.isEmpty(this.controllerFor('sessions').get('token'))) {
+            this.transitionToRoute('secret');
+        }
+    }
+});
+
+App.SecretRoute = App.AuthenticatedRoute.extend({
+    model: function() {
+        // Instantiate the model for the SecretController as a list of created users
+        console.log('SecretRoute: model()');
+        return this.store.find('user');
+    }
+});
+
+App.UsersSignupRoute = Ember.Route.extend({
+    model: function() {
+        // Define the model for the UsersSignupController as a new record from the User model
+        console.log('UsersSignupRoute: model()');
+        this.store.createRecord('user');
+    }
+});
+
+/** CONTROLLERS **/
+App.ApplicationController = Ember.Controller.extend({
+    // Requires the sessions controller
+    needs: ['sessions'],
+
+    // TODO
+    hostname: 'localhost:8080',
+
+    // TODO: Not DRY
+    // creates a computed property called currentUser that will be
+    // binded on the curretUser of the sessions controller and will return its value
+    currentUser: (function() {
+        var res = this.get('controllers.sessions.currentUser');
+        console.log('ApplicationController: currentUser='+JSON.stringify(res));
+        return res;
+    }).property('controllers.sessions.currentUser'),
+
+    // creates a computed property called isAuthenticated that will be
+    // binded on the curretUser of the sessions controller and will verify if the object is empty
+    isAuthenticated: (function() {
+        var res = !Ember.isEmpty(this.get('controllers.sessions.currentUser'));
+        console.log('ApplicationController: isAuthenticated='+res);
+        return res;
+    }).property('controllers.sessions.currentUser'),
+
+    isAdmin: (function() {
+        var res = this.get('controllers.sessions.currentUser.is_admin');
+        console.log('ApplicationController: currentUser='+res);
+        return res;
+    }).property('controllers.sessions.currentUser')
+});
+
+App.IndexController = Ember.Controller.extend({
+    // requires the sessions controller
+    needs: ['sessions'],
+
+    // TODO: not DRY need to centralize
+    // creates a computed property called currentUser that will be
+    // binded on the curretUser of the sessions controller and will return its value
+    currentUser: (function() {
+        var res = this.get('controllers.sessions.currentUser');
+        console.log('IndexController: currentUser='+JSON.stringify(res));
+        return res;
+    }).property('controllers.sessions.currentUser'),
+
+    // creates a computed property called isAuthenticated that will be
+    // binded on the curretUser of the sessions controller and will verify if the object is empty
+    isAuthenticated: (function() {
+        var res = !Ember.isEmpty(this.get('controllers.sessions.currentUser'));
+        console.log('IndexController: isAuthenticated='+res);
+        return res;
+    }).property('controllers.sessions.currentUser')
+});
+
+App.UsersSignupController = Ember.Controller.extend({
+    needs: ['sessions'],
+
+    actions: {
+        signupUser: function() {
+            console.log('UsersSignupController: createUser');
+            alert('Sorry, not yet implemented (be patient)');
+            this.transitionToRoute('index');
+            var _this = this;
+
+            // get the data from the form
+            var data = this.getProperties(
+                'firstName',
+                'lastName',
+                'email',
+                'username',
+                'password',
+                'password_confirmation'
+            );
+
+            // Compile the firstName & lastName into a single name property
+            data.name = "#{data.firstName} #{data.lastName}";
+
+            // Get the model passed from the UserSignupRoute
+            var user = this.get('model');
+
+            // Set the properties for the user based on the data from the form
+            user.setProperties(data);
+
+            // Save the user object into the database.
+            // POST => /users
+            user.save().then(
+                function(user) {
+                    // clear the form data
+                    _this.setProperties({
+                        name: null,
+                        email: null,
+                        username: null,
+                        password: null,
+                        password_confirmation: null
+                    });
+
+                    // Get the sessions controller object and set the properties to proceed to the login action
+                    var sessionsController = this.get('controllers.sessions');
+                    sessionsController.setProperties({
+                        username_or_email: data.username,
+                        password: data.password
+                    });
+
+                    // Remove the record from the localstorage to avoid
+                    // duplication on the users list as it is returned by
+                    // the server.
+                    user.deleteRecord();
+
+                    // Call the loginUser action to authenticate the created user
+                    sessionsController.send('loginUser');
+                },
+                // TODO
+                function(error) {
+                    // If server returns HTTP status 401 Unauthorized, create an
+                    // errors object to return to the user
+                    if (error.status == 401) {
+                        var errs = JSON.parse(error.responseText);
+                        user.set('errors', errs.errors)
+                    }
+                }
+            ); // save().then()
+        }
+    }
+});
+
+App.SessionsController = Ember.Controller.extend({});
+
+App.ProductsController = Ember.ArrayController.extend({
+    needs: ['sessions'],
+    isEditing: false,
+
+    sortAscending: true,
+    sortProperties: ['name'],
+    itemController: 'product',
+
+    isAdmin: (function() {
+        var res = this.get('controllers.sessions.currentUser.is_admin');
+        console.log('ProductsController: currentUser='+res);
+        return res;
+    }).property('controllers.sessions.currentUser'),
+    actions: {
+        createProduct: function() {
+            console.log('ProductsController: Create product');
+            this.transitionToRoute('products.new');
+        }
+    }
+});
+
+App.ProductsNewController = Ember.ObjectController.extend({
+    // TODO: Not DRY
+    needs: ['sessions'],
+    isAdmin: (function() {
+        var res = this.get('controllers.sessions.currentUser.is_admin');
+        console.log('ProductsNewController: isAdmin = '+res);
+        return res;
+    }).property('controllers.sessions.currentUser')
+});
+
+App.ProductController = Ember.ObjectController.extend({
+    // TODO: Not DRY
+    needs: ['sessions'],
+    isAdmin: (function() {
+        var res = this.get('controllers.sessions.currentUser.is_admin');
+        console.log('ProductController: isAdmin = '+res);
+        return res;
+    }).property('controllers.sessions.currentUser')
+});
+
+App.ProductEditController = Ember.ObjectController.extend({
+    // TODO: Not DRY
+    needs: ['sessions'],
+    isAdmin: (function() {
+        var res = this.get('controllers.sessions.currentUser.is_admin');
+        console.log('ProductEditController: isAdmin = '+res);
+        return res;
+    }).property('controllers.sessions.currentUser')
+});
+
+
+App.ProductIndexController = Ember.ObjectController.extend({
+    needs: ['products', 'sessions'],
+    isEditing: Ember.computed.alias('controllers.products.isEditing'),
+
+    // TODO: Not DRY
+    isAdmin: (function() {
+        var res = this.get('controllers.sessions.currentUser.is_admin');
+        console.log('ProductIndexController: isAdmin = '+res);
+        return res;
+    }).property('controllers.sessions.currentUser'),
+
+    actions: {
+        editProduct: function(product) {
+            this.set('isEditing', true);
+            this.transitionToRoute('product.edit', product);
+        },
+        deleteProduct: function(product) {
+            var id = product.get('id'),
+                name = product.get('name');
+            if (confirm('Are you sure you want to delete product '+name+' ('+id+') ?')) {
+                console.log('ProductIndexController: Delete product => '+product.get('name'));
+                product.destroyRecord(); // => DELETE to /products/id
+            } else {
+                console.log('ProductIndexController: Delete product => Cancelled');
+            }
+            this.transitionToRoute('products');
+        }
+    }
+});
+
+App.ProductEditController = Ember.ObjectController.extend({
+    needs: ['products'],
+    isEditing: Ember.computed.alias('controllers.products.isEditing'),
+    actions: {
+        saveEditProduct: function(product) {
+            this.set('isEditing', false);
+            product.save();
+            console.log('ProductEditController: Save product => '+product.get('name'));
+            this.transitionToRoute('product', product);
+        },
+        cancelEditProduct: function(product) {
+            this.set('isEditing', false);
+            product.rollback();
+            console.log('ProductEditController: Cancel product => '+product.get('name'));
+            this.transitionToRoute('product', product);
+        }
+    }
+});
+
+App.ProductsNewController = Ember.ObjectController.extend({
+    needs: ['products'],
+    isEditing: Ember.computed.alias('controllers.products.isEditing'),
+
+    actions: {
+        saveNewProduct: function() {
+            var product = this.get('model');
+            console.log('ProductsNewController: saveNewProduct() => '+JSON.stringify(product));
+            if (this._validProduct(product, true)) {
+                product.set('name', product.get('name').trim());
+                product.set('category', product.get('category').trim());
+                product.set('price', product.get('price').trim());
+                product.save();
+                this.set('isEditing', false);
+                this.transitionToRoute('product', product);
+            } else {
+               return false;
+            }
+        },
+        cancelNewProduct: function() {
+            var product = this.get('model');
+            product.destroyRecord();
+            this.set('isEditing', false);
+            console.log('ProductNewController: Create product => Cancelled');
+            this.transitionToRoute('products');
+        }
+    },
+
+/* private */
+
+    //TODO make this globally accessable also for edit product.
+    _validProduct: function(product, f) {
+        var name = product.get('name'),
+            category = product.get('category'),
+            price = product.get('price'),
+            re = new RegExp('^\\d+$');
+
+        if (!this._validString(name, 'name', f)) { return false; }
+        if (!(price && re.test(price.trim()))) {
+            if (f) { alert('Invalid price (must be a number)'); }
+            return false;
+        }
+        if (!this._validString(category, 'category', f)) { return false; }
+        return true;
+    },
+
+    _validString: function(s, n, f) {
+        if (!(s && s.trim().length)) {
+            if (f) { alert('Invalid '+n+' (must be a non-empty string)'); }
+            return false;
+        }
+        return true;
+    }
+});
+
+App.UsersUserController = Ember.ObjectController.extend({
+    // TODO: Not DRY
+    needs: ['sessions'],
+    isAdmin: (function() {
+        var res = this.get('controllers.sessions.currentUser.is_admin');
+        console.log('UsersUserController: isAdmin = '+res);
+        return res;
+    }).property('controllers.sessions.currentUser'),
+
+    actions: {
+        editProfile: function() {
+            alert('Sorry, not yet implemented (be patient)');
+        }
+    }
+});
+
+App.SecretController = Ember.ObjectController.extend({
+    // TODO: Not DRY
+    needs: ['sessions'],
+    isAdmin: (function() {
+        var res = this.get('controllers.sessions.currentUser.is_admin');
+        console.log('SecretController: isAdmin = '+res);
+        return res;
+    }).property('controllers.sessions.currentUser')
+});
+
+/** MODELS **/
+App.Product = DS.Model.extend({});
+App.User = DS.Model.extend({});
+App.ApiKey = DS.Model.extend({});
+
+/** HANDLEBAR HELPERS **/
+Ember.Handlebars.helper('truncate', function(value, options) {});
+Ember.Handlebars.helper('pluralize', function(number, options) {});
+Ember.Handlebars.helper('fromnow', function(context) {});
+Ember.Handlebars.helper('formatvalue', function(value, options) {});
+Ember.Handlebars.helper('yesno', function(b) {});
+
