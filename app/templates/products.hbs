@@ -1,0 +1,23 @@
+<h2 class="page-header">Products</h2>
+<div class="row">
+  <div class="col-md-6">
+    <h2>{{length}} {{pluralize length single='products'}}</h2>
+    <div class="list-group">
+      {{#if isAdmin}}
+        <div class="list-group-item">
+          <button type="button" class="btn btn-primary btn-sm" title="Create a new product" {{action "createProduct"}}>
+            <span class="glyphicon glyphicon-plus"></span> Create
+          </button>
+        </div>
+      {{/if}}
+      {{#each}}
+        {{#link-to 'product' this class="list-group-item"}}
+          <span {{bind-attr title=category}} {{bind-attr class=":glyphicon glyphicon"}}></span> {{formatvalue name}} <span class="badge">{{formatvalue price placeholder='?'}}</span>
+        {{/link-to}}
+      {{else}}
+        <li class="list-group-item">No products</li>
+      {{/each}}
+    </div>
+  </div>
+  {{outlet}}
+</div>
