@@ -26,6 +26,7 @@ Router.map(function() {
       this.route('edit');
     });
   });
+  this.route("loading");
 });
 
 export default Router;

@@ -2,11 +2,8 @@ App = Ember.Application.create({});
 
 // TODO handle network errors
 
-
 /** ADAPTERS **/
-
 DS.RESTAdapter.reopen({});
-
 App.ApiKeyAdapter = DS.LSAdapter.extend({});
 
 /** SERIALIZERS **/
@@ -16,25 +13,8 @@ App.ApplicationSerializer = DS.RESTSerializer.extend({});
 App.Router.map(function() {});
 
 /** ROUTES **/
-App.LoadingRoute = Ember.Route.extend({
-    beforeModel: function() {
-        console.log('LoadingRoute: beforeModel()');
-        //Ember.$('.navbar-header').hide()
-    },
-    afterModel: function() {
-        console.log('LoadingRoute: afterModel()');
-        //Ember.$('.navbar-header').show()
-    }
-});
-App.ApplicationRoute = Ember.Route.extend({
-    actions: {
-        logout: function() {
-            console.log('ApplicationRoute: logout()');
-            this.controllerFor('sessions').reset();
-            this.transitionTo('index');
-        }
-    }
-});
+App.LoadingRoute = Ember.Route.extend({});
+App.ApplicationRoute = Ember.Route.extend({});
 
 App.ProductsRoute = Ember.Route.extend({
     model: function() {
@@ -43,18 +23,7 @@ App.ProductsRoute = Ember.Route.extend({
     }
 });
 
-App.ProductsIndexRoute = Ember.Route.extend({
-    afterModel: function() {
-        var firstObject = this.modelFor('products').get('firstObject');
-        if (firstObject) {
-            console.log('ProductsIndexRoute: afterModel() => product/firstObject');
-            this.transitionTo('product', firstObject);
-        } else {
-            console.log('ProductsIndexRoute: afterModel() => products');
-            this.transitionTo('products');
-        }
-    }
-});
+App.ProductsIndexRoute = Ember.Route.extend({});
 
 App.ProductEditRoute = Ember.Route.extend({
     actions: {
@@ -114,29 +83,9 @@ App.AuthenticatedRoute = Ember.Route.extend({
     }
 });
 
-App.SessionsRoute = Ember.Route.extend({
-    // setup the SessionsController by resetting it to avoid data from a past authentication
-    setupController: function(controller, context) {
-        console.log('SessionRoute: setupController()');
-        controller.reset()
-    },
-
-    beforeModel: function(transition) {
-        console.log('SessionRoute: beforeModel()');
-        // before proceeding any further, verify if the token property is not empty
-        // if it is, transition to the secret route
-        if (!Ember.isEmpty(this.controllerFor('sessions').get('token'))) {
-            this.transitionToRoute('secret');
-        }
-    }
-});
+App.SessionsRoute = Ember.Route.extend({});
 
 App.SecretRoute = App.AuthenticatedRoute.extend({
-    model: function() {
-        // Instantiate the model for the SecretController as a list of created users
-        console.log('SecretRoute: model()');
-        return this.store.find('user');
-    }
 });
 
 App.UsersSignupRoute = Ember.Route.extend({

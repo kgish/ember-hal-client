@@ -5,5 +5,5 @@ export default DS.RESTAdapter.extend({
 });
 
 DS.RESTAdapter.reopen({
-  host: config.APP.RESTADAPTER_HOST
+    host: config.APP.RESTADAPTER_HOST
 });
