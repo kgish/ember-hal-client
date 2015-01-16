@@ -17,9 +17,14 @@ var app = new EmberApp();
 // please specify an object with the list of modules as keys
 // along with the exports of each module as its value.
 
-app.import('bower_components/jquery.cookie/jquery.cookie.js');
-app.import('bower_components/moment/min/moment.min.js');
-app.import('bower_components/ember-localstorage-adapter/localstorage_adapter.js');
-app.import('bower_components/bootstrap/dist/css/bootstrap.css');
+app.import('bower_components/jquery.cookie/jquery.cookie.js', {});
+app.import('bower_components/moment/min/moment.min.js', {});
+app.import('bower_components/ember-localstorage-adapter/localstorage_adapter.js', {});
+app.import('bower_components/bootstrap/dist/css/bootstrap.min.css', {});
+app.import('bower_components/bootstrap/dist/css/bootstrap.css.map', {});
+
+app.import('bower_components/bootstrap/dist/fonts/glyphicons-halflings-regular.woff', {destDir: 'fonts'});
+app.import('bower_components/bootstrap/dist/fonts/glyphicons-halflings-regular.ttf', {destDir: 'fonts'});
+
 
 module.exports = app.toTree();
