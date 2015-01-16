@@ -29,11 +29,29 @@ $ bower install
 
 ## Configuration
 
+Although the defaults work out of the box, you might have to configure certain
+parameters in order to get the application to work properly.
+
+This is accomplished by editing the file `config/environment.js` and making
+the following changes.
+
+### RESTAdapter host
+
 ```javascript
-// js/app.js
-DS.RESTAdapter.reopen({
-    host: 'http://0.0.0.0:8080' // <= change ip and port
-});
+module.exports = function(environment) {
+  var ENV = {
+    ...
+    },
+
+    APP: {
+      RESTADAPTER_HOST: 'http://0.0.0.0:8080'
+    }
+  };
+  ...
+
+  return ENV;
+};
+```
 
 ## Running / Development
 

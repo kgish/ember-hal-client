@@ -1,8 +1,9 @@
 import DS from 'ember-data';
+import config from './../config/environment';
 
 export default DS.RESTAdapter.extend({
 });
 
 DS.RESTAdapter.reopen({
-  host: 'http://0.0.0.0:8080'
+  host: config.APP.RESTADAPTER_HOST
 });

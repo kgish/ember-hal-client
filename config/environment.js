@@ -16,6 +16,7 @@ module.exports = function(environment) {
     APP: {
       // Here you can pass flags/options to your application instance
       // when it is created
+      RESTADAPTER_HOST: 'http://0.0.0.0:8080'
     }
   };
 
