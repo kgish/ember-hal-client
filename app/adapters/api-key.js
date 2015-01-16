@@ -1,5 +1,5 @@
-import ApplicationAdapter from './application';
+import DS from 'ember-data';
 
-export default ApplicationAdapter.extend({
+export default DS.LSAdapter.extend({
   namespace: 'emberauth-keys'
 });
