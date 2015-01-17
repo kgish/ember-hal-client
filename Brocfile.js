@@ -20,11 +20,12 @@ var app = new EmberApp();
 app.import('bower_components/jquery.cookie/jquery.cookie.js', {});
 app.import('bower_components/moment/min/moment.min.js', {});
 app.import('bower_components/ember-localstorage-adapter/localstorage_adapter.js', {});
+
+// Bootstrap
 app.import('bower_components/bootstrap/dist/css/bootstrap.min.css', {});
 app.import('bower_components/bootstrap/dist/css/bootstrap.css.map', {});
-
-app.import('bower_components/bootstrap/dist/fonts/glyphicons-halflings-regular.woff', {destDir: 'fonts'});
-app.import('bower_components/bootstrap/dist/fonts/glyphicons-halflings-regular.ttf', {destDir: 'fonts'});
+app.import('bower_components/bootstrap/dist/fonts/glyphicons-halflings-regular.woff', { destDir: 'fonts' });
+app.import('bower_components/bootstrap/dist/fonts/glyphicons-halflings-regular.ttf', { destDir: 'fonts' });
 
 
 module.exports = app.toTree();

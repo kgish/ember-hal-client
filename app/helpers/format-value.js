@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-export function formatvalue(input, options) {
+export default Ember.Handlebars.makeBoundHelper(function(input, options){
     var placeholder = options.hash['placeholder'];
     if (typeof input === 'undefined') {
         return placeholder || '[UNDEFINED]';
@@ -11,6 +11,4 @@ export function formatvalue(input, options) {
     } else {
         return input;
     }
-}
-
-export default Ember.Handlebars.makeBoundHelper(formatvalue);
+});

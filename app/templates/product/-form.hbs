@@ -21,7 +21,7 @@
       {{#if isEditing}}
         {{input class="form-control" placeholder="Price of product" value=price}}
       {{else}}
-        {{formatvalue price placeholder='?'}}&nbsp; {{pluralize price single='token'}}
+        {{format-value price placeholder='?'}}&nbsp; {{make-plural price single='token'}}
       {{/if}}
     </div>
   </div>
@@ -33,7 +33,7 @@
       {{#if isEditing}}
         {{input class="form-control" placeholder="Category of product" value=category}}
       {{else}}
-        {{formatvalue category}}
+        {{format-value category}}
       {{/if}}
     </div>
   </div>

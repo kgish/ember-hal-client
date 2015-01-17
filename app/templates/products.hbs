@@ -1,7 +1,7 @@
 <h2 class="page-header">Products</h2>
 <div class="row">
   <div class="col-md-6">
-    <h2>{{length}} {{pluralize length single='product'}}</h2>
+    <h2>{{length}} {{make-plural length single='product'}}</h2>
     <div class="list-group">
       {{#if isAdmin}}
         <div class="list-group-item">
@@ -12,7 +12,7 @@
       {{/if}}
       {{#each}}
         {{#link-to 'product' this class="list-group-item"}}
-          <span {{bind-attr title=category}} {{bind-attr class=":glyphicon glyphicon"}}></span> {{formatvalue name}} <span class="badge">{{formatvalue price placeholder='?'}}</span>
+          <span {{bind-attr title=category}} {{bind-attr class=":glyphicon glyphicon"}}></span> {{format-value name}} <span class="badge">{{format-value price placeholder='?'}}</span>
         {{/link-to}}
       {{else}}
         <li class="list-group-item">No products</li>

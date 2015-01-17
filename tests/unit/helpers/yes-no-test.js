@@ -1,11 +1,11 @@
 import {
-  yesno
-} from 'hal-client/helpers/yesno';
+  yesNo
+} from 'hal-client/helpers/yes-no';
 
-module('YesnoHelper');
+module('YesNoHelper');
 
 // Replace this with your real tests.
 test('it works', function() {
-  var result = yesno(42);
+  var result = yesNo(42);
   ok(result);
 });
