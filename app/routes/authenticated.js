@@ -1,5 +1,7 @@
 import Ember from 'ember';
 
+// TODO: get this working
+
 // This is the base object for any authentication protected route with the
 // required verifications. Use it like this:
 //

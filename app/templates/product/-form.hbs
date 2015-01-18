@@ -1,40 +1,43 @@
 {{#if id}}
-  <li class="list-group-item">
-    <div class="row">
-      <div class="col-md-5">Id</div>
-      <div class="col-md-5">{{id}}</div>
-    </div>
-  </li>
+    <li class="list-group-item">
+        <div class="row">
+            <div class="col-md-5">Id</div>
+            <div class="col-md-5">{{id}}</div>
+        </div>
+    </li>
 {{/if}}
+
 {{#if isEditing}}
-  <li class="list-group-item">
-    <div class="row">
-      <div class="col-md-5">Name</div>
-      <div class="col-md-5">{{input class="form-control" placeholder="Name of product" value=name}}</div>
-    </div>
-  </li>
+    <li class="list-group-item">
+        <div class="row">
+            <div class="col-md-5">Name</div>
+            <div class="col-md-5">{{input class="form-control" placeholder="Name of product" value=name}}</div>
+        </div>
+    </li>
 {{/if}}
+
 <li class="list-group-item">
-  <div class="row">
-    <div class="col-md-5">Price</div>
-    <div class="col-md-5">
-      {{#if isEditing}}
-        {{input class="form-control" placeholder="Price of product" value=price}}
-      {{else}}
-        {{format-value price placeholder='?'}}&nbsp; {{make-plural price single='token'}}
-      {{/if}}
+    <div class="row">
+        <div class="col-md-5">Price</div>
+        <div class="col-md-5">
+            {{#if isEditing}}
+                {{input class="form-control" placeholder="Price of product" value=price}}
+            {{else}}
+                {{format-value price placeholder='?'}}&nbsp; {{make-plural price single='token'}}
+            {{/if}}
+        </div>
     </div>
-  </div>
 </li>
+
 <li class="list-group-item">
-  <div class="row">
-    <div class="col-md-5">Category</div>
-    <div class="col-md-5">
-      {{#if isEditing}}
-        {{input class="form-control" placeholder="Category of product" value=category}}
-      {{else}}
-        {{format-value category}}
-      {{/if}}
+    <div class="row">
+        <div class="col-md-5">Category</div>
+        <div class="col-md-5">
+            {{#if isEditing}}
+                {{input class="form-control" placeholder="Category of product" value=category}}
+            {{else}}
+                {{format-value category}}
+            {{/if}}
+        </div>
     </div>
-  </div>
 </li>

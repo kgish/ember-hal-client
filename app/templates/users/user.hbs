@@ -1,15 +1,16 @@
 <h2 class="page-header">Profile</h2>
+
 <form class="form-horizontal" {{action "editProfile" on="submit"}}>
     <table class="table">
         <thead>
             <tr>
-              {{#if isAdmin}}
-                  <th></th>
-              {{/if}}
+                {{#if isAdmin}}
+                    <th></th>
+                {{/if}}
                 <th></th><th></th><th></th><th></th>
-              {{#if isAdmin}}
-                  <th></th><th></th>
-              {{/if}}
+                {{#if isAdmin}}
+                    <th></th><th></th>
+                {{/if}}
             </tr>
         </thead>
         <tbody>
@@ -26,5 +27,7 @@
             {{/if}}
         </tbody>
     </table>
-    <button type="submit" class="btn btn-primary btn-sm">Edit</button>
+    <button type="submit" class="btn btn-primary btn-sm">
+        Edit
+    </button>
 </form>

@@ -17,10 +17,6 @@ App.LoadingRoute = Ember.Route.extend({});
 App.ApplicationRoute = Ember.Route.extend({});
 
 App.ProductsRoute = Ember.Route.extend({
-    model: function() {
-        console.log('ProductsRoute: model()');
-        return this.store.find('product');
-    }
 });
 
 App.ProductsIndexRoute = Ember.Route.extend({});

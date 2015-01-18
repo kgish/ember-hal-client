@@ -6,28 +6,28 @@ var Router = Ember.Router.extend({
 });
 
 Router.map(function() {
-  this.route("help");
-  this.route("about");
+    this.route("help");
+    this.route("about");
 
-  this.resource('users', function() {
-      this.route('signup');
-      this.route('user', { path: '/profile/:user_id' });
-  });
+    this.resource('users', function() {
+        this.route('signup');
+        this.route('user', { path: '/profile/:user_id' });
+    });
 
-  this.resource("sessions", function() {
-      this.route("logout");
-      this.route("login");
-  });
-  this.route("secret");
+    this.resource("sessions", function() {
+        this.route("logout");
+        this.route("login");
+    });
+    this.route("secret");
 
-  this.resource('products', function() {
-      this.route('new');
-      this.resource('product', { path: ':product_id' }, function() {
-          this.route('edit');
-      });
-  });
-  this.route("loading");
-  this.route("authenticated");
+    this.resource('products', function() {
+        this.route('new');
+        this.resource('product', { path: ':product_id' }, function() {
+            this.route('edit');
+        });
+    });
+    this.route("loading");
+    this.route("authenticated");
 });
 
 export default Router;
