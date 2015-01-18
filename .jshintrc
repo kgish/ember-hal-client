@@ -2,7 +2,9 @@
   "predef": [
     "document",
     "window",
-    "-Promise"
+    "-Promise",
+    "WowENV",
+    "moment"
   ],
   "browser": true,
   "boss": true,
