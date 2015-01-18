@@ -226,6 +226,7 @@ App.ProductSerializer = DS.RESTSerializer.extend({
     }
 });
 ```
+
 The same will need to be done with the `user` resource, or in the future any
 newer resources that must be accessed by the client.
 
@@ -233,10 +234,19 @@ newer resources that must be accessed by the client.
 
 Of course, this is not very efficient having to copy code for each resource,
 so a better more generic handling should be done centrally at the level of
-the `ApplicationSerializer`. This is how it looks.
+the `ApplicationSerializer`. 
+
+In order to achieve this, we generate an ember-cli blueprint:
+```bash
+$ ember-cli generate serializer application
+```
+Which creates the file `app/serializers/application.js` and after proper
+modification should look something like this:
 
 ```javascript
-App.ApplicationSerializer = DS.RESTSerializer.extend({
+import DS from 'ember-data';
+
+export default DS.RESTSerializer.extend({
     ...
     normalizePayload: function(payload) {
         var normalizedPayload = {};
