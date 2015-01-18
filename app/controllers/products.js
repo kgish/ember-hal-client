@@ -4,9 +4,9 @@ export default Ember.ArrayController.extend({
     needs: ['sessions'],
     isEditing: false,
 
-//    sortAscending: true,
-//    sortProperties: ['name'],
-//    itemController: 'product',
+    sortAscending: true,
+    sortProperties: ['name'],
+    itemController: 'product',
 
     isAdmin: (function() {
         var res = this.get('controllers.sessions.currentUser.is_admin');

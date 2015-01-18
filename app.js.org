@@ -17,17 +17,7 @@ App.LoadingRoute = Ember.Route.extend({});
 App.ApplicationRoute = Ember.Route.extend({});
 App.ProductsRoute = Ember.Route.extend({});
 App.ProductsIndexRoute = Ember.Route.extend({});
-
-App.ProductEditRoute = Ember.Route.extend({
-    actions: {
-        didTransition: function() {
-            console.log('ProductEditRoute: didTransition()');
-            this.controller.set('isEditing', true);
-            return true;
-        }
-    }
-});
-
+App.ProductEditRoute = Ember.Route.extend({});
 App.ProductsNewRoute = Ember.Route.extend({});
 App.AuthenticatedRoute = Ember.Route.extend({});
 App.SessionsRoute = Ember.Route.extend({});
@@ -73,15 +63,7 @@ App.ProductsNewController = Ember.ObjectController.extend({
     }).property('controllers.sessions.currentUser')
 });
 
-App.ProductController = Ember.ObjectController.extend({
-    // TODO: Not DRY
-    needs: ['sessions'],
-    isAdmin: (function() {
-        var res = this.get('controllers.sessions.currentUser.is_admin');
-        console.log('ProductController: isAdmin = '+res);
-        return res;
-    }).property('controllers.sessions.currentUser')
-});
+App.ProductController = Ember.ObjectController.extend({});
 
 App.ProductEditController = Ember.ObjectController.extend({
     // TODO: Not DRY
@@ -93,56 +75,8 @@ App.ProductEditController = Ember.ObjectController.extend({
     }).property('controllers.sessions.currentUser')
 });
 
-
-App.ProductIndexController = Ember.ObjectController.extend({
-    needs: ['products', 'sessions'],
-    isEditing: Ember.computed.alias('controllers.products.isEditing'),
-
-    // TODO: Not DRY
-    isAdmin: (function() {
-        var res = this.get('controllers.sessions.currentUser.is_admin');
-        console.log('ProductIndexController: isAdmin = '+res);
-        return res;
-    }).property('controllers.sessions.currentUser'),
-
-    actions: {
-        editProduct: function(product) {
-            this.set('isEditing', true);
-            this.transitionToRoute('product.edit', product);
-        },
-        deleteProduct: function(product) {
-            var id = product.get('id'),
-                name = product.get('name');
-            if (confirm('Are you sure you want to delete product '+name+' ('+id+') ?')) {
-                console.log('ProductIndexController: Delete product => '+product.get('name'));
-                product.destroyRecord(); // => DELETE to /products/id
-            } else {
-                console.log('ProductIndexController: Delete product => Cancelled');
-            }
-            this.transitionToRoute('products');
-        }
-    }
-});
-
-App.ProductEditController = Ember.ObjectController.extend({
-    needs: ['products'],
-    isEditing: Ember.computed.alias('controllers.products.isEditing'),
-    actions: {
-        saveEditProduct: function(product) {
-            this.set('isEditing', false);
-            product.save();
-            console.log('ProductEditController: Save product => '+product.get('name'));
-            this.transitionToRoute('product', product);
-        },
-        cancelEditProduct: function(product) {
-            this.set('isEditing', false);
-            product.rollback();
-            console.log('ProductEditController: Cancel product => '+product.get('name'));
-            this.transitionToRoute('product', product);
-        }
-    }
-});
-
+App.ProductIndexController = Ember.ObjectController.extend({});
+App.ProductEditController = Ember.ObjectController.extend({});
 App.ProductsNewController = Ember.ObjectController.extend({});
 
 App.UsersUserController = Ember.ObjectController.extend({

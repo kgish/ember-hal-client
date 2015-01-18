@@ -7,7 +7,7 @@ import Ember from 'ember';
 //
 // import Authenticated from './authenticated';
 //
-// export default Authenticated.Route.extend({
+// export default Authenticated.extend({
 //     ...
 // });
 

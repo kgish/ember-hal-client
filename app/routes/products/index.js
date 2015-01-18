@@ -4,7 +4,7 @@ export default Ember.Route.extend({
     afterModel: function() {
         var m = this.modelFor('products');
         if (m) {
-            var firstObject = this.modelFor('products').get('firstObject');
+            var firstObject = m.get('firstObject');
             if (firstObject) {
                 console.log('ProductsIndexRoute: afterModel() => product/firstObject');
                 this.transitionTo('product', firstObject);
@@ -14,6 +14,7 @@ export default Ember.Route.extend({
             }
         } else {
             console.log('ProductsIndexRoute: afterModel() => modelFor(products) failed!');
+            this.transitionTo('index');
         }
     }
 });
