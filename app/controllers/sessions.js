@@ -10,11 +10,14 @@ export default Ember.Controller.extend({
         console.log('SessionsController: init');
         this._super();
         if (Ember.$.cookie('access_token')) {
+            console.log('SessionsController: init => access_token cookie set');
             Ember.$.ajaxSetup({
                 headers: {
                     'Authorization':'Bearer '+Ember.$.cookie('access_token')
                 }
             });
+        } else {
+            console.log('SessionsController: init => access_token cookie NOT set');
         }
     },
 
@@ -27,22 +30,20 @@ export default Ember.Controller.extend({
 
     // Create a observer binded to the token property of this controller to set/remove the authentication tokens
     tokenChanged: (function() {
-        console.log('SessionsController: tokenChanged');
         if (Ember.isEmpty(this.get('token'))) {
+            console.log('SessionsController: tokenChanged => remove cookies');
             Ember.$.removeCookie('access_token');
             Ember.$.removeCookie('auth_user');
         } else {
-            var access_token = this.get('token');
-            var auth_user = this.get('currentUser');
-            console.log('SessionsController: tokenChanged, auth_user='+auth_user+', access_token='+access_token);
-            Ember.$.cookie('access_token', access_token);
-            Ember.$.cookie('auth_user', auth_user);
+            console.log('SessionsController: tokenChanged => set cookies');
+            Ember.$.cookie('access_token', this.get('access_token'));
+            Ember.$.cookie('auth_user', this.get('auth_user'));
         }
     }).observes('token'),
 
     // reset the controller properties and the ajax header
     reset: function() {
-        console.log('SessionsController: reset');
+        console.log('SessionsController: reset()');
         this.setProperties({
             username_or_email: null,
             password:          null,
