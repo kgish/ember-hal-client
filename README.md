@@ -72,6 +72,7 @@ to [http://localhost:4200](http://localhost:4200).
 
 * `ember test`
 * `ember test --server`
+* `http://localhost:4200/tests`
 
 ### Building
 
