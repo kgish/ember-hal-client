@@ -2,6 +2,7 @@ import Ember from 'ember';
 
 export default Ember.ObjectController.extend({
     needs: ['products'],
+
     isEditing: Ember.computed.alias('controllers.products.isEditing'),
 
     actions: {

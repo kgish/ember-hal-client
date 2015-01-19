@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import config from './../config/environment';
 
 export default Ember.Controller.extend({
     // TODO Handle sessions and cookies with ember-cli-simple-auth (and ember-cli-cookie)
@@ -31,8 +32,11 @@ export default Ember.Controller.extend({
             Ember.$.removeCookie('access_token');
             Ember.$.removeCookie('auth_user');
         } else {
-            Ember.$.cookie('access_token', this.get('token'));
-            Ember.$.cookie('auth_user', this.get('currentUser'));
+            var access_token = this.get('token');
+            var auth_user = this.get('currentUser');
+            console.log('SessionsController: tokenChanged, auth_user='+auth_user+', access_token='+access_token);
+            Ember.$.cookie('access_token', access_token);
+            Ember.$.cookie('auth_user', auth_user);
         }
     }).observes('token'),
 
@@ -69,8 +73,8 @@ export default Ember.Controller.extend({
 
             data = JSON.stringify(data);
 
-            // TODO use APP.SessionsAdapter = DS.RESTAdapter.extend()
-            var url = 'http://0.0.0.0:8080/session';
+            // var url = 'http://0.0.0.0:8080/session';
+            var url = config.APP.RESTADAPTER_HOST + '/session';
 
             // send a POST request to the /sessions api with the form data
             Ember.$.ajaxSetup({contentType: 'application/json; charset=utf-8'});

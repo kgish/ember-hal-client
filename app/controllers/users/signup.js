@@ -1,6 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
+    // Requires the sessions controller
     needs: ['sessions'],
 
     actions: {

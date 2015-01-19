@@ -28,25 +28,6 @@ App.UsersSignupRoute = Ember.Route.extend({});
 App.ApplicationController = Ember.Controller.extend({});
 
 App.IndexController = Ember.Controller.extend({
-    // requires the sessions controller
-    needs: ['sessions'],
-
-    // TODO: not DRY need to centralize
-    // creates a computed property called currentUser that will be
-    // binded on the curretUser of the sessions controller and will return its value
-    currentUser: (function() {
-        var res = this.get('controllers.sessions.currentUser');
-        console.log('IndexController: currentUser='+JSON.stringify(res));
-        return res;
-    }).property('controllers.sessions.currentUser'),
-
-    // creates a computed property called isAuthenticated that will be
-    // binded on the curretUser of the sessions controller and will verify if the object is empty
-    isAuthenticated: (function() {
-        var res = !Ember.isEmpty(this.get('controllers.sessions.currentUser'));
-        console.log('IndexController: isAuthenticated='+res);
-        return res;
-    }).property('controllers.sessions.currentUser')
 });
 
 App.UsersSignupController = Ember.Controller.extend({});

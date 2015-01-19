@@ -1,14 +1,15 @@
 import Ember from 'ember';
 
+// TODO: not DRY (see application.js)
 export default Ember.ObjectController.extend({
-    needs: ['products', 'sessions'],
+    // Requires the sessions and products controllers
+    needs: ['sessions', 'products'],
 
     isEditing: Ember.computed.alias('controllers.products.isEditing'),
 
-    // TODO: Not DRY
     isAdmin: (function() {
         var res = this.get('controllers.sessions.currentUser.is_admin');
-        console.log('ProductIndexController: isAdmin = '+res);
+        console.log('ApplicationController: isAdmin => '+res);
         return res;
     }).property('controllers.sessions.currentUser'),
 

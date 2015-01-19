@@ -1,7 +1,10 @@
 import Ember from 'ember';
 
+// TODO: not DRY (see application.js)
 export default Ember.ArrayController.extend({
+    // Requires the sessions controller
     needs: ['sessions'],
+
     isEditing: false,
 
     sortAscending: true,
@@ -10,7 +13,7 @@ export default Ember.ArrayController.extend({
 
     isAdmin: (function() {
         var res = this.get('controllers.sessions.currentUser.is_admin');
-        console.log('ProductsController: currentUser='+res);
+        console.log('ApplicationController: isAdmin => '+res);
         return res;
     }).property('controllers.sessions.currentUser'),
 

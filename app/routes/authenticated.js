@@ -17,8 +17,13 @@ export default Ember.Route.extend({
     // login route (sessions).
     beforeModel: function(transition) {
         console.log('AuthenticatedRoute: beforeModel()');
-        if (Ember.isEmpty(this.controllerFor('sessions').get('token'))) {
+        var controller = this.controllerFor('sessions');
+        if (Ember.isEmpty(controller.get('token'))) {
+            console.log('AuthenticatedRoute: beforeModel() => user is not authenticated, redirect to login');
             return this.redirectToLogin(transition);
+        } else {
+            // User has logged in but is he allowed to transition here?
+
         }
     },
 
