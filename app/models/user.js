@@ -9,6 +9,6 @@ export default DS.Model.extend({
     access_token: DS.attr('string'),
     is_admin:   DS.attr('boolean'),
     login_date: DS.attr('date'),
-    apiKeys:    DS.hasMany('apiKey'),
+    apikeys:    DS.hasMany('apikey'),
     errors:     {}
 });

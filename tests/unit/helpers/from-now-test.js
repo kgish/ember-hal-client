@@ -4,8 +4,6 @@ import {
 
 module('FromNowHelper');
 
-// Replace this with your real tests.
-test('it works', function() {
-  var result = fromNow(42);
-  ok(result);
+test('now should display a few seconds ago', function() {
+    ok(fromNow(new Date() === 'a few seconds ago'));
 });

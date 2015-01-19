@@ -4,8 +4,14 @@ import {
 
 module('MakePluralHelper');
 
-// Replace this with your real tests.
-test('it works', function() {
-  var result = makePlural(42);
-  ok(result);
+test('three horse should end with s', function() {
+    ok(makePlural(3, { hash: { single: 'horse' } }) === 'horses');
+});
+
+test('one horse should just be horse', function() {
+    ok(makePlural(1, { hash: { single: 'horse' } }) === 'horse');
+});
+
+test('five things should be thingies', function() {
+    ok(makePlural(5, { hash: { single: 'thing', plural: 'thingies' } }) === 'thingies');
 });

@@ -1,5 +1,7 @@
 import Ember from 'ember';
 
-export default Ember.Handlebars.makeBoundHelper(function(input) {
+export function yesNo(input) {
     return input ? 'yes' : 'no';
-});
+}
+
+export default Ember.Handlebars.makeBoundHelper(yesNo);

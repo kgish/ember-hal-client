@@ -4,8 +4,10 @@ import {
 
 module('YesNoHelper');
 
-// Replace this with your real tests.
-test('it works', function() {
-  var result = yesNo(42);
-  ok(result);
+test('true should display yes', function() {
+    ok(yesNo(true) === 'yes');
+});
+
+test('false should display no', function() {
+    ok(yesNo(false) === 'no');
 });
