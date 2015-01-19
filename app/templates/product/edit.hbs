@@ -1,0 +1,14 @@
+<div class="col-md-6">
+    <h2>Edit -- {{format-value name}}</h2>
+    <div class="list-group">
+        {{partial 'product/form' isEditing=isEditing}}
+        <li class="list-group-item">
+            <button type="button" class="btn btn-primary btn-sm" title="Save changes to this product" {{action 'saveEditProduct' this}}>
+                <span class="glyphicon glyphicon-ok"></span> Save
+            </button>
+            <button type="button" class="btn btn-primary btn-sm" title="Cancel changes to this product" {{action 'cancelEditProduct' this}}>
+                <span class="glyphicon glyphicon-remove"></span> Cancel
+            </button>
+        </li>
+    </div>
+</div>

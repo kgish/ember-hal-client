@@ -6,33 +6,81 @@ that communicates with a compatible HAL/JSON web service, for example
 
 ![](images/screenshot-1.png?raw=true)
 
-## Instructions
+## Prerequisites
+
+You will need the following things properly installed on your computer.
+
+* [Git](http://git-scm.com/)
+* [Node.js](http://nodejs.org/) (with NPM)
+* [Bower](http://bower.io/)
+* [Ember CLI](http://www.ember-cli.com/)
+* [PhantomJS](http://phantomjs.org/)
+
+## Installation
 
 In order to install and start this application, run the following commands.
 
 ```bash
 $ git clone https://github.com/kgish/ember-hal-template hal-client
 $ cd hal-client
+$ npm install
+$ bower install
 ```
 
-Configure the RESTAdapter by editing the file `js/app.js` and modifying the `host` like this:
+## Configuration
+
+Although the defaults work out of the box, you might have to configure certain
+parameters in order to get the application to work properly.
+
+This is accomplished by editing the file `config/environment.js` and making
+the following changes.
+
+### RESTAdapter host
 
 ```javascript
-// js/app.js
-DS.RESTAdapter.reopen({
-    host: 'http://0.0.0.0:8080' // <= change ip and port
-});
+module.exports = function(environment) {
+  var ENV = {
+    ...
+    },
+
+    APP: {
+      RESTADAPTER_HOST: 'http://0.0.0.0:8080'
+    }
+  };
+  ...
+
+  return ENV;
+};
 ```
 
+## Running / Development
+
+```
 Start the client by running the following command.
 
 ```bash
-$ python -m SimpleHTTPServer
-Serving HTTP on 0.0.0.0 port 8000 ...
+$ ember server
+version: 0.1.6
+Livereload server on port 35729
+Serving on http://0.0.0.0:4200/
 ```
 
 After which you can fire up you favorite browser and point it
-to [http://localhost:8000](http://localhost:8000).
+to [http://localhost:4200](http://localhost:4200).
+
+### Running Tests
+
+* `ember test`
+* `ember test --server`
+
+### Building
+
+* `ember build` (development)
+* `ember build --environment production` (production)
+
+### Deploying
+
+This is what it takes to deploy this application.
 
 ## HAL Serializer (kind of)
 
@@ -178,6 +226,7 @@ App.ProductSerializer = DS.RESTSerializer.extend({
     }
 });
 ```
+
 The same will need to be done with the `user` resource, or in the future any
 newer resources that must be accessed by the client.
 
@@ -185,10 +234,19 @@ newer resources that must be accessed by the client.
 
 Of course, this is not very efficient having to copy code for each resource,
 so a better more generic handling should be done centrally at the level of
-the `ApplicationSerializer`. This is how it looks.
+the `ApplicationSerializer`. 
+
+In order to achieve this, we generate an ember-cli blueprint:
+```bash
+$ ember-cli generate serializer application
+```
+Which creates the file `app/serializers/application.js` and after proper
+modification should look something like this:
 
 ```javascript
-App.ApplicationSerializer = DS.RESTSerializer.extend({
+import DS from 'ember-data';
+
+export default DS.RESTSerializer.extend({
     ...
     normalizePayload: function(payload) {
         var normalizedPayload = {};
@@ -284,6 +342,12 @@ Here is a list of important references which I found very useful.
 * [Emberjs Authentication the right way](http://webcloud.info/blog/2014/04/07/emberjs-authentication-the-right-way-javascript-version/) ([example](https://github.com/WebCloud/EmberJS-Auth-Example))
 * [HTTP 1.1 Headers Status](http://upload.wikimedia.org/wikipedia/commons/8/88/Http-headers-status.png)
 
+## Further Reading / Useful Links
+
+* [ember.js](http://emberjs.com/)
+* [ember-cli](http://www.ember-cli.com/)
+* [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
+
 ## Author
 
-Feel free to contact me at Kiffin Gish <kiffin.gish@planet.nl>
+Kiffin Gish <kiffin.gish@planet.nl>
