@@ -337,6 +337,7 @@ the following:
 * Editing profile= including new password.
 * Adding, modifying and deleting user by admin.
 * Entry field validations.
+* Pagination for the products list would be nice.
 
 ## Thanks
 
