@@ -3,7 +3,7 @@ import {
   test
 } from 'ember-qunit';
 
-moduleFor('adapter:api-key', 'ApiKeyAdapter', {
+moduleFor('adapter:apikey', 'ApikeyAdapter', {
   // Specify the other units that are required for this test.
   // needs: ['serializer:foo']
 });

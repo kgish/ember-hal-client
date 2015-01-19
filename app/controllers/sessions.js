@@ -92,8 +92,8 @@ export default Ember.Controller.extend({
                         }
                     });
 
-                    // create a apiKey record on the local storage based on the returned object
-                    var key = _this.get('store').createRecord('apiKey', { accessToken: response['api_key']['access_token'] });
+                    // create a apikey record on the local storage based on the returned object
+                    var key = _this.get('store').createRecord('apikey', { accessToken: response['api_key']['access_token'] });
                     console.log('SessionsController: POST(OK) key='+JSON.stringify(key));
 
                     // find a user based on the user_id returned from the request to the /sessions api
@@ -108,11 +108,11 @@ export default Ember.Controller.extend({
                                 currentUser: user.getProperties('id', 'name', 'username', 'email', 'is_admin', 'login_date')
                             });
 
-                            // set the relationship between the User and the ApiKey models & save the apiKey object
+                            // set the relationship between the User and the apikey models & save the apikey object
                             key.set('user', user);
                             key.save();
 
-                            user.get('apiKeys').content.push(key);
+                            user.get('apikeys').content.push(key);
 
                             // check if there is any attemptedTransition to retry it or go to the secret route
                             if (attemptedTrans) {
