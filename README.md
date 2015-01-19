@@ -322,6 +322,22 @@ id = resource.href.replace(/^\/[^\/]+\//, '');
 Given a string like `/products/23` strip off the beginning and return the
 terminating string after the last backlash resulting in `23`.
 
+## Todo list
+
+There are still a number of minor issues which should be looked into, namely
+the following:
+
+* Refresh nukes the current user.
+* Need to implement better error handling.
+* Message/error banner for generic handling of user info.
+* Migrate to ember-cli-simple-auth
+* Restrict access for non admins, e.g. /secret or /products/2/edit
+* Global flags isAuthenticated, isAdmin and currentUser need to be handled more elegantly.
+* Registration via signup
+* Editing profile= including new password.
+* Adding, modifying and deleting user by admin.
+* Entry field validations.
+
 ## Thanks
 
 I had a look at the [Ember Data HAL Adapter](https://github.com/locks/ember-data-hal-adapter)

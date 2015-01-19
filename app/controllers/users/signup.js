@@ -58,7 +58,6 @@ export default Ember.Controller.extend({
                     // Call the loginUser action to authenticate the created user
                     sessionsController.send('loginUser');
                 },
-                // TODO
                 function(error) {
                     // If server returns HTTP status 401 Unauthorized, create an
                     // errors object to return to the user

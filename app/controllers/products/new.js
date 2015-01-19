@@ -31,7 +31,7 @@ export default Ember.ObjectController.extend({
 
     /* private */
 
-    //TODO make this globally accessable also for edit product.
+    //TODO make this globally accessible also for edit product.
     _validProduct: function(product, f) {
         var name = product.get('name'),
             category = product.get('category'),

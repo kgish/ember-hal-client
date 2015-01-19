@@ -1,7 +1,5 @@
 import Ember from 'ember';
 
-// TODO: get this working
-
 // This is the base object for any authentication protected route with the
 // required verifications. Use it like this:
 //
@@ -10,7 +8,6 @@ import Ember from 'ember';
 // export default Authenticated.extend({
 //     ...
 // });
-
 export default Ember.Route.extend({
     // Verify that the 'token' property of the sessions controller is set
     // before continuing with the request. If not, then redirect to the
