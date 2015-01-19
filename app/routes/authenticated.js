@@ -23,7 +23,16 @@ export default Ember.Route.extend({
             return this.redirectToLogin(transition);
         } else {
             // User has logged in but is he allowed to transition here?
-
+            var isAdmin = controller.get('currentUser.is_admin');
+            if (isAdmin) {
+               // This guy can do anything.
+                console.log('AuthenticatedRoute: beforeModel() => is_admin, can do anything');
+            } else {
+                // Not admin, some restrictions may apply.
+                // TODO: Needs to be worked out better
+                console.log('AuthenticatedRoute: beforeModel() => user is not admin, blocked!');
+                this.transitionTo('index');
+            }
         }
     },
 
