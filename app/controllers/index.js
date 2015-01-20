@@ -7,13 +7,13 @@ export default Ember.Controller.extend({
 
     currentUser: (function() {
         var res = this.get('controllers.sessions.currentUser');
-        console.log('ApplicationController: currentUser => '+JSON.stringify(res));
+        console.log('IndexController: currentUser => '+JSON.stringify(res));
         return res;
     }).property('controllers.sessions.currentUser'),
 
     isAuthenticated: (function() {
         var res = !Ember.isEmpty(this.get('controllers.sessions.currentUser'));
-        console.log('ApplicationController: isAuthenticated => '+res);
+        console.log('IndexController: isAuthenticated => '+res);
         return res;
     }).property('controllers.sessions.currentUser'),
 });

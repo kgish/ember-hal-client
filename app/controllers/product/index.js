@@ -9,7 +9,7 @@ export default Ember.ObjectController.extend({
 
     isAdmin: (function() {
         var res = this.get('controllers.sessions.currentUser.is_admin');
-        console.log('ApplicationController: isAdmin => '+res);
+        console.log('ProductIndexController: isAdmin => '+res);
         return res;
     }).property('controllers.sessions.currentUser'),
 

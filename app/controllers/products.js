@@ -13,7 +13,7 @@ export default Ember.ArrayController.extend({
 
     isAdmin: (function() {
         var res = this.get('controllers.sessions.currentUser.is_admin');
-        console.log('ApplicationController: isAdmin => '+res);
+        console.log('ProductsController: isAdmin => '+res);
         return res;
     }).property('controllers.sessions.currentUser'),
 
