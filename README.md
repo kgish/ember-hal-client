@@ -323,12 +323,15 @@ id = resource.href.replace(/^\/[^\/]+\//, '');
 Given a string like `/products/23` strip off the beginning and return the
 terminating string after the last backlash resulting in `23`.
 
+## Authentication using cookies
+
+Explain here how authentication using cookies works.
+
 ## Todo list
 
 There are still a number of minor issues which should be looked into, namely
 the following:
 
-* Refreshing the page nukes the current user.
 * Need to implement better error handling.
 * Message/error banner for generic handling of user info.
 * Migrate to ember-cli-simple-auth.
