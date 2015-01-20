@@ -14,7 +14,7 @@ export default Ember.Controller.extend({
             var access_token = cookie.getCookie('access_token');
             var auth_user = cookie.getCookie('auth_user');
             if (access_token) {
-                console.log('SessionsController: init => set authorization header with token');
+                console.log('SessionsController: init => set authorization header with token='+access_token);
                 this.set('token', access_token);
                 Ember.$.ajaxSetup({
                     headers: {
@@ -32,6 +32,7 @@ export default Ember.Controller.extend({
                 } catch (e) {
                     console.log('SessionsController: init => JSON.parse failed ('+e+')');
                 }
+                console.log('SessionsController: init => set current_user='+JSON.stringify(parsed_auth_user));
                 this.set('currentUser', parsed_auth_user);
             } else {
                 console.log('SessionsController: init => auth_user cookie is NOT set');

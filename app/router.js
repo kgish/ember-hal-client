@@ -22,8 +22,8 @@ Router.map(function() {
 
     // Users
     this.resource('users', function() {
-        this.route('signup');
-        this.route('user', { path: '/profile/:user_id' });
+      this.route('signup');
+      this.route('user', { path: '/profile/:user_id' });
     });
 
     // Products

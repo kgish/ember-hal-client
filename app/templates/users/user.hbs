@@ -3,28 +3,28 @@
 <form class="form-horizontal" {{action "editProfile" on="submit"}}>
     <table class="table">
         <thead>
-            <tr>
-                {{#if isAdmin}}
-                    <th></th>
-                {{/if}}
-                <th></th><th></th><th></th><th></th>
-                {{#if isAdmin}}
-                    <th></th><th></th>
-                {{/if}}
-            </tr>
+        <tr>
+            {{#if isAdmin}}
+                <th></th>
+            {{/if}}
+            <th></th><th></th><th></th><th></th>
+            {{#if isAdmin}}
+                <th></th><th></th>
+            {{/if}}
+        </tr>
         </thead>
         <tbody>
-            {{#if isAdmin}}
-                <tr><td>Id</td><td>{{id}}</td></tr>
-            {{/if}}
-            <tr><td>User</td><td>{{username}}</td></tr>
-            <tr><td>Name</td><td>{{name}}</td></tr>
-            <tr><td>Email</td><td>{{email}}</td></tr>
-            <tr><td>Login</td><td>{{from-now login_date}}</td></tr>
-            {{#if isAdmin}}
-                <tr><td>Token</td><td>{{access_token}}</td></tr>
-                <tr><td>Admin</td><td>{{yes-no is_admin}}</td></tr>
-            {{/if}}
+        {{#if isAdmin}}
+            <tr><td>Id</td><td>{{id}}</td></tr>
+        {{/if}}
+        <tr><td>User</td><td>{{username}}</td></tr>
+        <tr><td>Name</td><td>{{name}}</td></tr>
+        <tr><td>Email</td><td>{{email}}</td></tr>
+        <tr><td>Login</td><td>{{from-now login_date}}</td></tr>
+        {{#if isAdmin}}
+            <tr><td>Token</td><td>{{access_token}}</td></tr>
+            <tr><td>Admin</td><td>{{yes-no is_admin}}</td></tr>
+        {{/if}}
         </tbody>
     </table>
     <button type="submit" class="btn btn-primary btn-sm">

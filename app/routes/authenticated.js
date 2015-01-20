@@ -51,6 +51,7 @@ export default Ember.Route.extend({
                 this.redirectToLogin(transition);
             } else {
                 console.log('AuthenticatedRoute: unknown problem => '+reason.status);
+                this.transitionTo('error');
             }
         }
     }
