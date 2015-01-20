@@ -8,17 +8,17 @@ var Router = Ember.Router.extend({
 Router.map(function() {
 
     // Top-level (navbar)
-    this.route("help");
-    this.route("about");
-    this.route("loading");
-    this.route("authenticated");
+    this.route('help');
+    this.route('about');
+    this.route('loading');
+    this.route('authenticated');
 
     // Sessions
-    this.resource("sessions", function() {
-        this.route("logout");
-        this.route("login");
+    this.resource('sessions', function() {
+        this.route('logout');
+        this.route('login');
     });
-    this.route("secret");
+    this.route('secret');
 
     // Users
     this.resource('users', function() {
@@ -33,6 +33,9 @@ Router.map(function() {
             this.route('edit');
         });
     });
+
+    // Not found
+    this.route('not-found', { path: '/*path'});
 });
 
 export default Router;
