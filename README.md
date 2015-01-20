@@ -1,8 +1,12 @@
 # Ember HAL Template
 
-This is a simple web client template for setting up an Ember application
-that communicates with a compatible HAL/JSON web service, for example
-[ruby-webmachine-roar-template](https://github.com/kgish/ruby-webmachine-roar-template).
+A simple web client template for setting up an Ember application
+that communicates with a compatible HAL/JSON web service.
+
+For example, have a look at [ruby-webmachine-roar-template](https://github.com/kgish/ruby-webmachine-roar-template) 
+which I created in tandem to this project for use as a test harnass.
+
+Built using the [ember-cli](http://www.ember-cli.com/) framework.
 
 ![](images/screenshot-1.png?raw=true)
 
@@ -78,10 +82,6 @@ to [http://localhost:4200](http://localhost:4200).
 
 * `ember build` (development)
 * `ember build --environment production` (production)
-
-### Deploying
-
-This is what it takes to deploy this application.
 
 ## HAL Serializer (kind of)
 
