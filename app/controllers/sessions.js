@@ -133,10 +133,10 @@ export default Ember.Controller.extend({
                     console.log('SessionsController: find(\'user\',user_id='+user_id+')');
                     _this.store.find('user', user_id).then(
                         function(user) {
-                            console.log('SessionsController: find() => OK, token='+response['api_key']['access_token']);
+                            console.log('SessionsController: find() => OK, token='+access_token);
                             // set this controller token & current user properties based on the data from the user and access_token
                             _this.setProperties({
-                                token:       response['api_key']['access_token'],
+                                token:       access_token,
                                 currentUser: user.getProperties('id', 'name', 'username', 'email', 'is_admin', 'login_date')
                             });
 

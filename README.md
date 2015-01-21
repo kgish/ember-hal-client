@@ -332,6 +332,7 @@ Explain here how authentication using cookies works.
 There are still a number of minor issues which should be looked into, namely
 the following:
 
+* On refresh the header authentication token is nuked.
 * Need to implement better error handling.
 * Message/error banner for generic handling of user info.
 * Migrate to ember-cli-simple-auth.

@@ -17,7 +17,7 @@ export default Ember.Route.extend({
             var token = controller.get('token');
             if (!Ember.isEmpty(token)) {
                 console.log('SessionRoute: beforeModel() => transition to secret');
-                this.transitionToRoute('secret');
+                this.transitionTo('secret');
             } else {
                 console.log('SessionRoute: beforeModel(), token not empty => do nothing!');
             }
