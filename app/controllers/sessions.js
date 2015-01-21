@@ -16,6 +16,7 @@ export default Ember.Controller.extend({
             if (access_token) {
                 console.log('SessionsController: init => set authorization header with token='+access_token);
                 this.set('token', access_token);
+                console.log('SessionsController: init => set header \'Authorization\':\'Bearer '+access_token+'\'');
                 Ember.$.ajaxSetup({
                     headers: {
                         'Authorization':'Bearer '+access_token
@@ -62,8 +63,8 @@ export default Ember.Controller.extend({
                 // TODO: expire in 30 minutes.
                 var access_token = this.get('token');
                 var auth_user = this.get('currentUser');
-                cookie.setCookie('access_token', access_token);
-                cookie.setCookie('auth_user', JSON.stringify(auth_user));
+                cookie.setCookie('access_token', access_token, { root: '/'});
+                cookie.setCookie('auth_user', JSON.stringify(auth_user), { root: '/'});
                 console.log('SessionsController: tokenChanged => cookie(auth_user='+cookie.getCookie('auth_user')+',cookie(access_token)='+cookie.getCookie('access_token')+')');
             }
         } else {
@@ -80,6 +81,7 @@ export default Ember.Controller.extend({
             token:             null,
             currentUser:       null
         });
+        console.log('SessionsController: reset => set header \'Authorization\':\'Bearer none\'');
         Ember.$.ajaxSetup({
             headers: {
                 'Authorization': 'Bearer none'
@@ -104,26 +106,26 @@ export default Ember.Controller.extend({
 
             data = JSON.stringify(data);
 
-            // var url = 'http://0.0.0.0:8080/session';
             var url = config.APP.RESTADAPTER_HOST + '/session';
 
             // send a POST request to the /sessions api with the form data
             Ember.$.ajaxSetup({contentType: 'application/json; charset=utf-8'});
-            console.log('SessionsController: post(url='+url+ ',data='+data+')');
+            console.log('SessionsController: loginUser post(url='+url+ ',data='+data+')');
             Ember.$.post(url, data).then(
                 function(response) {
-                    console.log('SessionsController: post() => OK, response='+JSON.stringify(response));
+                    var access_token = response['api_key']['access_token'];
+                    console.log('SessionsController: loginUser post() => OK, response='+JSON.stringify(response));
                     // set the ajax header with the returned access_token object
-                    console.log('SessionsController: POST(OK) access_token='+response['api_key']['access_token']);
+                    console.log('SessionsController: loginUser => set header \'Authorization\':\'Bearer '+access_token+'\'');
                     Ember.$.ajaxSetup({
                         contentType: 'application/json; charset=utf-8',
                         headers: {
-                            'Authorization': 'Bearer '+response['api_key']['access_token']
+                            'Authorization': 'Bearer '+access_token
                         }
                     });
 
                     // create a apikey record on the local storage based on the returned object
-                    var key = _this.get('store').createRecord('apikey', { accessToken: response['api_key']['access_token'] });
+                    var key = _this.get('store').createRecord('apikey', { accessToken: access_token });
                     console.log('SessionsController: POST(OK) key='+JSON.stringify(key));
 
                     // find a user based on the user_id returned from the request to the /sessions api
