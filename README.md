@@ -3,7 +3,7 @@
 A simple web client template for setting up an Ember application
 that communicates with a compatible HAL/JSON web service.
 
-For example, have a look at [ruby-webmachine-roar-template](https://github.com/kgish/ruby-webmachine-roar-template) 
+For example, have a look at [ruby-hal-server](https://github.com/kgish/ruby-hal-server) 
 which I created in tandem to this project for use as a test harnass.
 
 Built using the [ember-cli](http://www.ember-cli.com/) framework.
