@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
-export function initialize(container, application) {
-    application.inject('controller', 'cookie', 'cookie:main');
+export function initialize(/*container, application*/) {
+//    application.inject('controller', 'cookie', 'cookie:main');
 
     var t = Ember.$.cookie('access_token') || 'undefined';
     var cu = Ember.$.cookie('auth_user');

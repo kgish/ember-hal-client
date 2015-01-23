@@ -9,10 +9,12 @@ export default Ember.Controller.extend({
     init: function() {
         console.log('SessionsController: init');
         this._super();
-        var cookie = this.get('cookie');
-        if (cookie) {
-            var access_token = cookie.getCookie('access_token');
-            var auth_user = cookie.getCookie('auth_user');
+//        var cookie = this.get('cookie');
+//        if (cookie) {
+//            var access_token = cookie.getCookie('access_token');
+//            var auth_user = cookie.getCookie('auth_user');
+            var access_token = Ember.$.cookie('access_token');
+            var auth_user = Ember.$.cookie('auth_user');
             if (access_token) {
                 console.log('SessionsController: init => set authorization header with token='+access_token);
                 this.set('token', access_token);
@@ -38,9 +40,9 @@ export default Ember.Controller.extend({
             } else {
                 console.log('SessionsController: init => auth_user cookie is NOT set');
             }
-        } else {
-            console.log('SessionsController: init => cannot get cookies!');
-        }
+//        } else {
+//            console.log('SessionsController: init => cannot get cookies!');
+//        }
     },
 
     // Overwrite default attemptedTransition attribute from the Ember.Controller object
@@ -52,24 +54,29 @@ export default Ember.Controller.extend({
 
     // Create a observer bound to the token property of this controller to set/remove the authentication tokens
     tokenChanged: (function() {
-        var cookie = this.get('cookie');
-        if (cookie) {
+//        var cookie = this.get('cookie');
+//        if (cookie) {
             if (Ember.isEmpty(this.get('token'))) {
                 console.log('SessionsController: tokenChanged => remove cookies');
-                cookie.removeCookie('access_token');
-                cookie.removeCookie('auth_user');
+                Ember.$.removeCookie('access_token');
+                Ember.$.removeCookie('auth_user');
+//                cookie.removeCookie('access_token');
+//                cookie.removeCookie('auth_user');
             } else {
                 console.log('SessionsController: tokenChanged => set cookies');
                 // TODO: expire in 30 minutes.
                 var access_token = this.get('token');
                 var auth_user = this.get('currentUser');
-                cookie.setCookie('access_token', access_token, { root: '/'});
-                cookie.setCookie('auth_user', JSON.stringify(auth_user), { root: '/'});
-                console.log('SessionsController: tokenChanged => cookie(auth_user='+cookie.getCookie('auth_user')+',cookie(access_token)='+cookie.getCookie('access_token')+')');
+                Ember.$.cookie('access_token', access_token, { root: '/'});
+                Ember.$.cookie('auth_user', JSON.stringify(auth_user), { root: '/'});
+//                cookie.setCookie('access_token', access_token, { root: '/'});
+//                cookie.setCookie('auth_user', JSON.stringify(auth_user), { root: '/'});
+//                console.log('SessionsController: tokenChanged => cookie(auth_user='+cookie.getCookie('auth_user')+',cookie(access_token)='+cookie.getCookie('access_token')+')');
+                console.log('SessionsController: tokenChanged => cookie(auth_user='+Ember.$.cookie('auth_user')+',cookie(access_token)='+Ember.$.cookie('access_token')+')');
             }
-        } else {
-            console.log('SessionsController: tokenChanged => cannot get cookies');
-        }
+//        } else {
+//            console.log('SessionsController: tokenChanged => cannot get cookies');
+//        }
     }).observes('token'),
 
     // reset the controller properties and the ajax header

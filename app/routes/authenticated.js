@@ -27,9 +27,9 @@ export default Ember.Route.extend({
             } else {
                 // Not admin, some restrictions may apply.
                 // TODO: Needs to be worked out better
-                console.log('AuthenticatedRoute: beforeModel() => user is not admin, blocked!');
-                transition.abort();
-                this.transitionTo('/not-found');
+                console.log('AuthenticatedRoute: beforeModel() => user is not admin, TODO block?');
+                //transition.abort();
+                //this.transitionTo('/not-found');
             }
         }
     },
