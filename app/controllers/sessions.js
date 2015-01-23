@@ -2,8 +2,6 @@ import Ember from 'ember';
 import config from './../config/environment';
 
 export default Ember.Controller.extend({
-    // TODO Handle sessions using ember-cli-simple-auth
-
     // Initialization method to verify if there is an access_token cookie set
     // so we can set our ajax header with it to access the protected pages.
     init: function() {

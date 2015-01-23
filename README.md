@@ -321,26 +321,95 @@ id = resource.href.replace(/^\/[^\/]+\//, '');
 Given a string like `/products/23` strip off the beginning and return the
 terminating string after the last backlash resulting in `23`.
 
-## Authentication using cookies
+## Authentication and how it works 
 
-Explain here how authentication using cookies works.
+All of activities related to authentication are handled in the sessions 
+controller defined in the `app/controllers/sessions.js` file.
+
+Two cookies are used for persistent session handling, namely:
+
+* `access_token` (token)
+* `auth_user` (currentUser)
+
+Logging into the server is done by sending a `POST /sessions` with the
+following payload included in the request body:
+
+```javascript
+{ password: 'pindakaas', username_or_email: 'kiffin' }
+```
+
+Assuming success the server responds with a `201 Created` passing back the
+`access_token` as part of the following payload in the response body:
+
+```javascript
+{ api_key: { user_id: 1, access_token: '26c06...342aa' } }
+```
+
+Failure to login results is a `401 Unauthorized` which means that either or
+both of the username and password were incorrect.
+
+The `access_token` is stored for safe-keeping in the appropriate cookie:
+
+```javascript
+Ember.$.cookie('access_token', access_token, { root: '/'});
+```
+ 
+and thereafter needs to be included in the authorization header of all 
+following requests in order to gain access:
+
+```javascript
+Ember.$.ajaxSetup({
+    contentType: 'application/json; charset=utf-8',
+    headers: {
+       'Authorization': 'Bearer '+access_token
+    }
+});
+```
+
+At his point the attributes related to the current user can be acquired by
+sending a `GET /users/user_id` (together with the token authorization.
+
+The server send backs the following HAL/JSON data in the response body which
+after being converted by the serializer (above) looks like this:
+
+```javascript
+currentUser = {
+    id:         1,
+    name:       'Kiffin Gish',
+    username:   'kiffin',
+    email:      'kiffin.gish@planet.nl',
+    is_admin:   true,
+    login_date: '2015-01-23T20:12:24.000Z'
+}
+```
+
+This is also saved in a cookie for safe-keeping:
+
+```javascript
+Ember.$.cookie('auth_user', currentUser, { root: '/'});
+```
+
+During page refresh or incoming url the cookies are first checked to see if
+an authenticated user is available, and if so use those cookies for further
+validation purposes.
+
+After this you're in the ballpark and can proceed freely to your seat behind
+home plate.
 
 ## Todo list
 
 There are still a number of minor issues which should be looked into, namely
 the following:
 
-* On refresh the header authentication token is nuked.
 * Need to implement better error handling.
 * Message/error banner for generic handling of user info.
-* Migrate to ember-cli-simple-auth.
-* Restrict access for non admins, e.g. /secret or /products/2/edit.
+* Migrate to ember-cli-simple-auth (maybe).
 * Global flags isAuthenticated, isAdmin and currentUser not DRY, need to be handled more elegantly.
 * Enable the registration via signup.
 * Should be able to edit own profile including new password.
 * Adding, modifying and deleting user by admin.
-* Entry field validations.
-* Pagination for the products list would be nice.
+* Consistent entry field validations.
+* Pagination for the products list (nice to have).
 
 ## Thanks
 
