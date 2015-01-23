@@ -1,7 +1,6 @@
-# Ember HAL Template
+# Ember HAL Client
 
-A simple web client template for setting up an Ember application
-that communicates with a compatible HAL/JSON web service.
+An example ember application that communicates with a compatible HAL/JSON web service.
 
 For example, have a look at [ruby-hal-server](https://github.com/kgish/ruby-hal-server) 
 which I created in tandem to this project for use as a test harnass.
