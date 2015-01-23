@@ -403,12 +403,13 @@ the following:
 
 * Need to implement better error handling.
 * Message/error banner for generic handling of user info.
-* Migrate to ember-cli-simple-auth (maybe).
-* Global flags isAuthenticated, isAdmin and currentUser not DRY, need to be handled more elegantly.
-* Enable the registration via signup.
+* Migrate to `ember-cli-simple-auth` (maybe).
+* The global flags `isAuthenticated`, `isAdmin` and `currentUser` are not DRY, need to be handled more elegantly.
+* Enable the registration via the signup page.
 * Should be able to edit own profile including new password.
-* Adding, modifying and deleting user by admin.
-* Consistent entry field validations.
+* Admin should be able to add, modify and/or delete user info.
+* Profile page should include next/previous button for admin.
+* Consistent form field validations.
 * Pagination for the products list (nice to have).
 
 ## Thanks
