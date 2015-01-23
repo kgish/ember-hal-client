@@ -369,7 +369,7 @@ Ember.$.ajaxSetup({
 At his point the attributes related to the current user can be acquired by
 sending a `GET /users/user_id` (together with the token authorization, of course).
 
-The server send backs the following HAL/JSON data in the response body which
+The server send backs the the user data in HAL/JSON format in the response body which
 after being converted by the serializer (above) looks like this:
 
 ```javascript
