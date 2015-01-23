@@ -25,6 +25,7 @@ app.import('bower_components/ember-localstorage-adapter/localstorage_adapter.js'
 app.import('bower_components/bootstrap/dist/css/bootstrap.min.css', {});
 app.import('bower_components/bootstrap/dist/css/bootstrap.css.map', {});
 app.import('bower_components/bootstrap/dist/fonts/glyphicons-halflings-regular.woff', { destDir: 'fonts' });
+app.import('bower_components/bootstrap/dist/fonts/glyphicons-halflings-regular.woff2', { destDir: 'fonts' });
 app.import('bower_components/bootstrap/dist/fonts/glyphicons-halflings-regular.ttf', { destDir: 'fonts' });
 
 
