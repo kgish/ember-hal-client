@@ -6,8 +6,10 @@ export default DS.RESTSerializer.extend({
         console.log('ApplicationSerializer: typeForRoot(root='+root+') => '+res);
         return res;
     },
+
     normalizePayload: function(payload) {
-        console.log('ApplicationSerializer: normalizePayload(payload='+JSON.stringify(payload)+')');
+//        console.log('ApplicationSerializer: normalizePayload(payload='+JSON.stringify(payload)+')');
+        console.log('ApplicationSerializer: normalizePayload()');
         var normalizedPayload = {};
         if (payload['_links']) {
             var links = payload['_links'],
@@ -30,7 +32,7 @@ export default DS.RESTSerializer.extend({
             } else {
                 normalizedPayload = this._normalizeCollection(payload, m[1], 'ht');
             }
-            console.log('ApplicationSerializer: normalizePayload() => '+JSON.stringify(normalizedPayload));
+//            console.log('ApplicationSerializer: normalizePayload() => '+JSON.stringify(normalizedPayload));
         } else {
             console.log('ApplicationSerializer: normalizePayload() => unknown payload format!');
         }

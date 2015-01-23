@@ -4,9 +4,13 @@ import config from './../config/environment';
 
 export default DS.RESTAdapter.extend({
     headers: function() {
-        var access_token = Ember.$.cookie('access_token') || 'none';
-        console.log('ApplicationAdapter: headers() => Authorization: Bearer '+access_token);
-        return access_token === 'none' ? {} : {'Authorization': 'Bearer '+access_token};
+        var access_token = Ember.$.cookie('access_token');
+        if (access_token) {
+            console.log('ApplicationAdapter: headers() => \'Authorization: Bearer '+access_token+'\'');
+            return { 'Authorization': 'Bearer '+access_token };
+        } else {
+            return {};
+        }
     }.property().volatile(),
 
     buildURL: function(type, id, record) {

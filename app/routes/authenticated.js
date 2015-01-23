@@ -1,35 +1,50 @@
 import Ember from 'ember';
+import config from './../config/environment';
 
 // This is the base object for any authentication protected route with the
-// required verifications. Use it like this:
+// required verifications. Refers to config.APP.BLACKLIST_TARGETS for
+// blocking transitions of users not authenticated (admin).
 //
-// import Authenticated from './authenticated';
+// Subclass/extend by declaring it like this:
 //
-// export default Authenticated.extend({
-//     ...
-// });
+//   import Authenticated from './authenticated';
+//
+//   export default Authenticated.extend({
+//       ...
+//   });
 export default Ember.Route.extend({
     // Verify that the 'token' property of the sessions controller is set
     // before continuing with the request. If not, then redirect to the
     // login route (sessions).
     beforeModel: function(transition) {
-        console.log('AuthenticatedRoute: beforeModel()');
+        var currentRouteName = this.controllerFor('application').get('currentRouteName');
+        var currentPath = this.controllerFor('application').get('currentPath');
+        var targetName = transition.targetName;
+        console.log('AuthenticatedRoute: beforeModel() currentRouteName='+currentRouteName+', currentPath='+currentPath+', targetName='+targetName);
+
+        // Check if already logged in by accessing the sessions controller for token.
         var controller = this.controllerFor('sessions');
         if (Ember.isEmpty(controller.get('token'))) {
             console.log('AuthenticatedRoute: beforeModel() => user is not authenticated, redirect to login');
             return this.redirectToLogin(transition);
+        }
+
+        // User has logged in but is he allowed to transition here?
+        var isAdmin = controller.get('currentUser.is_admin');
+        if (isAdmin) {
+           // This guy can do anything.
+            console.log('AuthenticatedRoute: beforeModel() => is_admin, can do anything');
         } else {
-            // User has logged in but is he allowed to transition here?
-            var isAdmin = controller.get('currentUser.is_admin');
-            if (isAdmin) {
-               // This guy can do anything.
-                console.log('AuthenticatedRoute: beforeModel() => is_admin, can do anything');
+            // Not admin, some restrictions may apply.
+            if ( config.APP.BLACKLIST_TARGETS.indexOf(targetName) != -1) {
+                // Not allowed, redirect to not found page.
+                console.log('AuthenticatedRoute: beforeModel() => targetName='+targetName+', user blocked');
+                transition.abort();
+                this.transitionTo('/not-found');
             } else {
-                // Not admin, some restrictions may apply.
-                // TODO: Needs to be worked out better
-                console.log('AuthenticatedRoute: beforeModel() => user is not admin, TODO block?');
-                //transition.abort();
-                //this.transitionTo('/not-found');
+                // Okay free passage.
+                console.log('AuthenticatedRoute: beforeModel() => targetName='+targetName+', user okay');
+
             }
         }
     },

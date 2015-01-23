@@ -16,7 +16,8 @@ module.exports = function(environment) {
         APP: {
             // Here you can pass flags/options to your application instance
             // when it is created
-            RESTADAPTER_HOST: 'http://0.0.0.0:8080'
+            RESTADAPTER_HOST: 'http://0.0.0.0:8080',
+            BLACKLIST_TARGETS: ['secret', 'users.index', 'products.new', 'product.edit']
         },
 
         // Defaults

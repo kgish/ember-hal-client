@@ -1,6 +1,6 @@
-import Ember from 'ember';
+import Authenticated from './authenticated';
 
-export default Ember.Route.extend({
+export default Authenticated.extend({
     model: function() {
         // Instantiate the model for the SecretController as a list of created users
         console.log('SecretRoute: model()');
