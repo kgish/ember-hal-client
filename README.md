@@ -7,7 +7,7 @@ which I created in tandem to this project for use as a test harnass.
 
 Built using the [ember-cli](http://www.ember-cli.com/) framework.
 
-![](images/screenshot-1.png?raw=true)
+![](images/screenshot.png?raw=true)
 
 ## Prerequisites
 
@@ -58,7 +58,6 @@ module.exports = function(environment) {
 
 ## Running / Development
 
-```
 Start the client by running the following command.
 
 ```bash
