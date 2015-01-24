@@ -36,7 +36,7 @@ export default Ember.Route.extend({
             console.log('AuthenticatedRoute: beforeModel() => is_admin, can do anything');
         } else {
             // Not admin, some restrictions may apply.
-            if ( config.APP.BLACKLIST_TARGETS.indexOf(targetName) != -1) {
+            if ( config.APP.BLACKLIST_TARGETS.indexOf(targetName) !== -1) {
                 // Not allowed, redirect to not found page.
                 console.log('AuthenticatedRoute: beforeModel() => targetName='+targetName+', user blocked');
                 transition.abort();
