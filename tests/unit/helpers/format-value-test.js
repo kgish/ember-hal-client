@@ -1,6 +1,5 @@
-import {
-  formatValue
-} from 'hal-client/helpers/format-value';
+import { module, click } from 'ember-qunit';
+import { formatValue } from 'hal-client/helpers/format-value';
 
 module('FormatValueHelper');
 

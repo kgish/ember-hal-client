@@ -1,6 +1,5 @@
-import {
-  makePlural
-} from 'hal-client/helpers/make-plural';
+import { module, click } from 'ember-qunit';
+import { makePlural } from 'hal-client/helpers/make-plural';
 
 module('MakePluralHelper');
 

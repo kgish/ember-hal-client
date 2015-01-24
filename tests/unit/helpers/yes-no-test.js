@@ -1,6 +1,5 @@
-import {
-  yesNo
-} from 'hal-client/helpers/yes-no';
+import { module, click } from 'ember-qunit';
+import { yesNo } from 'hal-client/helpers/yes-no';
 
 module('YesNoHelper');
 

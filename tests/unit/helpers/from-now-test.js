@@ -1,6 +1,5 @@
-import {
-  fromNow
-} from 'hal-client/helpers/from-now';
+import { module, click } from 'ember-qunit';
+import { fromNow } from 'hal-client/helpers/from-now';
 
 module('FromNowHelper');
 

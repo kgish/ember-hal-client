@@ -13,11 +13,10 @@ module('Integration - Login Page', {
   }
 });
 
-test('Should require me to login', function() {
-    // Don't forget to clear cookies first
-    Ember.$.removeCookie('access_token');
-    Ember.$.removeCookie('auth_user');
+test('Should navigate to the about page', function() {
     visit('/').then(function() {
-        equal(find('h2.page-header').text(), 'Login');
+        click("a:contains('About')").then(function() {
+            equal(find('h2.page-header').text(), 'About');
+        });
     });
 });
