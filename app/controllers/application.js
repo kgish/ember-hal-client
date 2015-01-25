@@ -1,8 +1,11 @@
 import Ember from 'ember';
+import config from './../config/environment';
 
 export default Ember.Controller.extend({
     // Requires the sessions controller
     needs: ['sessions'],
+
+    hostname: config.APP.RESTADAPTER_HOST.replace(/^https?:\/\//, ''),
 
     // Creates a computed property called 'currentUser' that will be
     // bound to the currentUser of the sessions controller and will

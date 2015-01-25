@@ -22,12 +22,9 @@
                 <li>{{#link-to 'about'}}About{{/link-to}}</li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+                <li>{{#link-to 'root'}}<span class="glyphicon glyphicon-globe"></span> {{hostname}}{{/link-to}}</li>
                 {{#if isAuthenticated}}
-                <p class="navbar-text">{{hostname}}</p>
-                    <li>{{#link-to 'users.user' currentUser.id}}
-                            <span class="glyphicon glyphicon-user"></span>
-                            {{currentUser.name}} ({{#if isAdmin}} admin {{else}} user {{/if}})
-                        {{/link-to}}</li>
+                    <li>{{#link-to 'users.user' currentUser.id}}<span class="glyphicon glyphicon-user"></span> {{currentUser.name}} ({{#if isAdmin}}admin{{else}}user{{/if}}){{/link-to}}</li>
                     <li><a href="#" {{action 'logout'}}>Logout</a></li>
                 {{else}}
                     <li>{{#link-to 'users.signup'}}Sign up{{/link-to}}</li>
