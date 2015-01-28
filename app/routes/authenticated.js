@@ -24,7 +24,7 @@ export default Ember.Route.extend({
 
         // Check if already logged in by accessing the sessions controller for token.
         var controller = this.controllerFor('sessions');
-        if (Ember.isEmpty(controller.get('token'))) {
+        if (targetName !== 'users.signup' && Ember.isEmpty(controller.get('token'))) {
             console.log('AuthenticatedRoute: beforeModel() => user is not authenticated, redirect to login');
             return this.redirectToLogin(transition);
         }
