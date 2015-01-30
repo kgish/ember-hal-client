@@ -401,6 +401,7 @@ home plate.
 There are still a number of minor issues which should be looked into, namely
 the following:
 
+* Value of 'ht' is hardcoded, instead use autodiscovery on root resource.
 * Need to implement better error handling.
 * Message/error banner for generic handling of user info.
 * Migrate to `ember-cli-simple-auth` (maybe).

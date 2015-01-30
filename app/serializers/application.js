@@ -30,6 +30,7 @@ export default DS.RESTSerializer.extend({
             if (m[3]) {
                 normalizedPayload = this._normalizeResource(payload, m[1], m[3]);
             } else {
+                // TODO: The value of 'ht' should not be hardcoded, use autodiscovery on root resource
                 normalizedPayload = this._normalizeCollection(payload, m[1], 'ht');
             }
 //            console.log('ApplicationSerializer: normalizePayload() => '+JSON.stringify(normalizedPayload));
