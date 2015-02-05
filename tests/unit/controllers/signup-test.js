@@ -3,7 +3,7 @@ import {
   test
 } from 'ember-qunit';
 
-moduleFor('controller:users/signup', 'UsersSignupController', {
+moduleFor('controller:signup', 'SignupController', {
   // Specify the other units that are required for this test.
   needs: ['controller:sessions']
 });

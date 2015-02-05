@@ -128,7 +128,7 @@ export default Ember.Controller.extend({
 
                             user.get('apikeys').content.push(key);
 
-                            // check if there is any attemptedTransition to retry it or go to the secret route
+                            // check if there is any attemptedTransition to retry it or go to the users route
                             if (attemptedTrans) {
                                 attemptedTrans.retry();
                                 _this.set('attemptedTransition', null);

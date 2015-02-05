@@ -1,10 +1,9 @@
 import Ember from 'ember';
 import startApp from '../helpers/start-app';
-//import { module, click } from 'ember-qunit';
 
 var App;
 
-module('Integration - Login Page', {
+module('Integration - Signup Page', {
   setup: function() {
     App = startApp();
   },
@@ -13,10 +12,10 @@ module('Integration - Login Page', {
   }
 });
 
-test('Should navigate to the help page', function() {
+test('Should navigate to the signup page', function() {
     visit('/').then(function() {
-        click("a:contains('Help')").then(function() {
-            equal(find('h2.page-header').text(), 'Help');
+        click("a:contains('Sign up')").then(function() {
+            equal(find('h2.page-header').text(), 'Signup');
         });
     });
 });

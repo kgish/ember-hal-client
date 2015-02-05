@@ -24,7 +24,7 @@ export default Ember.Route.extend({
 
         // Check if already logged in by accessing the sessions controller for token.
         var controller = this.controllerFor('sessions');
-        if (targetName !== 'users.signup' && Ember.isEmpty(controller.get('token'))) {
+        if (targetName !== 'signup' && Ember.isEmpty(controller.get('token'))) {
             console.log('AuthenticatedRoute: beforeModel() => user is not authenticated, redirect to login');
             return this.redirectToLogin(transition);
         }
@@ -52,6 +52,8 @@ export default Ember.Route.extend({
     // Redirect to the login page and store the current transition so we can
     // run it again after login
     redirectToLogin: function(transition) {
+        // TODO Logout and clear all cookies just in case.
+        this.controllerFor('sessions').reset();
         console.log('AuthenticatedRoute: redirectToLogin()');
         this.controllerFor('sessions').set('attemptedTransition', transition);
         return this.transitionTo('sessions');

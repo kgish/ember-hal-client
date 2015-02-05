@@ -1,0 +1,17 @@
+<h2 class="page-header">User
+    {{#if isAdmin}}
+        <button type="submit" {{action 'prevUser' this}} title="Go to previous user" class="btn btn-default btn-sm">&laquo;</button>
+        <button type="submit" {{action 'nextUser' this}} title="Go to next user" class="btn btn-default btn-sm">&raquo;</button>
+    {{/if}}
+</h2>
+
+{{partial 'user/form'}}
+
+<form class="form-horizontal">
+    <button type="button" class="btn btn-primary btn-sm" title="Edit this user" {{action "editUser" this}}>
+        <span class="glyphicon glyphicon-edit"></span> Edit
+    </button>
+    <button type="button" class="btn btn-default btn-sm" title="Delete this user" {{action "deleteUser" this}}>
+        <span class="glyphicon glyphicon-remove"></span> Delete
+    </button>
+</form>

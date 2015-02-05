@@ -1,0 +1,65 @@
+<table class="table">
+    <thead>
+        <tr>
+            {{#if isAdmin}}
+                <th></th>
+            {{/if}}
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            {{#if isAdmin}}
+                <th></th>
+            {{/if}}
+        </tr>
+    </thead>
+    <tbody>
+        {{#if isAdmin}}
+            <tr><td>Id</td><td>{{id}}</td></tr>
+        {{/if}}
+        <tr>
+            <td>User</td>
+            <td>
+                {{#if isEditing}}
+                    {{input type='text' value=username}}
+                {{else}}
+                    {{username}}
+                {{/if}}
+            </td>
+        </tr>
+        <tr>
+            <td>Name</td>
+            <td>
+                {{#if isEditing}}
+                    {{input type='text' value=name}}
+                {{else}}
+                    {{name}}
+                {{/if}}
+            </td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td>
+                {{#if isEditing}}
+                    {{input type='text' value=email}}
+                {{else}}
+                    {{email}}
+                {{/if}}
+            </td>
+        </tr>
+        <tr>
+            <td>Login</td><td>{{from-now login_date}}</td></tr>
+        {{#if isAdmin}}
+            <tr>
+                <td>Admin</td>
+                <td>
+                    {{#if isEditing}}
+                        {{input type='checkbox' checked=is_admin}}
+                    {{else}}
+                        {{yes-no is_admin}}
+                    {{/if}}
+                </td>
+            </tr>
+        {{/if}}
+    </tbody>
+</table>

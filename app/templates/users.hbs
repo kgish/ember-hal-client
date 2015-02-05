@@ -1,1 +1,27 @@
-{{outlet}}
+<h2 class="page-header">Users</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>User</th>
+            <th>Name</th>
+            <th>Email</th>
+            {{#if isAdmin}}
+                <th>Login</th>
+                <th>Admin</th>
+            {{/if}}
+        </tr>
+    </thead>
+    <tbody>
+        {{#each model}}
+            <tr>
+                <td>{{id}}</td>
+                <td>{{#link-to 'user' this}}{{username}}{{/link-to}}</td>
+                <td>{{name}}</td>
+                <td>{{email}}</td>
+                <td>{{from-now login_date}}</td>
+                <td>{{yes-no is_admin}}</td>
+            </tr>
+        {{/each}}
+    </tbody>
+</table>

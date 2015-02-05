@@ -1,7 +1,7 @@
 <div class="container">
-    <h1>HAL Client - Demo Application</h1>
+    <h1>HAL Client</h1>
     <p>
-        An amazing demo which will dazzle your family and friends.
+        An amazing application which will dazzle your family and friends.
     </p>
 </div>
 
@@ -15,7 +15,7 @@
                 {{#if isAuthenticated}}
                     <li>{{#link-to 'products'}}Products{{/link-to}}</li>
                     {{#if isAdmin}}
-                        <li>{{#link-to 'secret'}}Users{{/link-to}}</li>
+                        <li>{{#link-to 'users'}}Users{{/link-to}}</li>
                     {{/if}}
                 {{/if}}
                 <li>{{#link-to 'help'}}Help{{/link-to}}</li>
@@ -24,10 +24,10 @@
             <ul class="nav navbar-nav navbar-right">
                 <li>{{#link-to 'root'}}<span class="glyphicon glyphicon-globe"></span> {{hostname}}{{/link-to}}</li>
                 {{#if isAuthenticated}}
-                    <li>{{#link-to 'users.user' currentUser.id}}<span class="glyphicon glyphicon-user"></span> {{currentUser.name}} ({{#if isAdmin}}admin{{else}}user{{/if}}){{/link-to}}</li>
+                    <li>{{#link-to 'user' currentUser.id}}<span class="glyphicon glyphicon-user"></span> {{currentUser.name}} ({{#if isAdmin}}admin{{else}}user{{/if}}){{/link-to}}</li>
                     <li><a href="#" {{action 'logout'}}>Logout</a></li>
                 {{else}}
-                    <li>{{#link-to 'users.signup'}}Sign up{{/link-to}}</li>
+                    <li>{{#link-to 'signup'}}Sign up{{/link-to}}</li>
                     <li>{{#link-to 'sessions.index'}}Login{{/link-to}}</li>
                 {{/if}}
             </ul>

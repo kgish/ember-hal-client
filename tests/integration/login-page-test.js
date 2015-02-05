@@ -1,6 +1,5 @@
 import Ember from 'ember';
 import startApp from '../helpers/start-app';
-import { module, click } from 'ember-qunit';
 
 var App;
 
