@@ -3,8 +3,8 @@ import {
   test
 } from 'ember-qunit';
 
-moduleFor('controller:users/user', 'UsersUserController', {
-  needs: ['controller:sessions']
+moduleFor('controller:users', 'UsersController', {
+//  needs: ['controller:sessions']
 });
 
 // Replace this with your real tests.

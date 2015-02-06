@@ -15,7 +15,7 @@ Router.map(function() {
     this.route('signup');
 
     // Sessions
-    this.resource('sessions', function() {
+    this.resource('sessions', { path: 'login' }, function() {
         this.route('logout');
         this.route('login');
     });
