@@ -5,7 +5,13 @@ export default Ember.ObjectController.extend({
     // Requires the sessions controller
     needs: ['sessions', 'users'],
 
+    // Computes aliases.
     isEditing: Ember.computed.alias('controllers.users.isEditing'),
+    currentUser: Ember.computed.alias('controllers.sessions.currentUser'),
+
+    canDelete: function() {
+        return this.get('currentUser.id') != this.get('model.id');
+    }.property('currentUser.id', 'model.id'),
 
     isAdmin: (function() {
         var res = this.get('controllers.sessions.currentUser.is_admin');
