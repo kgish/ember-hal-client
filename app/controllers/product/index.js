@@ -22,7 +22,7 @@ export default Ember.ObjectController.extend({
             var id = product.get('id'),
                 name = product.get('name');
             if (confirm('Are you sure you want to delete product '+name+' ('+id+') ?')) {
-                console.log('ProductIndexController: Delete product => '+product.get('name'));
+                console.log('ProductIndexController: Delete product => '+name);
                 product.destroyRecord(); // => DELETE to /products/id
             } else {
                 console.log('ProductIndexController: Delete product => Cancelled');
