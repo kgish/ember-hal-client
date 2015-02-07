@@ -4,5 +4,12 @@ export default Ember.ArrayController.extend({
     sortAscending: true,
     sortProperties: ['id'],
 
-    isEditing: false
+    isEditing: false,
+
+    actions: {
+        createUser: function() {
+            alert('Sorry, not yet implemented.');
+        }
+    }
+
 });
