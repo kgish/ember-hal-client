@@ -408,8 +408,8 @@ the following:
 * The global flags `isAuthenticated`, `isAdmin` and `currentUser` are not DRY, need to be handled more elegantly.
 * Enable the registration via the signup page.
 * Should be able to edit own profile including new password.
-* Admin should be able to add, modify and/or delete user info.
-* Profile page should include next/previous button for admin.
+* Admin should be able to create new user.
+* User should be able to change password.
 * Consistent form field validations.
 * Pagination for the products list (nice to have).
 
