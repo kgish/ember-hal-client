@@ -1,9 +1,9 @@
 <div class="col-md-6">
     <h2>Create -- {{name}}</h2>
         <div class="list-group">
-            {{partial 'product/form' isEditing=isEditing this=controller.newProduct}}
+            {{partial 'product/form'}}
             <li class="list-group-item">
-            <button type="button" class="btn btn-primary btn-sm" title="Create new product" {{action 'saveNewProduct'}}>
+            <button type="button" class="btn btn-primary btn-sm" title="Save new product" {{action 'saveNewProduct'}}>
                 <span class="glyphicon glyphicon-ok"></span> Create
             </button>
             <button type="button" class="btn btn-primary btn-sm" title="Cancel new product" {{action 'cancelNewProduct'}}>

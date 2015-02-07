@@ -15,7 +15,9 @@
     </thead>
     <tbody>
         {{#if isAdmin}}
-            <tr><td>Id</td><td>{{id}}</td></tr>
+            {{#unless isEditing}}
+                <tr><td>Id</td><td>{{id}}</td></tr>
+            {{/unless}}
         {{/if}}
         <tr>
             <td>User</td>
@@ -47,8 +49,11 @@
                 {{/if}}
             </td>
         </tr>
-        <tr>
-            <td>Login</td><td>{{from-now login_date}}</td></tr>
+        {{#unless isEditing}}
+            <tr>
+                <td>Login</td><td>{{from-now login_date}}</td>
+            </tr>
+        {{/unless}}
         {{#if isAdmin}}
             <tr>
                 <td>Admin</td>

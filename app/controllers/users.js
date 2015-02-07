@@ -8,7 +8,8 @@ export default Ember.ArrayController.extend({
 
     actions: {
         createUser: function() {
-            alert('Sorry, not yet implemented.');
+            console.log('UsersController: Create user');
+            this.transitionToRoute('users.new');
         }
     }
 
