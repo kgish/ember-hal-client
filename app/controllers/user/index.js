@@ -30,15 +30,40 @@ export default Ember.ObjectController.extend({
             // TODO do something
             this.transitionToRoute('users');
         },
-        nextUser: function() {
-            console.log('UserIndexController: next user');
-            // TODO do something
-            //this.transitionToRoute('user');
+        nextUser: function(user) {
+            this.transitionToRoute('user.index', this._gotoNextOrPrev(user, 'next'));
         },
-        prevUser: function() {
-            console.log('UserIndexController: previous user');
-            // TODO do something
-            //this.transitionToRoute('user');
+        prevUser: function(user) {
+            this.transitionToRoute('user.index', this._gotoNextOrPrev(user, 'prev'));
+        }
+    },
+
+    _gotoNextOrPrev: function(user, next) {
+        var content = this.get('controllers.users.content'),
+            found = -1,
+            cnt = 0,
+            users = [];
+        content.forEach(function(u){
+            users.pushObject(u);
+            if (found == -1) {
+                if (u.id == user.id) {
+                    found = cnt;
+                }
+            }
+            cnt++;
+        });
+        if (found != -1) {
+            if (next === 'next') {
+                if (++found == cnt) found = 0;
+            } else {
+                if (--found == -1) found = cnt - 1;
+            }
+            var id = users[found].id;
+            console.log('UserIndexController: '+next+' user => id = '+id);
+            return id;
+        } else {
+            console.log('UserIndexController: '+next+' user => FAILED!');
+            return user.id;
         }
     }
 });
