@@ -5,6 +5,9 @@ export default Ember.ArrayController.extend({
     sortProperties: ['id'],
 
     isEditing: false,
+    readOnly: function() {
+       return !this.get('isEditing');
+    }.property('isEditing'),
 
     actions: {
         createUser: function() {

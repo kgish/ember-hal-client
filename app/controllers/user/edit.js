@@ -6,6 +6,7 @@ export default Ember.ObjectController.extend({
     needs: ['sessions', 'users'],
 
     isEditing: Ember.computed.alias('controllers.users.isEditing'),
+    readOnly: Ember.computed.alias('controllers.users.readOnly'),
 
     isAdmin: (function() {
         var res = this.get('controllers.sessions.currentUser.is_admin');

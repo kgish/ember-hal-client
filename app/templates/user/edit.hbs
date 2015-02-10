@@ -1,12 +1,14 @@
 <h2 class="page-header">Edit user</h2>
-
-{{partial 'user/form'}}
-
 <form class="form-horizontal">
-    <button type="button" class="btn btn-primary btn-sm" title="Save changes to this user" {{action 'saveEditUser' this}}>
-        <span class="glyphicon glyphicon-ok"></span> Save
-    </button>
-    <button type="button" class="btn btn-default btn-sm" title="Cancel changes to this user" {{action 'cancelEditUser' this}}>
-        <span class="glyphicon glyphicon-remove"></span> Cancel
-    </button>
+    {{partial 'user/form'}}
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="button" class="btn btn-primary btn-sm" title="Save changes to this user" {{action 'saveEditUser' this}}>
+                <span class="glyphicon glyphicon-ok"></span> Save
+            </button>
+            <button type="button" class="btn btn-default btn-sm" title="Cancel changes to this user" {{action 'cancelEditUser' this}}>
+                <span class="glyphicon glyphicon-remove"></span> Cancel
+            </button>
+        </div>
+    </div>
 </form>

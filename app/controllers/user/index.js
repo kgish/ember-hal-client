@@ -7,6 +7,7 @@ export default Ember.ObjectController.extend({
 
     // Computes aliases.
     isEditing: Ember.computed.alias('controllers.users.isEditing'),
+    readOnly: Ember.computed.alias('controllers.users.readOnly'),
     currentUser: Ember.computed.alias('controllers.sessions.currentUser'),
 
     canDelete: function() {
