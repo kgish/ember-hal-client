@@ -20,7 +20,7 @@ export default Ember.ObjectController.extend({
                 user.set('password_confirmation', user.get('password_confirmation'));
                 user.save();
                 this.set('isEditing', false);
-                this.transitionToRoute('user', user);
+                this.transitionToRoute('users');
             } else {
                 return false;
             }
@@ -44,10 +44,10 @@ export default Ember.ObjectController.extend({
             password = user.get('password'),
             password_confirmation = user.get('password_confirmation');
 
-        if (!this._validString(username, 'username', f)) { return false; }
-        if (!this._validString(name, 'name', f)) { return false; }
+        if (!this._validString(username, 'username', f, 5)) { return false; }
+        if (!this._validString(name, 'name', f, 5)) { return false; }
         if (!this._validEmail(email, f)) { return false; }
-        if (!this._validString(password, 'password', f)) { return false; }
+        if (!this._validString(password, 'password', f, 6)) { return false; }
         if (password !== password_confirmation) {
             alert('Password and confirmation do not match');
             return false;
@@ -61,9 +61,9 @@ export default Ember.ObjectController.extend({
         return ok;
     },
 
-    _validString: function(s, n, f) {
-        if (!(s && s.trim().length > 5)) {
-            if (f) { alert('Invalid '+n+' (must be at least six characters)'); }
+    _validString: function(s, n, f, len) {
+        if (!(s && s.trim().length > len-1)) {
+            if (f) { alert('Invalid '+n+' (must be at least '+len+' characters)'); }
             return false;
         }
         return true;

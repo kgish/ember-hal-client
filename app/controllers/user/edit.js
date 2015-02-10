@@ -19,13 +19,13 @@ export default Ember.ObjectController.extend({
             console.log('UserEditController: save edit user');
             user.save();
             this.set('isEditing', false);
-            this.transitionToRoute('user.index', user);
+            this.transitionToRoute('users');
         },
         cancelEditUser: function (user) {
             console.log('UserEditController: cancel edit user');
             user.rollback();
             this.set('isEditing', false);
-            this.transitionToRoute('user.index', user);
+            this.transitionToRoute('users');
         }
     }
 });

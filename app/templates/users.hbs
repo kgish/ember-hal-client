@@ -8,11 +8,9 @@
                 <th>Id</th>
                 <th>User</th>
                 <th>Name</th>
+                <th>Admin</th>
                 <th>Email</th>
-                {{#if isAdmin}}
-                    <th>Login</th>
-                    <th>Admin</th>
-                {{/if}}
+                <th>Login</th>
             </tr>
         </thead>
         <tbody>
@@ -21,9 +19,9 @@
                     <td>{{id}}</td>
                     <td>{{#link-to 'user' this}}{{username}}{{/link-to}}</td>
                     <td>{{name}}</td>
+                    <td>{{yes-no is_admin}}</td>
                     <td>{{email}}</td>
                     <td>{{from-now login_date}}</td>
-                    <td>{{yes-no is_admin}}</td>
                 </tr>
             {{/each}}
         </tbody>

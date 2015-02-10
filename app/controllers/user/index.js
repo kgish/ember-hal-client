@@ -26,6 +26,10 @@ export default Ember.ObjectController.extend({
             this.set('isEditing', true);
             this.transitionToRoute('user.edit', user);
         },
+        cancelUser: function(user) {
+            console.log('UserIndexController: cancel user');
+            this.transitionToRoute('users');
+        },
         deleteUser: function(user) {
             var id = user.get('id'),
                 username = user.get('username');
