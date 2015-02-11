@@ -26,14 +26,14 @@ export default DS.RESTAdapter.extend({
     },
 
     ajaxError: function(jqXHR) {
-        console.log('ApplicationAdapter: ajaxError() => '+jqXHR.responseText);
+        var status = jqXHR ? jqXHR.status : 'unknown';
+        console.log('ApplicationAdapter: ajaxError() => '+status+' error');
         var err = this._super(jqXHR);
-        if (jqXHR && jqXHR.status === 422) {
-          var jsonErrors = Ember.$.parseJSON(jqXHR.responseText);
-          return new DS.InvalidError(jsonErrors);
-        } else {
-          return err;
+        if (jqXHR && jqXHR.status === 401) {
+            // TODO: There must be a better way.
+            alert('An authentication error has occurred, please logout and login again.');
         }
+        return err;
     }
 });
 

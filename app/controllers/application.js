@@ -30,5 +30,13 @@ export default Ember.Controller.extend({
         var res = this.get('controllers.sessions.currentUser.is_admin');
         console.log('ApplicationController: isAdmin => '+res);
         return res;
-    }).property('controllers.sessions.currentUser')
+    }).property('controllers.sessions.currentUser'),
+
+    actions: {
+        logout: function() {
+            console.log('ApplicationRoute: logout()');
+            this.controllerFor('sessions').reset();
+            this.transitionToRoute('sessions');
+        }
+    }
 });

@@ -12,9 +12,11 @@
             <button type="button" class="btn btn-primary btn-sm" title="Edit this user" {{action "editUser" this}}>
                 <span class="glyphicon glyphicon-edit"></span> Edit
             </button>
-            <button type="button" class="btn btn-default btn-sm" title="Cancel editing this user" {{action "cancelUser" this}}>
-                <span class="glyphicon glyphicon-minus"></span> Cancel
-            </button>
+            {{#if isAdmin}}
+                <button type="button" class="btn btn-default btn-sm" title="Cancel editing this user" {{action "cancelUser" this}}>
+                    <span class="glyphicon glyphicon-minus"></span> Cancel
+                </button>
+            {{/if}}
             {{#if canDelete}}
                 <button type="button" class="btn btn-default btn-sm" title="Delete this user" {{action "deleteUser" this}}>
                     <span class="glyphicon glyphicon-remove"></span> Delete
