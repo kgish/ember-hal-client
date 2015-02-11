@@ -7,10 +7,14 @@ export default Ember.ObjectController.extend({
 
     actions: {
         saveEditProduct: function(product) {
-            this.set('isEditing', false);
-            product.save();
-            console.log('ProductEditController: Save product => '+product.get('name'));
-            this.transitionToRoute('product', product);
+            if (this.controllerFor('products').validProduct(product, true)) {
+                this.set('isEditing', false);
+                product.save();
+                console.log('ProductEditController: Save product => ' + product.get('name'));
+                this.transitionToRoute('product', product);
+            } else {
+               return false;
+            }
         },
         cancelEditProduct: function(product) {
             this.set('isEditing', false);
