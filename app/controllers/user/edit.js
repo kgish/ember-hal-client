@@ -17,9 +17,13 @@ export default Ember.ObjectController.extend({
     actions: {
         saveEditUser: function (user) {
             console.log('UserEditController: save edit user');
-            user.save();
-            this.set('isEditing', false);
-            this.transitionToRoute('users');
+            if (this.controllerFor('users').validUser(user, true)) {
+                user.save();
+                this.set('isEditing', false);
+                this.transitionToRoute('users');
+            } else {
+               return false;
+            }
         },
         cancelEditUser: function (user) {
             console.log('UserEditController: cancel edit user');
