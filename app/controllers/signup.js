@@ -1,72 +1,40 @@
 import Ember from 'ember';
+import config from './../config/environment';
 
-export default Ember.Controller.extend({
+export default Ember.ObjectController.extend({
     // Requires the sessions controller
-    needs: ['sessions'],
+    needs: ['sessions', 'users'],
 
     actions: {
-        signupUser: function() {
-            console.log('SignupController: createUser');
-            alert('Sorry, not yet implemented (be patient)');
-    //        this.transitionToRoute('index');
-    //        var _this = this;
-    //
-    //        // get the data from the form
-    //        var data = this.getProperties(
-    //            'firstName',
-    //            'lastName',
-    //            'email',
-    //            'username',
-    //            'password',
-    //            'password_confirmation'
-    //        );
-    //
-    //        // Compile the firstName & lastName into a single name property
-    //        data.name = "#{data.firstName} #{data.lastName}";
-    //
-    //        // Get the model passed from the SignupRoute
-    //        var user = this.get('model');
-    //
-    //        // Set the properties for the user based on the data from the form
-    //        user.setProperties(data);
-    //
-    //        // Save the user object into the database.
-    //        // POST => /users
-    //        user.save().then(
-    //            function(user) {
-    //                // clear the form data
-    //                _this.setProperties({
-    //                    name: null,
-    //                    email: null,
-    //                    username: null,
-    //                    password: null,
-    //                    password_confirmation: null
-    //                });
-    //
-    //                // Get the sessions controller object and set the properties to proceed to the login action
-    //                var sessionsController = this.get('controllers.sessions');
-    //                sessionsController.setProperties({
-    //                    username_or_email: data.username,
-    //                    password: data.password
-    //                });
-    //
-    //                // Remove the record from the localstorage to avoid
-    //                // duplication on the users list as it is returned by
-    //                // the server.
-    //                user.deleteRecord();
-    //
-    //                // Call the loginUser action to authenticate the created user
-    //                sessionsController.send('loginUser');
-    //            },
-    //            function(error) {
-    //                // If server returns HTTP status 401 Unauthorized, create an
-    //                // errors object to return to the user
-    //                if (error.status === 401) {
-    //                    var errs = JSON.parse(error.responseText);
-    //                    user.set('errors', errs.errors);
-    //                }
-    //            }
-    //        ); // save().then()
+        saveSignupUser: function() {
+            var user = this.get('model');
+            console.log('SignupController: saveSignupUser() => '+JSON.stringify(user));
+            var controller = this.get('controllers.users');
+            if (controller.validUser(user, true)) {
+                var username = user.get('username').trim();
+                user.set('username', username);
+                user.set('name', user.get('name').trim());
+                user.set('email', user.get('email').trim());
+                user.set('is_admin', false);
+                user.set('password', user.get('password'));
+                user.set('password_confirmation', user.get('password_confirmation'));
+                Ember.$.ajaxSetup({ headers: { 'X-Secret-Key-Signup': config.APP.SECRET_KEY_SIGNUP } });
+                user.save().then(
+                    function() {
+                        alert('Registration succeeded. You can now login with username \''+username+'\' and the password you entered.')
+                    }
+                );
+                this.transitionToRoute('sessions');
+            } else {
+                return false;
+            }
+        },
+
+        cancelSignupUser: function() {
+            console.log('SignupController: Signup user => cancelled');
+            var user = this.get('model');
+            user.destroyRecord();
+            this.transitionToRoute('sessions');
         }
     }
 });

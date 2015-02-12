@@ -33,12 +33,12 @@ export default Ember.ObjectController.extend({
         deleteUser: function(user) {
             var id = user.get('id'),
                 username = user.get('username');
-            if (confirm('Are you sure you want to delete user '+username+' ('+id+') ?')) {
+            if (confirm('Are you sure you want to delete user '+username+' (id='+id+') ?')) {
                 console.log('UserIndexController: Delete user => '+username);
                 user.destroyRecord(); // => DELETE to /users/id
                 this.transitionToRoute('users');
             } else {
-                console.log('UserIndexController: Delete user => Cancelled');
+                console.log('UserIndexController: Delete user => cancelled');
             }
         },
         nextUser: function(user) {

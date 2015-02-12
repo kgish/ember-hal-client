@@ -45,7 +45,6 @@ export default Ember.Controller.extend({
             Ember.$.removeCookie('auth_user');
         } else {
             console.log('SessionsController: tokenChanged => set cookies');
-            // TODO: expire in 30 minutes.
             var access_token = this.get('token');
             var auth_user = this.get('currentUser');
             Ember.$.cookie('access_token', access_token, { root: '/'});

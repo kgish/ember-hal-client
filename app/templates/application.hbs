@@ -27,7 +27,7 @@
                     <li>{{#link-to 'user' currentUser.id}}<span class="glyphicon glyphicon-user"></span> {{currentUser.name}} ({{#if isAdmin}}admin{{else}}user{{/if}}){{/link-to}}</li>
                     <li><a href="#" {{action 'logout'}}>Logout</a></li>
                 {{else}}
-                    <li>{{#link-to 'signup'}}Sign up{{/link-to}}</li>
+                    <li>{{#link-to 'signup'}}<span class="glyphicon glyphicon-thumbs-up"></span> Sign up{{/link-to}}</li>
                     <li>{{#link-to 'sessions.index'}}Login{{/link-to}}</li>
                 {{/if}}
             </ul>

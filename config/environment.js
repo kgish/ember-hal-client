@@ -17,7 +17,8 @@ module.exports = function(environment) {
             // Here you can pass flags/options to your application instance
             // when it is created
             RESTADAPTER_HOST: 'http://0.0.0.0:8080',
-            BLACKLIST_TARGETS: ['users.index', 'products.new', 'product.edit']
+            BLACKLIST_TARGETS: ['users.index', 'products.new', 'product.edit'],
+            SECRET_KEY_SIGNUP: '2d5b0672-b207-11e4-94cd-3c970ead4d26'
         },
 
         // Defaults

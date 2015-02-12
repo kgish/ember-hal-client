@@ -20,7 +20,7 @@ export default Ember.ObjectController.extend({
             if (this.controllerFor('users').validUser(user, true)) {
                 user.save();
                 this.set('isEditing', false);
-                this.transitionToRoute('users');
+                this.transitionToRoute('user', user);
             } else {
                return false;
             }

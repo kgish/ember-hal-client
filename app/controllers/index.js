@@ -15,5 +15,5 @@ export default Ember.Controller.extend({
         var res = !Ember.isEmpty(this.get('controllers.sessions.currentUser'));
         console.log('IndexController: isAuthenticated => '+res);
         return res;
-    }).property('controllers.sessions.currentUser'),
+    }).property('controllers.sessions.currentUser')
 });

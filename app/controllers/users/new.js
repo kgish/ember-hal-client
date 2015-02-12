@@ -29,7 +29,7 @@ export default Ember.ObjectController.extend({
             var user = this.get('model');
             user.destroyRecord();
             this.set('isEditing', false);
-            console.log('UserNewController: Create user => Cancelled');
+            console.log('UserNewController: Create user => cancelled');
             this.transitionToRoute('users');
         }
     }

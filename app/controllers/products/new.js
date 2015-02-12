@@ -24,7 +24,7 @@ export default Ember.ObjectController.extend({
             var product = this.get('model');
             product.destroyRecord();
             this.set('isEditing', false);
-            console.log('ProductNewController: Create product => Cancelled');
+            console.log('ProductNewController: Create product => cancelled');
             this.transitionToRoute('products');
         }
     }
