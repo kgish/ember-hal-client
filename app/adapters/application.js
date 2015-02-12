@@ -32,6 +32,8 @@ export default DS.RESTAdapter.extend({
         if (jqXHR && jqXHR.status === 401) {
             // TODO: There must be a better way.
             alert('An authentication error has occurred, please logout and login again.');
+        } else {
+            alert('Server error: '+status);
         }
         return err;
     }

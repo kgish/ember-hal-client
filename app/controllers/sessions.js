@@ -138,6 +138,7 @@ export default Ember.Controller.extend({
                         function(error) {
                             // TODO Handle errors better in gui
                             console.log('SessionsController: find() => NOK, error='+JSON.stringify(error));
+                            alert('Server error: '+JSON.stringify(error));
                         }
                     ); // find().then()
                 },
@@ -147,6 +148,12 @@ export default Ember.Controller.extend({
                     if (error.status === 401) {
                         // If there is a authentication error the user is informed of it to try again
                         alert("wrong user or password, please try again");
+                    } else {
+                        if (error.readyState == 0 && error.responseText == "" && error.status == 0 && error.statusText == "error") {
+                            alert('Oops. Looks like the server is unavailable now, try again later.');
+                        } else {
+                            alert('Server error: '+JSON.stringify(error));
+                        }
                     }
                 }
             ); // post().then()
