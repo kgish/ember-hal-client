@@ -406,11 +406,6 @@ the following:
 * Message/error banner for generic handling of user info.
 * Migrate to `ember-cli-simple-auth` (maybe).
 * The global flags `isAuthenticated`, `isAdmin` and `currentUser` are not DRY, need to be handled more elegantly.
-* Enable the registration page so that new users can sign up.
-* Should be able to edit own profile including new password.
-* Admin should be able to create new user.
-* User should be able to change password.
-* Consistent form field validations.
 * Pagination for the products list (nice to have).
 
 ## Thanks
