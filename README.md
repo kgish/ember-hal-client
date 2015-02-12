@@ -407,6 +407,7 @@ the following:
 * Migrate to `ember-cli-simple-auth` (maybe).
 * The global flags `isAuthenticated`, `isAdmin` and `currentUser` are not DRY, need to be handled more elegantly.
 * Pagination for the products list (nice to have).
+* Successful user registration should redircet to login page with username field prefilled.
 
 ## Thanks
 
