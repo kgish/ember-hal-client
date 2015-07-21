@@ -86,7 +86,7 @@ to [http://localhost:4200](http://localhost:4200).
 In order to get this application running properly with the ember default
 `RESTAdapter`, I had to do some serious tweaking.
 
-The server will return HAL/JSON payload which looks needs to be
+The server will return HAL/JSON payload which needs to be
 reformatted before passing on to the client.
 
 For a `single` resource, the incoming payload from the API Server looks
