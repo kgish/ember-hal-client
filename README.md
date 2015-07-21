@@ -345,7 +345,7 @@ Assuming success the server responds with a `201 Created` passing back the
 { api_key: { user_id: 1, access_token: '26c06...342aa' } }
 ```
 
-Failure to login results is a `401 Unauthorized` which means that either or
+Failure to login results in a `401 Unauthorized` which means that either or
 both of the username and password were incorrect.
 
 The `access_token` is stored for safe-keeping in the appropriate cookie:
